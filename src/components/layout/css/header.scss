@@ -1,0 +1,24 @@
+/* 2022.08.25(한예지) : header 색상 변경 */
+.nav-color {
+    background-color: #162547;
+}
+
+.header-logo {
+    width: 189px;
+    height: 96px;
+    object-fit: scale-down;
+
+}
+/*
+<Navbar.Brand href="#home">
+                <img src={logo} className="header-logo"></img>
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+                <Nav>
+                    <Nav.Link href="#reservation">예약내역</Nav.Link>
+                    <Nav.Link href="#login">로그인</Nav.Link>
+                    <Nav.Link href="#join">회원가입</Nav.Link>
+                </Nav>
+            </Navbar.Collapse>
+*/
