@@ -1,6 +1,6 @@
 import React from "react";
 
-/* 2022:08.25(한예지) : react-bootstarp을 import */
+/* 2022.08.25(한예지) : react-bootstarp을 import */
 import 'bootstrap/dist/css/bootstrap.min.css';  
 import {Nav, Navbar, Container, NavDropdown} from 'react-bootstrap';
 
