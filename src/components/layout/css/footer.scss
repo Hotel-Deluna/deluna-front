@@ -1,4 +1,26 @@
-#footer{
-    position: fixed;
-    bottom: 0;
+
+.footer-logo{
+    width: 189px;
+    height: auto;
+    object-fit: scale-down;
+}
+.title_text{
+    width: 100%;
+    height: auto;
+    margin: 0;
+    font-size: 0.5rem;
+}
+
+.sub_text{
+    font-size : 0.5rem;
+}
+
+.skill_text{
+    margin: 0;
+}
+#git_col{
+    margin-top: 0.5%;
+}
+.vertical-center{
+    margin: 0.5%;
 }
