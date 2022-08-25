@@ -1,7 +1,7 @@
 import React from "react";
 import Accordion from 'react-bootstrap/Accordion';
 //import Table from 'react-bootstrap/Table';
-import logo from '../images/delunaLogo_128.png';
+//import logo from '../images/delunaLogo_128.png';
 import '../css/footer.scss';
 
 function Developer({ info }) {
