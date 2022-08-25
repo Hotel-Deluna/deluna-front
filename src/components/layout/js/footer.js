@@ -80,7 +80,7 @@ const Footer = () => {
     return (
         <footer className="navbar-fixed-bottom">
             <Navbar bg="gray" expand="lg">
-                <Container container-fluid>
+                <Container id="container_center">
                     <Row className="vertical-center">
                         {developer.map(list => (<Developer info={list} />))}
                         <Col sm id="git_col">
