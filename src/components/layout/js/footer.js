@@ -4,10 +4,10 @@ import '../css/footer.scss';
 import gitlogo from '../imges/github_logo.png';
 function Developer({ info }) {
     return (
-          <Col sm>
+        <Col sm id="title_col">
             <b className="title_text">{info.position}</b>
             {info.name_list.map(lists => (<Names namelist={lists} />)) }   
-          </Col>
+        </Col>
     );
  }
 
@@ -36,18 +36,18 @@ const Footer = () => {
             position : 'PM',
             name_list : [ {
                 username : '박문수',
-                email : 'cccccc@gmail.com'
+                email : 'monsu1016@gmail.com'
             }]
         },
         {
             position : 'BACKEND DEVELOPER',
             name_list : [ {
                 username : '한동희',
-                email : 'aaaaaa@gmail.com'
+                email : 'sms44556688@gmail.com'
               },
               {
                   username : '김영수',
-                  email : 'bbbbbb@gmail.com'
+                  email : 'surfingboy0914@gmail.com'
               }]
         },
         {
@@ -66,29 +66,29 @@ const Footer = () => {
     let skillarr = [
         {
             title : 'BACKEND',
-            skills : ['java - open jdk 17', 'redis', 'spring boot', 'spring security', 'jwt', 'lombok']
+            skills : ['java - open jdk 17', 'spring cloud gateway', 'spring boot', 'spring security', 'JWT', 'lombok']
         },
         {
             title : 'FRONTEND',
-            skills : ['node.js - 16.17.0', 'react - 18.2.0', 'react-bootstrap', 'scss', 'HTML5']
+            skills : ['node.js - 16.17.0', 'react - 18.2.0', 'react-bootstrap', 'HTML5', 'Sass(SCSS)']
         },
         {
             title : 'COMMON',
-            skills : ['SERVER : aws','SCM : git', 'DB : mariaDB', 'CLOUD : aws, cafe24, oracle cloud', 'API Tools : swagger']
+            skills : ['SERVER : AWS', 'IMAGE-SERVER : AWS S3','DB : mariaDB', 'CLOUD : cafe24, oracle cloud', 'API Tools : swagger', 'SCM : git']
         }
     ];
     return (
         <footer className="navbar-fixed-bottom">
             <Navbar bg="gray" expand="lg">
                 <Container id="container_center">
-                    <Row className="vertical-center">
+                    <Row lg={7} className="vertical-center">
                         {developer.map(list => (<Developer info={list} />))}
                         <Col sm id="git_col">
                             <Navbar.Brand href={git_addr} target="_blank">
-                                <img src={gitlogo} className="footer-logo" />
+                                <img src={gitlogo} className="footer-logo" alt="gitlogo" />
                             </Navbar.Brand>
                             <br />
-                            <b className="title_text">© 2022 Copyright: Hotel-Deluna</b>
+                            <b className="title_text">© 2022 Copyright: Hotel Deluna</b>
                         </Col>
                         {skillarr.map(skill_value => (<SkillOut skill_list={skill_value} />))}
                     </Row>
