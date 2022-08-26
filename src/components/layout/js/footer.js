@@ -65,16 +65,16 @@ const Footer = () => {
     let git_addr = 'https://github.com/Hotel-Deluna';
     let skillarr = [
         {
+            title : 'COMMON',
+            skills : ['SERVER : AWS', 'IMAGE-SERVER : AWS S3','DB : mariaDB', 'CLOUD : cafe24, oracle cloud', 'API Tools : swagger', 'SCM : git']
+        },
+        {
             title : 'BACKEND',
             skills : ['java - open jdk 17', 'spring cloud gateway', 'spring boot', 'spring security', 'JWT', 'lombok']
         },
         {
             title : 'FRONTEND',
             skills : ['node.js - 16.17.0', 'react - 18.2.0', 'react-bootstrap', 'HTML5', 'Sass(SCSS)']
-        },
-        {
-            title : 'COMMON',
-            skills : ['SERVER : AWS', 'IMAGE-SERVER : AWS S3','DB : mariaDB', 'CLOUD : cafe24, oracle cloud', 'API Tools : swagger', 'SCM : git']
         }
     ];
     return (
