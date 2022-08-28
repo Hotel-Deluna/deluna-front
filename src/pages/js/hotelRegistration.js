@@ -1,39 +1,29 @@
 import React from "react";
-/* 2022.08.25(한예지) : react-bootstarp을 import */
-import 'bootstrap/dist/css/bootstrap.min.css';  
-import {Nav, Navbar, Container, NavDropdown} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
-/* 2022.08.25(한예지) : 호텔델루나 로고 이미지 import */
-import logo from "../../components/layout/imges/delunaLogo.png";
-
-/* 2022.08.25(한예지) : header.scss파일 import*/
-import "../../components/layout/css/header.scss";
 const hotelRegistration = () => {
     return (
-        <Navbar collapseOnSelect expand="md" className="nav-color" variant="dark">
-        <Container fluid>        
-            <Navbar.Brand href="#home">
-                <img src={logo} className="header-logo"></img>
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
-                <Nav>
-                    <Nav.Link href="#reservation">
-                        예약내역
-                    </Nav.Link>
-                    <Nav.Link href="#buisnessmanLogin">
-                        사업자 로그인
-                    </Nav.Link>
-                    <Nav.Link href="#userLogin">
-                        고객 로그인
-                    </Nav.Link>
-                    <Nav.Link href="#join">
-                        회원가입
-                    </Nav.Link>
-                </Nav>
-            </Navbar.Collapse>
-        </Container>
-        </Navbar>
+        <Form>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Email address</Form.Label>
+        <Form.Control type="email" placeholder="Enter email" />
+        <Form.Text className="text-muted">
+          We'll never share your email with anyone else.
+        </Form.Text>
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control type="password" placeholder="Password" />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formBasicCheckbox">
+        <Form.Check type="checkbox" label="Check me out" />
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        Submit
+      </Button>
+    </Form>
     );
 };
 
