@@ -4,6 +4,8 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Button from 'react-bootstrap/Button';
 
 import "../css/hotelRegistration.scss";
 
@@ -11,7 +13,11 @@ const hotelRegistration = () => {
     return (
         <>
         <Container className="containerMain">
-            
+            <Row className="containerTitle">
+                <Col>
+                    호텔등록
+                </Col>
+            </Row>
             <Row className="inputBox">
                 <Col>
                     <Form.Label htmlFor="hotelKoreaName">호텔명(한글)</Form.Label>
@@ -55,12 +61,17 @@ const hotelRegistration = () => {
 
             <Row className="inputBox">
                 <Col>
-                    <Form.Label htmlFor="hotelAddress">호텔 주소</Form.Label>
+                <Form.Label htmlFor="hotelAddress">호텔 주소</Form.Label>
+                <InputGroup className="mb-3">
                     <Form.Control
-                        type="text"
-                        id="hotelAddress"
-                        placeholder="ex) 지번주소만 입력 가능합니다."
+                    type="text"
+                    id="hotelAddress"
+                    placeholder="ex) 지번주소만 입력 가능합니다."
                     />
+                    <Button variant="outline-secondary" id="hotelAddressSearch">
+                        주소찾기
+                    </Button>
+                </InputGroup>
                 </Col>
             </Row>
 
@@ -92,86 +103,94 @@ const hotelRegistration = () => {
                             label="24시간 데스크"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-1`}
+                            id={`service-${type}-1`}
                         />
                         <Form.Check
                             inline
                             label="주차장"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-2`}
+                            id={`service-${type}-2`}
                         />
                         <Form.Check
                             inline
                             label="애견동반"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-3`}
+                            id={`service-${type}-3`}
                         />
                         <Form.Check
                             inline
                             label="수영장"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-4`}
+                            id={`service-${type}-4`}
                         />
                         <Form.Check
                             inline
                             label="헬스장"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-5`}
+                            id={`service-${type}-5`}
                         />
                         <Form.Check
                             inline
                             label="룸서비스"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-6`}
+                            id={`service-${type}-6`}
                         />
                         <Form.Check
                             inline
                             label="와인바&레스토랑"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-7`}
+                            id={`service-${type}-7`}
                         />
                         <Form.Check
                             inline
                             label="뷔페"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-8`}
+                            id={`service-${type}-8`}
                         />
                         <Form.Check
                             inline
                             label="커피숍"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-9`}
+                            id={`service-${type}-9`}
                         />
                         <Form.Check
                             inline
                             label="스파&사우나"
                             name="hotelService"
                             type={type}
-                            id={`inline-${type}-10`}
+                            id={`service-${type}-10`}
                         />
                     </div>
                 ))}
                 </Col>
             </Row>
             <Row className="inputBox">
-                <Col>
-                    <Form.Label htmlFor="hotelPeakSeason">성수기</Form.Label>
-                    <Form.Control
-                        type="text"
-                        id="hotelPeakSeason"
-                        placeholder="ex)02-123-4567"
-                    />
-                </Col>
+            <Form.Label htmlFor="hotelPeakSeason">성수기</Form.Label>
+            <InputGroup className="mb-3">
+                <Form.Control
+                    type="date"
+                    id="hotelPeakSeasonEnd"
+                />
+                <InputGroup.Text className="inputText">~</InputGroup.Text>
+                <Form.Control
+                    type="date"
+                    id="hotelPeakSeasonEnd"
+                />
+            </InputGroup>
             </Row>
-
+            <div className="mb-4">
+                <Button variant="outline-primary" size="sm">
+                    추가하기 +
+                </Button>
+            </div>
         </Container>
         </>
     );

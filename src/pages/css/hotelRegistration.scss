@@ -1,9 +1,20 @@
 .containerMain{
-    margin-top : 100px;
+    margin-top : 50px;
     margin-bottom: 100px;
+    width: 90%;
 }
-
+.containerTitle{
+    text-align: left;
+    margin-bottom: 30px;
+    font-weight:bold;
+    font-size : larger;
+}
 .inputBox{
     text-align: left;
     margin-top: 10px;
+}
+
+.inputText{
+    border: none;
+    background-color: white;
 }
