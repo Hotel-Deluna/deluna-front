@@ -3,7 +3,7 @@ import Footer from './components/layout/js/footer';
 import Main from "./pages/js/main"
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import HotelRegis from "./pages/js/hotelRegistration";
+import HotelInfo from "./pages/js/hotelInfo";
 function App() {
   return (
     <div className="App">
@@ -11,7 +11,7 @@ function App() {
 				<Header />
 				<Routes>
 					<Route path="/" element={<Main />}></Route>
-          <Route path="/auth/hotelRegis" element={<HotelRegis />}></Route>
+          <Route path="/auth/hotel/info" element={<HotelInfo />}></Route>
 				</Routes>
         <Footer />
 			</BrowserRouter>

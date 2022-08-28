@@ -7,9 +7,9 @@ import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 
-import "../css/hotelRegistration.scss";
+import "../css/hotelInfo.scss";
 
-const hotelRegistration = () => {
+const hotelInfo = () => {
     return (
         <>
         <Container className="containerMain">
@@ -174,19 +174,24 @@ const hotelRegistration = () => {
             </Row>
             <Row className="inputBox">
             <Form.Label htmlFor="hotelPeakSeason">성수기</Form.Label>
-            <InputGroup className="mb-3">
-                <Form.Control
-                    type="date"
-                    id="hotelPeakSeasonEnd"
-                />
-                <InputGroup.Text className="inputText">~</InputGroup.Text>
-                <Form.Control
-                    type="date"
-                    id="hotelPeakSeasonEnd"
-                />
-            </InputGroup>
+            <Col xs={12} md={8}>
+                <InputGroup className="mb-3">
+                    <Form.Control
+                        type="date"
+                        id="hotelPeakSeasonEnd"
+                    />
+                    <InputGroup.Text className="inputText">~</InputGroup.Text>
+                    <Form.Control
+                        type="date"
+                        id="hotelPeakSeasonEnd"
+                    />
+                </InputGroup>
+            </Col>
+            <Col xs={6} md={4}>
+                <Button variant="danger">삭제하기</Button>{' '}
+            </Col>
             </Row>
-            <div className="mb-4">
+            <div className="d-grid gap-2">
                 <Button variant="outline-primary" size="sm">
                     추가하기 +
                 </Button>
@@ -196,4 +201,4 @@ const hotelRegistration = () => {
     );
 };
 
-export default hotelRegistration;
+export default hotelInfo;
