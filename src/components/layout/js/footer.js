@@ -20,7 +20,7 @@ function Developer({ info }) {
  }
 
  function SkillOut({skill_list}) {
-    const skillname = skill_list.skills.map((skill) => <p className="skill_text">{skill}</p>);
+    const skillname = skill_list.skills.map((skill, index) => <p key={index} className="skill_text">{skill}</p>);
     return (
         <Col sm>
             <b className="title_text">{skill_list.title} SKILLS</b>

@@ -4,6 +4,7 @@ import Main from "./pages/js/main"
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HotelInfo from "./pages/js/hotelInfo";
+import Join from './pages/js/join';
 function App() {
   return (
     <div className="App">
@@ -12,6 +13,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Main />}></Route>
           <Route path="/auth/hotel/info" element={<HotelInfo />}></Route>
+          <Route path="/auth/join" element={<Join />}></Route>
 				</Routes>
         <Footer />
 			</BrowserRouter>
