@@ -1,13 +1,25 @@
-import React, { useRef,useState } from "react";
+/*global kakao*/
+import React, { useRef,useState, useEffect } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
-import {Form, Container, Row, Col, InputGroup, Button } from 'react-bootstrap';
+import {Form, Container, Row, Col, InputGroup, Button, Card, CardGroup } from 'react-bootstrap';
 
 /* 2022.08.28 (한예지) : 호텔등록&수정 UI를 위한 scss파일 */
 import "../css/hotelInfo.scss";
 
+/* 2022.08.28 (한예지) : react 링크이동(페이지이동) */
+import { Link } from 'react-router-dom'
+
+//import ReactDragList from "react-drag-list"
+//import UploadLogo from "../images/UploadIcon.png";
+
+/* 2022.08.28 (한예지) : daum api 사용을 위한 import */
+import DaumPostcode from 'react-daum-postcode';
+
+
 const HotelInfo = () => {
-    const nextId = useRef(1)
+    const nextId = useRef(1);
+    let imgIdx = 0;
     const [inputItems, setInputItems] = useState([
         {
             id : 0,
@@ -34,28 +46,102 @@ const HotelInfo = () => {
     /* 2022.08.28 (한예지) : 삭제하기 누를 시 Input 삭제 */
     const deleteInput = (idx) =>{
         const inputItemsCopy = JSON.parse(JSON.stringify(inputItems));
-        if(inputItems.length === 1){
+        if(inputItems.length === 1){ //1개의 input남을 경우 date 초기화
             inputItemsCopy[0].content.peakSeasonStart = ''
             inputItemsCopy[0].content.peakSeasonEnd = ''
             setInputItems(inputItemsCopy)
-            
-        }else{
+        }else{ //1개 이상의 input일 경우 삭제
             setInputItems(inputItems.filter(item => item.id !== idx))
         }
-
-        
     }
     /* 2022.08.28 (한예지) : input value 동적 처리 */
     const inputValueChange = (e, idx, type) => {
         const inputItemsCopy = JSON.parse(JSON.stringify(inputItems));
-        if(type === 'start'){
+        if(type === 'start'){ //성수기 시작값
             inputItemsCopy[idx].content.peakSeasonStart = e.target.value
-        }else{
+        }else{ //성수기 종료값
             inputItemsCopy[idx].content.peakSeasonEnd = e.target.value
         }
         setInputItems(inputItemsCopy)
     }
+
+    /* 2022.08.28 (한예지) : 이미지 등록 관련*/
+    const [showImages, setShowImages] = useState([]);
     
+    /* 2022.08.28 (한예지) : 이미지 등록 */
+    const handleAddImages = (e) => {
+        const imageList = e.target.files;
+        let imageUrlList = [...showImages];
+        for(let i = 0; i < imageList.length; i++){
+            const currentImgeUrl = URL.createObjectURL(imageList[i]);
+            imageUrlList.push(currentImgeUrl)
+        }
+
+        //10장 이상일 경우 예외처리
+        if(imageUrlList.length > 10){
+            alert("이미지는 최대 10장까지 등록이 가능합니다.")
+            imageUrlList = imageUrlList.slice(0,10);
+        }
+       
+        setShowImages(imageUrlList)
+    }
+
+    /* 2022.08.28 (한예지) : 이미지 개별삭제&일괄삭제 관련*/
+    const handleDeleteImage = (type,id) => {
+        if(type === 'All'){ //일괄삭제
+            const showImages = []
+            setShowImages(showImages);
+        }else{ //개별삭제
+            setShowImages(showImages.filter((_, index) => index !== id));
+        }
+    };
+    
+    const changeClick = (idx) => {
+        imgIdx = idx
+    }
+
+    /* 2022.08.29(한예지) : 이미지 변경 */
+    const changeImg = (e) => {
+        const changeImgeUrl = URL.createObjectURL(e.target.files[0]);
+        showImages[imgIdx] = changeImgeUrl;
+        setShowImages(showImages.map(index =>
+            index === imgIdx ? {...index, changeImgeUrl} : index)
+            )
+    }
+
+    /* 2022.08.28 (한예지) : 다음 주소 api 사용 */
+    const [address, setAddress] = useState(null);
+    const handleComplete = (data) => {
+        let addr = '';
+        if (data.userSelectedType === "R") {
+          alert("지번 주소만 선택 가능합니다.")
+          click = true
+        }else{
+            addr = data.jibunAddress
+            setAddress(addr)
+        }
+        
+      };
+      useEffect(()=>{
+        var geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch('경기도 평택시 서정동 879-1', function(result, status) {
+            console.log(status)
+            // 정상적으로 검색이 완료됐으면 
+             if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                
+                
+                
+            } 
+        });   
+        }, [])
+      /* 2022.08.28 (한예지) : 주소찾기 버튼에따라 다음 주소창 true, false */
+      const [click, setClick] = useState(false);
+      const clickFucn = () => {
+        setClick(current => !current)
+      }
+
+      
     return (
         <>
         <Container className="containerMain">
@@ -113,15 +199,22 @@ const HotelInfo = () => {
                     type="text"
                     id="hotelAddress"
                     placeholder="ex) 지번주소만 입력 가능합니다."
+                    value = {address}
                     disabled
                     />
-                    <Button variant="outline-secondary" id="hotelAddressSearch">
+                    <Button variant="outline-secondary" id="hotelAddressSearch" onClick={clickFucn}>
                         주소찾기
                     </Button>
                 </InputGroup>
                 </Col>
             </Row>
-
+            {click &&
+                <Row>
+                    <Col>
+                        <DaumPostcode onComplete={handleComplete}/>
+                    </Col>
+                </Row>
+            }
             <Row className="inputBox">
                 <Col>
                     <Form.Group className="mb-3" controlId="hotelExplanation">
@@ -222,19 +315,6 @@ const HotelInfo = () => {
             <Row className="inputBox">
                 <Form.Label htmlFor="hotelPeakSeason">성수기</Form.Label>
                 <Col>
-                
-                    {/* <InputGroup className="mb-3">
-                         <Form.Control
-                            type="date"
-                            id="hotelPeakSeasonEnd"
-                        />
-                        <InputGroup.Text className="inputText">~</InputGroup.Text>
-                        <Form.Control
-                            type="date"
-                            id="hotelPeakSeasonEnd"
-                        />
-                        <Button variant="danger">삭제하기</Button>{' '}
-                    </InputGroup> */}
                     {inputItems.map((item, index) => (
                         <InputGroup className="mb-3" key={index}>
                             <Form.Control
@@ -269,15 +349,56 @@ const HotelInfo = () => {
             </Row>
             <Row className="inputBox">
                 <Form.Label htmlFor="imgInset">호텔 이미지 (최대 10장까지 업로드가 가능합니다.)</Form.Label>
+                <Row xs={1} md={5} className="g-4">
+                    
+                    {showImages.map((image, idx) => (
+                        
+                        <Col key={idx}>
+                            <Card border="dark">
+                                <Card.Img variant="top" src={image} />
+                            </Card>
+                            <Button variant="primary" size="sm">
+                            <label for="change-file" onClick={() => changeClick(idx)}>
+                                변경하기
+                            </label>
+                            
+                            </Button>
+                            <input type="file" id="change-file" style={{display:"none"}}
+                            accept=".png, .jpg" onChange={changeImg}
+                            />
+                            <Button variant="danger" size="sm" onClick={() => handleDeleteImage('Individual',idx)}>삭제하기</Button>{' '}
+                        </Col>
+                         
+                    ))}
+                </Row>
+                 <div className="buttonGroup">
+                    <Button variant="outline-primary" size="sm">
+                    <label for="input-file">
+                        이미지 업로드
+                    </label>
+                    </Button>
+                    <input type="file" id="input-file" style={{display:"none"}}
+                        onChange={handleAddImages} multiple accept=".png, .jpg"
+                    />
+                    <Button variant="outline-danger" size="sm" onClick={() => handleDeleteImage('All')}>
+                        일괄삭제
+                    </Button>
+                </div>
+                
+            </Row>
+            <Row className="inputBox">
                 <Col>
-                    <div className="buttonGroup">
-                        <Button variant="outline-primary" size="sm">
-                            이미지 등록
-                        </Button>
-                        <Button variant="outline-danger" size="sm">
-                            일괄삭제
-                        </Button>
-                    </div>
+                    <div className="finalButton">
+                            <Button variant="primary" size="sm">
+                                등록
+                            </Button>
+                            {/* 2022.08.28 (한예지) : 취소 누를 시 main 이동 */}
+                            <Link to = "/">
+                                <Button variant="secondary" size="sm">
+                                    취소
+                                </Button>
+                            </Link>
+                    </div>    
                 </Col>
             </Row>
         </Container>

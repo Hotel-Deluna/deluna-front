@@ -1,7 +1,7 @@
 .containerMain{
     margin-top : 50px;
     margin-bottom: 100px;
-    width: 90%;
+    width: 100%;
 }
 .containerTitle{
     text-align: left;
@@ -26,3 +26,45 @@
     margin-top: 30px;
     margin-right: 10px;
 }
+.finalButton {
+    text-align: center;
+}
+.finalButton button {
+    margin-top: 30px;
+    margin-right: 10px;
+    min-width: 45%;
+    width: 45%;
+    text-align: center;
+}
+.g-4 {
+    --bs-gutter-y : 0.2rem;
+}
+.g-4 div {
+    margin-bottom:10px;
+    
+}
+
+.g-4 button{
+    width: 100%;
+    margin-bottom: 2px;
+}
+.card-img-top {
+    max-height: 80px;
+}
+@media only screen and (min-width: 768px) {
+    .containerMain{
+        margin-top : 50px;
+        margin-bottom: 100px;
+        width: 60%;
+    }
+
+    
+  }
+  @media only screen and (max-width: 600px) {
+    .g-4 div{
+        max-width: 110px;
+    }
+    .card-img-top {
+        max-height: 50px;
+    }
+  }
