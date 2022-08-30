@@ -1,8 +1,13 @@
 import React, {useState} from "react";
 import {Alert, Form}  from "react-bootstrap";
 import "../css/joinCheckbox.scss";
+/**
+ * 
+ * 체크박스
+ * 
+ */
 function JoinCheck(props) { 
-    if(props.value == '0'){
+    if(props.value === '0'){
         return(
             <UserJoinCheck />
         );
@@ -24,7 +29,7 @@ function JoinCheck(props) {
     ];
     // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);
-
+  const [isCheckbox, setIsCheckbox] = useState(false);
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, id) => {
     if (checked) {
@@ -34,6 +39,7 @@ function JoinCheck(props) {
       // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
       setCheckItems(checkItems.filter((el) => el !== id));
     }
+    console.log('',checkItems.length);
   };
 
   // 체크박스 전체 선택
@@ -43,10 +49,12 @@ function JoinCheck(props) {
       const idArray = [];
       data.forEach((el) => idArray.push(el.id));
       setCheckItems(idArray);
+      setIsCheckbox(true);
     }
     else {
       // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
       setCheckItems([]);
+      setIsCheckbox(false);
     }
   }
     return (

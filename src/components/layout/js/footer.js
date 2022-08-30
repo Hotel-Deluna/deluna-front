@@ -2,34 +2,11 @@ import React from "react";
 import {Navbar, Container, Row, Col} from 'react-bootstrap';
 import '../css/footer.scss';
 import gitlogo from '../imges/github_logo.png';
-function Developer({ info }) {
-    return (
-        <Col sm id="title_col">
-            <b className="title_text">{info.position}</b>
-            {info.name_list.map(lists => (<Names namelist={lists} />)) }   
-        </Col>
-    );
- }
-
- function Names({namelist}){
-    return (
-        <p className="sub_text">
-            {namelist.username} <br/> {namelist.email}
-        </p>
-    )
- }
-
- function SkillOut({skill_list}) {
-    const skillname = skill_list.skills.map((skill, index) => <p key={index} className="skill_text">{skill}</p>);
-    return (
-        <Col sm>
-            <b className="title_text">{skill_list.title} SKILLS</b>
-            <p className="sub_text">{skillname}</p>
-        </Col>
-    );
- }
-
-
+/**
+ * 
+ * 풋터
+ * 
+ */
 const Footer = () => {
     let developer = [
         {
@@ -79,10 +56,13 @@ const Footer = () => {
     ];
     return (
         <footer className="navbar-fixed-bottom">
-            <Navbar bg="gray" expand="lg">
+            <Navbar bg="gray" expand="lg" id="navbar_border">
                 <Container id="container_center">
                     <Row lg={7} className="vertical-center">
-                        {developer.map(list => (<Developer info={list} />))}
+                            {developer.map((value,index) =>(<Col sm id="title_col" key={'developer'+index}>
+                                <b className="title_text">{value.position}</b>
+                                {value.name_list.map((value, index)=>(<p key={index} className="sub_text">{value.username} <br /> {value.email}</p>))}
+                            </Col>))}
                         <Col sm id="git_col">
                             <Navbar.Brand href={git_addr} target="_blank">
                                 <img src={gitlogo} className="footer-logo" alt="gitlogo" />
@@ -90,7 +70,10 @@ const Footer = () => {
                             <br />
                             <b className="title_text">© 2022 Copyright: Hotel Deluna</b>
                         </Col>
-                        {skillarr.map(skill_value => (<SkillOut skill_list={skill_value} />))}
+                            {skillarr.map((value, index) => (<Col sm key={'skill'+index}>
+                                <b className="title_text">{value.title} SKILLS</b>
+                                <div className="sub_text">{value.skills.map((value, index)=>(<p key={index} className="sub_text">{value}</p>))}</div>
+                            </Col>))}
                     </Row>
                 </Container>
             </Navbar>
