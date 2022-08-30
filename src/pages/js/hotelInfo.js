@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useRef,useState } from "react";
+import React, { useRef,useState, useEffect } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
 import {Form, Container, Row, Col, InputGroup, Button, Card, CardGroup } from 'react-bootstrap';
@@ -8,16 +8,79 @@ import {Form, Container, Row, Col, InputGroup, Button, Card, CardGroup } from 'r
 import "../css/hotelInfo.scss";
 
 /* 2022.08.28 (한예지) : react 링크이동(페이지이동) */
-import { Link } from 'react-router-dom'
-
-//import ReactDragList from "react-drag-list"
-//import UploadLogo from "../images/UploadIcon.png";
+import { Link, useSearchParams } from 'react-router-dom'
 
 /* 2022.08.28 (한예지) : daum api 사용을 위한 import */
 import DaumPostcode from 'react-daum-postcode';
 
+import axios from 'axios';
 
 const HotelInfo = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const type = searchParams.get('type') //registration:등록, modfiy : 수정
+    
+    const testData = {
+        "data": {
+          "address": "서울특별시 강남구",
+          "eng_name": "Shilla Stay",
+          "hotel_num": 12345,
+          "image": "[https://aws.bucket/1, https://aws.bucket/2]",
+          "info": "신라스테이 강남점은...",
+          "name": "신라스테이",
+          "peak_season_list": [
+            {
+              "peak_season_end": "2022-08-30T11:41:22.889Z",
+              "peak_season_start": "2022-08-30T11:41:22.889Z"
+            }
+          ],
+          "phone_num": "0212345678",
+          "room_list": [
+            {
+              "available_yn": true,
+              "check_in_time": "11:00",
+              "check_out_time": "15:00",
+              "double_bed_count": 1,
+              "image": "[https://aws.bucket/1, https://aws.bucket/2]",
+              "maximum_people": 3,
+              "minimum_people": 2,
+              "name": "신라스테이",
+              "p_weekday_price": 350000,
+              "p_weekend_price": 450000,
+              "price": 150000,
+              "reservable_room_count": 3,
+              "room_closed_end": "2022-08-30T11:41:22.889Z",
+              "room_closed_start": "2022-08-30T11:41:22.889Z",
+              "room_detail_info": [
+                {
+                  "delete_date": "2022-08-30T11:41:22.889Z",
+                  "name": "101호",
+                  "room_closed_end": "2022-08-30T11:41:22.889Z",
+                  "room_closed_start": "2022-08-30T11:41:22.889Z",
+                  "room_detail_num": 12345,
+                  "status": 1
+                }
+              ],
+              "room_num": 12345,
+              "single_bed_count": 1,
+              "tags": [
+                0
+              ],
+              "weekday_price": 150000,
+              "weekend_price": 250000
+            }
+          ],
+          "rule": "대욕장 이용안내...",
+          "star": 5,
+          "tags": "[1,2,3]"
+        },
+        "message": "string",
+        "result": "string"
+      }
+    
+    if(type !== 'registration'){
+        console.log(testData.data.name)
+        
+    }
     const nextId = useRef(1);
     let imgIdx = 0;
     const [inputItems, setInputItems] = useState([
@@ -29,7 +92,7 @@ const HotelInfo = () => {
             }
         }
     ])
-
+    
     /* 2022.08.28 (한예지) : 성수기 추가버튼 누를 시 Input 추가 */
     const addInput = () => {
         const input = {
@@ -84,7 +147,6 @@ const HotelInfo = () => {
         }
        
         setShowImages(imageUrlList)
-        console.log(showImages)
     }
 
     /* 2022.08.28 (한예지) : 이미지 개별삭제&일괄삭제 관련*/
@@ -116,7 +178,7 @@ const HotelInfo = () => {
         let addr = '';
         if (data.userSelectedType === "R") {
           alert("지번 주소만 선택 가능합니다.")
-          click = true
+          click = true;
         }else{
             addr = data.jibunAddress
             setAddress(addr)
@@ -125,8 +187,7 @@ const HotelInfo = () => {
         
       };
 
-    /* 2022.08.29 (한예지) : 주소 -> 좌표변환 하는 영역 kakaoMap 사용*/
-    const [addrCoord, setAddrCoord] = useState({La:'', Ma:''})
+    const [addrCoord, setAddrCoord] = useState({La:'', Ma:'',region_1depth:'',region_2depth:''}) //2022.08.29 (한예지) : 주소 -> 좌표변환 하는 영역 kakaoMap 사용
     const HandleCoord = (addr) =>{
         // 주소-좌표 변환 객체를 생성
         var geocoder = new kakao.maps.services.Geocoder();
@@ -135,7 +196,14 @@ const HotelInfo = () => {
             // 정상적으로 검색이 완료됐으면 
             if (status === kakao.maps.services.Status.OK) {
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                setAddrCoord({La : coords.La,Ma : coords.Ma})
+                setAddrCoord(
+                    {
+                        x : result[0].x,
+                        y : result[0].y,
+                        region_1depth : result[0].road_address.region_1depth_name,
+                        region_2depth : result[0].road_address.region_2depth_name
+                    }
+                )
             } 
         });    
     };
@@ -145,8 +213,195 @@ const HotelInfo = () => {
         setClick(current => !current)
     }
 
+    const [phoneValue, setPhoneValue] = useState(''); //2022.08.29 (한예지) : 호텔 전화번호 input 상태     
+    /* 2022.08.29 (한예지) : 호텔 전화번호 input 정규식 체크 */
     const handlePhone = (e) => {
-        const regex = /^[0-9\b -]{0,12}$/;
+        const regex = /^[0-9\b -]{0,12}$/; // 하이픈 포함 최대 12자리
+        if(regex.test(e.target.value)){
+            setPhoneValue(e.target.value.replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") ); 
+        }
+    }
+
+     //2022.08.29 (한예지) : 호텔명 한글 input 상태
+    const [hotelKoreaName, setHotelKoreaName] = useState('');
+    /* 2022.08.29 (한예지) : 호텔명 한글 input 정규식 체크 */
+    const handleHotelKoreaName = (e) => {
+        const regex = /^[가-힣|ㄱ-ㅎ\s]+$/;
+        if(regex.test(e.target.value)){
+            setHotelKoreaName(e.target.value)
+        }
+    }
+    
+    const [hotelEnglishName, setHotelEnglishName] = useState(''); //2022.08.29 (한예지) : 호텔명 영문 input 상태
+    /* 2022.08.29 (한예지) : 호텔명 영문 input 정규식 체크 */
+    const handleHotelEnglishName = (e) => {
+        const regex = /^[a-z|A-Z\s]+$/;
+        if(regex.test(e.target.value)){
+            setHotelEnglishName(e.target.value)
+        }
+    }
+
+    const [selected, setSelected] = useState(''); //2022.08.29 (한예지) : 호텔 등급
+    const handleChangeSelect = (e) => {
+        setSelected(e.target.value);
+    }
+
+
+    const [explanation, setExplanation] = useState(''); //2022.08.29 (한예지) : 호텔 설명
+    const handleExplanation = (e) => {
+        setExplanation(e.target.value)
+    }
+
+    const [rule, setRule] = useState(''); //2022.08.29 (한예지) : 호텔 규정
+    const handleRule = (e) => {
+        setRule(e.target.value)
+    }
+
+    //2022.08.29 (한예지) : 호텔 부가시설/서비스 UI뿌려주기 위한 데이터
+    const checkbox = [
+        {
+            name : '뷔페',
+            value : 1
+
+        },
+        {
+            name : '주차장',
+            value : 2
+
+        },
+        {
+            name : '커피숍',
+            value : 3
+
+        },
+        {
+            name : '수영장',
+            value : 4
+
+        },
+        {
+            name : '헬스장',
+            value : 5
+
+        },
+        {
+            name : '룸서비스',
+            value : 6
+
+        },
+        {
+            name : '와인바&레스토랑',
+            value : 7
+
+        },
+        {
+            name : '24시간 데스크',
+            value : 8
+
+        },
+        {
+            name : '애경동반',
+            value : 9
+
+        },
+        {
+            name : '스파&사우나',
+            value : 10
+
+        }
+    ]
+
+    const [isChecked, setIsChecked] = useState(false) // 2022.08.29 (한예지) : 체크박스 체크 여부
+    const [checkedItems, setCheckedItems] = useState(new Set()); //2022.08.29 (한예지) : 체크된 항목
+
+    /*2022.08.29 (한예지) : 체크박스 선택시 핸들링*/
+    const checkedList = (e) => { 
+        setIsChecked(!isChecked);
+        handleChecked(e.target.value, e.target.checked)
+    }
+
+    /*2022.08.28 (한예지) : 체크박스 true, false에 따라 선택된항목 추가 or 삭제*/
+    const handleChecked = (val, isChecked) => {
+        if(isChecked){
+            checkedItems.add(val);
+            setCheckedItems(checkedItems)
+        }else if(!isChecked && checkedItems.has(val)){
+            checkedItems.delete(val);
+            setCheckedItems(checkedItems)
+        }
+    }
+    const inputRef = useRef([])
+    const searchAddrRef = useRef();
+    const handleHotelRegis = () =>{
+        let joinBoolean = true;
+        for(let i = 0; i<inputRef.current.length; i++){
+            if(!inputRef.current[i].value || inputRef.current[i].value === ''){
+                
+                if(i !== 4){
+                    inputRef.current[i].focus();
+                }else{
+                    searchAddrRef.current.focus()
+                }
+                joinBoolean = false
+                break;
+            }
+	    }
+        
+        //axios 연동 부분
+        if(!joinBoolean){
+            /*axios({
+                url: 'http://43.200.222.222:8080/hotel/register',
+                method: 'post',
+                headers: {
+                    Authorization : "1234"
+                },
+                data: {
+                        "address": "서울시 강남구",
+                        "eng_name": "Shilla Stay",
+                        "image": "[멀티파트 파일 이미지1 , 멀티파트 파일 이미지2]",
+                        "location": "[123.546, 10.48]",
+                        "name": "신라스테이",
+                        "peak_season_list": [
+                          {
+                            "peak_season_end": "2022-08-30T09:44:05.307Z",
+                            "peak_season_start": "2022-08-30T09:44:05.307Z"
+                          }
+                        ],
+                        "phone_num": "0212345678",
+                        "region_1depth_name": "서울시",
+                        "region_2depth_name": "강남구",
+                        "rule": "대욕장 이용안내...",
+                        "star": 5,
+                        "tags": "[1,2,3]" 
+                }
+            })
+                .then((response) => {
+                    console.log(response)
+                })
+                .catch(function(error) {
+                });*/
+        }
+        // if(!hotelKoreaName)  inputRef.current[0].focus();
+        // else if(!hotelEnglishName) inputRef.current[1].focus();
+        // else if(!selected) inputRef.current[2].focus();
+        // else if(!phoneValue) inputRef.current[3].focus();
+        // else if(!address) inputRef.current[4].focus();
+        // else if(!address) inputRef.current[5].focus();
+        console.log("호텔명 한글 : "+hotelKoreaName)
+        console.log("호텔명 영어 : "+hotelEnglishName)
+        console.log("호텔등급 : "+selected)
+        console.log("호텔 전화번호 : "+phoneValue)
+        console.log("호텔 주소 : "+address)
+        console.log("좌표 x: "+addrCoord.x)
+        console.log("좌표 y: "+addrCoord.y)
+        console.log("1depth : "+addrCoord.region_1depth)
+        console.log("2depth : "+addrCoord.region_2depth)
+        console.log("호텔 설명 : "+explanation)
+        console.log("호텔 규정 : " + rule)
+        console.log("부가시설 : "+ JSON.stringify(checkedItems))
+        console.log("성수기 : "+ JSON.stringify(inputItems))
+        console.log("이미지 : "+showImages)
+        
 
     }
     return (
@@ -155,32 +410,40 @@ const HotelInfo = () => {
             <Row className="containerTitle">
                 <Col>
                     호텔등록
-                    
                 </Col>
             </Row>
             <Row className="inputBox">
                 <Col>
-                    <Form.Label htmlFor="hotelKoreaName">호텔명(한글)</Form.Label>
+                    <Form.Label htmlFor="hotelKoreaName">호텔명(한글)<span className="essential">*필수입력</span></Form.Label>
                     <Form.Control
                         type="text"
-                        id="hotelKoreaName"
+                        name="호텔명 한글"
                         placeholder="ex) 신라스테이 서초점"
                         maxLength={30}
+                        onChange={handleHotelKoreaName}
+                        value={hotelKoreaName}
+                        ref={el => (inputRef.current[0] = el)}
                     />
                 </Col>
                 <Col>
-                    <Form.Label htmlFor="hotelEnglishName">호텔명(영어)</Form.Label>
+                    <Form.Label htmlFor="hotelEnglishName">호텔명(영어)<span className="essential">*필수입력</span></Form.Label>
                     <Form.Control
                         type="text"
-                        id="hotelEnglishName"
+                        name="호텔명 영어"
                         placeholder="ex) Shilla Stay Seocho"
-                        maxlength='30'
+                        maxLength={30}
+                        onChange={handleHotelEnglishName}
+                        value={hotelEnglishName}
+                        ref={el => (inputRef.current[1] = el)}
                     />
                 </Col>
                 <Col>
-                    <Form.Label htmlFor="hotelEnglishName">호텔등급</Form.Label>
-                    <Form.Select>
-                        <option>호텔 등급을 선택해주세요.</option>
+                    <Form.Label htmlFor="hotelEnglishName">호텔등급<span className="essential">*필수선택</span></Form.Label>
+                    <Form.Select onChange={handleChangeSelect}
+                        ref={el => (inputRef.current[2] = el)}
+                        name="호텔둥급"
+                    >
+                        <option value="">호텔 등급을 선택해주세요.</option>
                         <option value="1">1성</option>
                         <option value="2">2성</option>
                         <option value="3">3성</option>
@@ -192,29 +455,34 @@ const HotelInfo = () => {
 
             <Row className="inputBox">
                 <Col>
-                    <Form.Label htmlFor="hotelPhoneNumber">호텔 전화번호</Form.Label>
+                    <Form.Label htmlFor="hotelPhoneNumber">호텔 전화번호<span className="essential">*필수입력</span></Form.Label>
                     <Form.Control
                         type="text"
-                        id="hotelPhoneNumber"
+                        name="호텔 전화번호"
                         placeholder="ex)02-123-4567"
-                        maxLength='12'
+                        maxLength={12}
                         onChange={handlePhone}
+                        value={phoneValue}
+                        ref={el => (inputRef.current[3] = el)}
                     />
                 </Col>
             </Row>
 
             <Row className="inputBox">
                 <Col>
-                <Form.Label htmlFor="hotelAddress">호텔 주소</Form.Label>
+                <Form.Label htmlFor="hotelAddress">호텔 주소<span className="essential">*필수입력</span></Form.Label>
                 <InputGroup className="mb-3">
                     <Form.Control
                     type="text"
-                    id="hotelAddress"
+                    name="호텔 주소"
                     placeholder="ex) 지번주소만 입력 가능합니다."
                     value = {address}
                     disabled
+                    ref={el => (inputRef.current[4] = el)}
                     />
-                    <Button variant="outline-secondary" id="hotelAddressSearch" onClick={clickFucn}>
+                    <Button variant="outline-secondary" id="hotelAddressSearch" onClick={clickFucn}
+                        ref={searchAddrRef}
+                    >
                         주소찾기
                     </Button>
                 </InputGroup>
@@ -230,8 +498,13 @@ const HotelInfo = () => {
             <Row className="inputBox">
                 <Col>
                     <Form.Group className="mb-3" controlId="hotelExplanation">
-                        <Form.Label>호텔 설명</Form.Label>
-                        <Form.Control as="textarea" rows={5} />
+                        <Form.Label>호텔 설명<span className="essential">*필수입력</span></Form.Label>
+                        <Form.Control as="textarea" rows={5} maxLength={200}
+                        onChange={handleExplanation}
+                        value = {explanation}
+                        name="호텔 설명"
+                        ref={el => (inputRef.current[5] = el)}
+                        />
                     </Form.Group>
                 </Col>
             </Row>
@@ -239,8 +512,13 @@ const HotelInfo = () => {
             <Row className="inputBox">
                 <Col>
                     <Form.Group className="mb-3" controlId="hotelRule">
-                        <Form.Label>호텔 규정</Form.Label>
-                        <Form.Control as="textarea" rows={5} />
+                        <Form.Label>호텔 규정<span className="essential">*필수입력</span></Form.Label>
+                        <Form.Control as="textarea" rows={5} maxLength={200}
+                        onChange={handleRule}
+                        value={rule}
+                        name="호텔 규정"
+                        ref={el => (inputRef.current[6] = el)}
+                        />
                     </Form.Group>
                 </Col>
             </Row>
@@ -248,80 +526,20 @@ const HotelInfo = () => {
             <Row className="inputBox">
                 <Col>
                     <Form.Label htmlFor="hotelService">부가시설/서비스</Form.Label>
-                    {['checkbox'].map((type) => (
-                        <div key={`inline-${type}`} className="mb-3">
+                    <div className="mb3">
+                        {checkbox.map((item, index) => (
                             <Form.Check
-                                inline
-                                label="24시간 데스크"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-1`}
+                            inline
+                            key={index}
+                            label={item.name}
+                            value={item.value}
+                            onChange={checkedList}
+                            name="hotelService"
+                            type='checkbox'
                             />
-                            <Form.Check
-                                inline
-                                label="주차장"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-2`}
-                            />
-                            <Form.Check
-                                inline
-                                label="애견동반"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-3`}
-                            />
-                            <Form.Check
-                                inline
-                                label="수영장"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-4`}
-                            />
-                            <Form.Check
-                                inline
-                                label="헬스장"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-5`}
-                            />
-                            <Form.Check
-                                inline
-                                label="룸서비스"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-6`}
-                            />
-                            <Form.Check
-                                inline
-                                label="와인바&레스토랑"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-7`}
-                            />
-                            <Form.Check
-                                inline
-                                label="뷔페"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-8`}
-                            />
-                            <Form.Check
-                                inline
-                                label="커피숍"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-9`}
-                            />
-                            <Form.Check
-                                inline
-                                label="스파&사우나"
-                                name="hotelService"
-                                type={type}
-                                id={`service-${type}-10`}
-                            />
-                        </div>
-                    ))}
+                            
+                        ))}
+                    </div>
                 </Col>
             </Row>
             <Row className="inputBox">
@@ -370,7 +588,7 @@ const HotelInfo = () => {
                                 <Card.Img variant="top" src={image} />
                             </Card>
                             <Button variant="primary" size="sm">
-                            <label for="change-file" onClick={() => changeClick(idx)}>
+                            <label htmlFor="change-file" onClick={() => changeClick(idx)}>
                                 변경하기
                             </label>
                             
@@ -385,7 +603,7 @@ const HotelInfo = () => {
                 </Row>
                  <div className="buttonGroup">
                     <Button variant="outline-primary" size="sm">
-                    <label for="input-file">
+                    <label htmlFor="input-file">
                         이미지 업로드
                     </label>
                     </Button>
@@ -401,7 +619,7 @@ const HotelInfo = () => {
             <Row className="inputBox">
                 <Col>
                     <div className="finalButton">
-                            <Button variant="primary" size="sm">
+                            <Button variant="primary" size="sm" onClick={()=> handleHotelRegis()}>
                                 등록
                             </Button>
                             {/* 2022.08.28 (한예지) : 취소 누를 시 main 이동 */}

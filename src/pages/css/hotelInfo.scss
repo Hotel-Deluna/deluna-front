@@ -51,6 +51,12 @@
 .card-img-top {
     max-height: 70px;
 }
+.essential{
+    font-size: 0.1rem;
+    color: red;
+    padding-left: 5px;
+    font-weight: bold;
+}
 @media only screen and (min-width: 768px) {
     .containerMain{
         margin-top : 50px;
@@ -66,5 +72,8 @@
     }
     .card-img-top {
         max-height: 50px;
+    }
+    .form-label, .form-control, .form-select, .btn, .inputText, .form-check-label{
+        font-size: 0.3rem;
     }
   }

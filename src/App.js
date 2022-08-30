@@ -12,7 +12,7 @@ function App() {
 				<Header />
 				<Routes>
 					<Route path="/" element={<Main />}></Route>
-          <Route path="/auth/hotel/info" element={<HotelInfo />}></Route>
+          <Route path="/auth/hotel/info/" element={<HotelInfo />}></Route>
           <Route path="/auth/join" element={<JoinPage />}></Route>
 				</Routes>
         <Footer />
