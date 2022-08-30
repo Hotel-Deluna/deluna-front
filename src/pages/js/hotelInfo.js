@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useRef,useState, useEffect } from "react";
+import React, { useRef,useState } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
 import {Form, Container, Row, Col, InputGroup, Button, Card, CardGroup } from 'react-bootstrap';
@@ -84,6 +84,7 @@ const HotelInfo = () => {
         }
        
         setShowImages(imageUrlList)
+        console.log(showImages)
     }
 
     /* 2022.08.28 (한예지) : 이미지 개별삭제&일괄삭제 관련*/
@@ -110,7 +111,7 @@ const HotelInfo = () => {
     }
 
     /* 2022.08.28 (한예지) : 다음 주소 api 사용 */
-    const [address, setAddress] = useState(null);
+    const [address, setAddress] = useState();
     const handleComplete = (data) => {
         let addr = '';
         if (data.userSelectedType === "R") {
@@ -119,35 +120,42 @@ const HotelInfo = () => {
         }else{
             addr = data.jibunAddress
             setAddress(addr)
+            HandleCoord(addr)
         }
         
       };
-      useEffect(()=>{
-        var geocoder = new kakao.maps.services.Geocoder();
-        geocoder.addressSearch('경기도 평택시 서정동 879-1', function(result, status) {
-            console.log(status)
-            // 정상적으로 검색이 완료됐으면 
-             if (status === kakao.maps.services.Status.OK) {
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                
-                
-                
-            } 
-        });   
-        }, [])
-      /* 2022.08.28 (한예지) : 주소찾기 버튼에따라 다음 주소창 true, false */
-      const [click, setClick] = useState(false);
-      const clickFucn = () => {
-        setClick(current => !current)
-      }
 
-      
+    /* 2022.08.29 (한예지) : 주소 -> 좌표변환 하는 영역 kakaoMap 사용*/
+    const [addrCoord, setAddrCoord] = useState({La:'', Ma:''})
+    const HandleCoord = (addr) =>{
+        // 주소-좌표 변환 객체를 생성
+        var geocoder = new kakao.maps.services.Geocoder();
+        // 주소로 좌표를 검색
+        geocoder.addressSearch(addr, function(result, status) {
+            // 정상적으로 검색이 완료됐으면 
+            if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                setAddrCoord({La : coords.La,Ma : coords.Ma})
+            } 
+        });    
+    };
+      /* 2022.08.28 (한예지) : 주소찾기 버튼에따라 다음 주소창 true, false */
+    const [click, setClick] = useState(false);
+    const clickFucn = () => {
+        setClick(current => !current)
+    }
+
+    const handlePhone = (e) => {
+        const regex = /^[0-9\b -]{0,12}$/;
+
+    }
     return (
         <>
         <Container className="containerMain">
             <Row className="containerTitle">
                 <Col>
                     호텔등록
+                    
                 </Col>
             </Row>
             <Row className="inputBox">
@@ -157,6 +165,7 @@ const HotelInfo = () => {
                         type="text"
                         id="hotelKoreaName"
                         placeholder="ex) 신라스테이 서초점"
+                        maxLength={30}
                     />
                 </Col>
                 <Col>
@@ -165,6 +174,7 @@ const HotelInfo = () => {
                         type="text"
                         id="hotelEnglishName"
                         placeholder="ex) Shilla Stay Seocho"
+                        maxlength='30'
                     />
                 </Col>
                 <Col>
@@ -187,6 +197,8 @@ const HotelInfo = () => {
                         type="text"
                         id="hotelPhoneNumber"
                         placeholder="ex)02-123-4567"
+                        maxLength='12'
+                        onChange={handlePhone}
                     />
                 </Col>
             </Row>
