@@ -24,24 +24,54 @@ const HotelInfo = () => {
           "address": "서울특별시 강남구",
           "eng_name": "Shilla Stay",
           "hotel_num": 12345,
-          "image": ["https://cdn.pixabay.com/photo/2016/12/13/05/15/puppy-1903313_1280.jpg",
-           "https://cdn.pixabay.com/photo/2016/05/09/10/42/weimaraner-1381186_1280.jpg"],
+          "image": "[https://aws.bucket/1, https://aws.bucket/2]",
           "info": "신라스테이 강남점은...",
           "name": "신라스테이",
           "peak_season_list": [
             {
               "peak_season_end": "2022-08-30T11:41:22.889Z",
               "peak_season_start": "2022-08-30T11:41:22.889Z"
-            },
-            {
-                "peak_season_end": "2022-09-30T11:41:22.889Z",
-                "peak_season_start": "2022-09-30T11:41:22.889Z"
-              }
+            }
           ],
           "phone_num": "0212345678",
+          "room_list": [
+            {
+              "available_yn": true,
+              "check_in_time": "11:00",
+              "check_out_time": "15:00",
+              "double_bed_count": 1,
+              "image": "[https://aws.bucket/1, https://aws.bucket/2]",
+              "maximum_people": 3,
+              "minimum_people": 2,
+              "name": "신라스테이",
+              "p_weekday_price": 350000,
+              "p_weekend_price": 450000,
+              "price": 150000,
+              "reservable_room_count": 3,
+              "room_closed_end": "2022-08-30T11:41:22.889Z",
+              "room_closed_start": "2022-08-30T11:41:22.889Z",
+              "room_detail_info": [
+                {
+                  "delete_date": "2022-08-30T11:41:22.889Z",
+                  "name": "101호",
+                  "room_closed_end": "2022-08-30T11:41:22.889Z",
+                  "room_closed_start": "2022-08-30T11:41:22.889Z",
+                  "room_detail_num": 12345,
+                  "status": 1
+                }
+              ],
+              "room_num": 12345,
+              "single_bed_count": 1,
+              "tags": [
+                0
+              ],
+              "weekday_price": 150000,
+              "weekend_price": 250000
+            }
+          ],
           "rule": "대욕장 이용안내...",
           "star": 5,
-          "tags": [{code : 1, name: "뷔페"}, {code : 2, name: "주차장"},{code : 10, name: "스파사우나"}]
+          "tags": "[1,2,3]"
         },
         "message": "string",
         "result": "string"
@@ -138,7 +168,7 @@ const HotelInfo = () => {
     }
 
     /* 2022.08.28 (한예지) : 다음 주소 api 사용 */
-    const [address, setAddress] = useState('');
+    const [address, setAddress] = useState();
     const handleComplete = (data) => {
         let addr = '';
         if (data.userSelectedType === "R") {
@@ -152,7 +182,7 @@ const HotelInfo = () => {
         
       };
 
-    const [addrCoord, setAddrCoord] = useState({x:'', y:'',region_1depth:'',region_2depth:''}) //2022.08.29 (한예지) : 주소 -> 좌표변환 하는 영역 kakaoMap 사용
+    const [addrCoord, setAddrCoord] = useState({La:'', Ma:'',region_1depth:'',region_2depth:''}) //2022.08.29 (한예지) : 주소 -> 좌표변환 하는 영역 kakaoMap 사용
     const HandleCoord = (addr) =>{
         // 주소-좌표 변환 객체를 생성
         var geocoder = new kakao.maps.services.Geocoder();
@@ -277,26 +307,21 @@ const HotelInfo = () => {
     ]
 
     const [isChecked, setIsChecked] = useState(false) // 2022.08.29 (한예지) : 체크박스 체크 여부
-    const [checkedItems, setCheckedItems] = useState([]); //2022.08.29 (한예지) : 체크된 항목
+    const [checkedItems, setCheckedItems] = useState(new Set()); //2022.08.29 (한예지) : 체크된 항목
 
     /*2022.08.29 (한예지) : 체크박스 선택시 핸들링*/
-    const checkedList = (e) => {
-        console.log(e.target.checked) 
+    const checkedList = (e) => { 
         setIsChecked(!isChecked);
         handleChecked(e.target.value, e.target.checked)
     }
 
     /*2022.08.28 (한예지) : 체크박스 true, false에 따라 선택된항목 추가 or 삭제*/
     const handleChecked = (val, isChecked) => {
-        console.log(val)
-        console.log(isChecked)
         if(isChecked){
-            
-            checkedItems.push(val);
+            checkedItems.add(val);
             setCheckedItems(checkedItems)
-            
-        }else if(!isChecked && checkedItems.includes(val)){
-            checkedItems.splice(checkedItems.indexOf(val), 1);
+        }else if(!isChecked && checkedItems.has(val)){
+            checkedItems.delete(val);
             setCheckedItems(checkedItems)
         }
     }
@@ -356,13 +381,13 @@ const HotelInfo = () => {
         console.log("호텔등급 : "+selected)
         console.log("호텔 전화번호 : "+phoneValue)
         console.log("호텔 주소 : "+address)
-        //console.log("좌표 x: "+addrCoord.x)
-        //console.log("좌표 y: "+addrCoord.y)
-        //console.log("1depth : "+addrCoord.region_1depth)
-        //console.log("2depth : "+addrCoord.region_2depth)
+        console.log("좌표 x: "+addrCoord.x)
+        console.log("좌표 y: "+addrCoord.y)
+        console.log("1depth : "+addrCoord.region_1depth)
+        console.log("2depth : "+addrCoord.region_2depth)
         console.log("호텔 설명 : "+explanation)
         console.log("호텔 규정 : " + rule)
-        console.log("부가시설 : "+checkedItems)
+        console.log("부가시설 : "+ JSON.stringify(checkedItems))
         console.log("성수기 : "+ JSON.stringify(inputItems))
         console.log("이미지 : "+showImages)
         
@@ -371,36 +396,7 @@ const HotelInfo = () => {
 
     useEffect(() => {
         if(type !== 'registration'){
-            setHotelKoreaName(testData.data.name);
-            setHotelEnglishName(testData.data.eng_name);
-            setSelected(testData.data.star);
-            setPhoneValue(testData.data.phone_num);
-            setAddress(testData.data.address);
-            setExplanation(testData.data.info);
-            setRule(testData.data.rule);
-            for(var i = 0; i < testData.data.tags.length; i++){
-                checkedItems.push(testData.data.tags[i].code);
-            }
-            if(testData.data.peak_season_list.length > 0){
-                for(var i =0; i<testData.data.peak_season_list.length; i++){
-                    if(i === 0){
-                        inputItems[0].content.peakSeasonStart = testData.data.peak_season_list[i].peak_season_start.split('T')[0]
-                        inputItems[0].content.peakSeasonEnd = testData.data.peak_season_list[i].peak_season_end.split('T')[0]
-                    }else{
-                        inputItems.push({
-                            id : i,
-                            content : {
-                               peakSeasonStart : testData.data.peak_season_list[i].peak_season_start.split('T')[0],
-                               peakSeasonEnd : testData.data.peak_season_list[i].peak_season_end.split('T')[0]
-                           }
-                            
-                           })
-                    }
-                }
-            }
-            for(var i=0; i<testData.data.image.length; i++){
-                showImages.push(testData.data.image[i])
-            }
+            setHotelKoreaName(testData.data.name)
             
         }
     },[])
@@ -441,7 +437,7 @@ const HotelInfo = () => {
                     <Form.Label htmlFor="hotelEnglishName">호텔등급<span className="essential">*필수선택</span></Form.Label>
                     <Form.Select onChange={handleChangeSelect}
                         ref={el => (inputRef.current[2] = el)}
-                        name="호텔둥급" 
+                        name="호텔둥급"
                     >
                         <option value="">호텔 등급을 선택해주세요.</option>
                         <option value="1">1성</option>
@@ -536,7 +532,6 @@ const HotelInfo = () => {
                             onChange={checkedList}
                             name="hotelService"
                             type='checkbox'
-                            checked={checkedItems.includes(item.value) ? true : false}
                             />
                             
                         ))}
