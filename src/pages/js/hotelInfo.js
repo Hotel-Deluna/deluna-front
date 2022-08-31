@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useRef,useState, useEffect } from "react";
+import React, { useRef,useState, useEffect, useCallback } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
 import {Form, Container, Row, Col, InputGroup, Button, Card, CardGroup } from 'react-bootstrap';
@@ -21,7 +21,7 @@ const HotelInfo = () => {
     
     const testData = {
         "data": {
-          "address": "서울특별시 강남구",
+          "address": "경기 평택시 서정동 879-1",
           "eng_name": "Shilla Stay",
           "hotel_num": 12345,
           "image": ["https://cdn.pixabay.com/photo/2016/12/13/05/15/puppy-1903313_1280.jpg",
@@ -30,13 +30,9 @@ const HotelInfo = () => {
           "name": "신라스테이",
           "peak_season_list": [
             {
-              "peak_season_end": "2022-08-30T11:41:22.889Z",
-              "peak_season_start": "2022-08-30T11:41:22.889Z"
-            },
-            {
-                "peak_season_end": "2022-09-30T11:41:22.889Z",
-                "peak_season_start": "2022-09-30T11:41:22.889Z"
-              }
+                "peak_season_end": "2022-08-31T06:04:21.431Z",
+                "peak_season_start": "2022-08-31T06:04:21.431Z"
+            }
           ],
           "phone_num": "0212345678",
           "rule": "대욕장 이용안내...",
@@ -63,8 +59,8 @@ const HotelInfo = () => {
         const input = {
             id : nextId.current,
             content : {
-                peakSeasonStart : '',
-                peakSeasonEnd : ''
+                peakSeasonStart : undefined,
+                peakSeasonEnd : undefined
             }
         }
         setInputItems([...inputItems, input]);
@@ -95,35 +91,40 @@ const HotelInfo = () => {
 
     /* 2022.08.28 (한예지) : 이미지 등록 관련*/
     const [showImages, setShowImages] = useState([]);
-    
+    const [imagesFile, setImagesFile] = useState([]);
     /* 2022.08.28 (한예지) : 이미지 등록 */
     const handleAddImages = (e) => {
         const imageList = e.target.files;
         let imageUrlList = [...showImages];
+        let imageFileList = [...imagesFile]
         for(let i = 0; i < imageList.length; i++){
             const currentImgeUrl = URL.createObjectURL(imageList[i]);
             imageUrlList.push(currentImgeUrl)
+            imageFileList.push(imageList[i])
         }
-
         //10장 이상일 경우 예외처리
         if(imageUrlList.length > 10){
             alert("이미지는 최대 10장까지 등록이 가능합니다.")
             imageUrlList = imageUrlList.slice(0,10);
+            imageFileList = imageFileList.slice(0,10);
         }
-       
+        
+        setImagesFile(imageFileList)
         setShowImages(imageUrlList)
     }
 
-    /* 2022.08.28 (한예지) : 이미지 개별삭제&일괄삭제 관련*/
-    const handleDeleteImage = (type,id) => {
-        if(type === 'All'){ //일괄삭제
-            const showImages = []
-            setShowImages(showImages);
-        }else{ //개별삭제
-            setShowImages(showImages.filter((_, index) => index !== id));
-        }
+    /* 2022.08.28 (한예지) : 이미지 개별삭제&일괄삭제 관련*/   
+    const handleDeleteImage = (id) => {
+        setShowImages(showImages.filter((_, index) => index !== id));
+        setImagesFile(imagesFile.filter((_, index) => index !== id));
     };
-    
+
+    const handleDeleteAllImage = useCallback(() =>{
+        setShowImages([]);
+        setImagesFile([]);
+        
+    },[])
+
     const changeClick = (idx) => {
         imgIdx = idx
     }
@@ -131,25 +132,36 @@ const HotelInfo = () => {
     /* 2022.08.29(한예지) : 이미지 변경 */
     const changeImg = (e) => {
         const changeImgeUrl = URL.createObjectURL(e.target.files[0]);
+        const changeImageFile = e.target.files[0];
         showImages[imgIdx] = changeImgeUrl;
+        imagesFile[imgIdx] = changeImageFile;
         setShowImages(showImages.map(index =>
             index === imgIdx ? {...index, changeImgeUrl} : index)
-            )
+        )
+        setImagesFile(imagesFile.map(index =>
+            index === imgIdx ? {...index, changeImageFile} : index)
+        )
     }
-
+    /* 2022.08.28 (한예지) : 주소찾기 버튼에따라 다음 주소창 true, false */
+    const [click, setClick] = useState(false);
+    const clickFucn = () => {
+        setClick(current => !current)
+    }
     /* 2022.08.28 (한예지) : 다음 주소 api 사용 */
     const [address, setAddress] = useState('');
     const handleComplete = (data) => {
         let addr = '';
+        console.log(data.userSelectedType)
         if (data.userSelectedType === "R") {
           alert("지번 주소만 선택 가능합니다.")
-          click = true;
+          setClick(true)
         }else{
             addr = data.jibunAddress
+            setClick(false)
             setAddress(addr)
             HandleCoord(addr)
         }
-        
+        console.log(click)
       };
 
     const [addrCoord, setAddrCoord] = useState({x:'', y:'',region_1depth:'',region_2depth:''}) //2022.08.29 (한예지) : 주소 -> 좌표변환 하는 영역 kakaoMap 사용
@@ -163,8 +175,8 @@ const HotelInfo = () => {
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
                 setAddrCoord(
                     {
-                        x : result[0].x,
-                        y : result[0].y,
+                        x : coords.La,
+                        y : coords.Ma,
                         region_1depth : result[0].road_address.region_1depth_name,
                         region_2depth : result[0].road_address.region_2depth_name
                     }
@@ -172,11 +184,7 @@ const HotelInfo = () => {
             } 
         });    
     };
-      /* 2022.08.28 (한예지) : 주소찾기 버튼에따라 다음 주소창 true, false */
-    const [click, setClick] = useState(false);
-    const clickFucn = () => {
-        setClick(current => !current)
-    }
+
 
     const [phoneValue, setPhoneValue] = useState(''); //2022.08.29 (한예지) : 호텔 전화번호 input 상태     
     /* 2022.08.29 (한예지) : 호텔 전화번호 input 정규식 체크 */
@@ -281,24 +289,20 @@ const HotelInfo = () => {
 
     /*2022.08.29 (한예지) : 체크박스 선택시 핸들링*/
     const checkedList = (e) => {
-        console.log(e.target.checked) 
         setIsChecked(!isChecked);
         handleChecked(e.target.value, e.target.checked)
     }
 
     /*2022.08.28 (한예지) : 체크박스 true, false에 따라 선택된항목 추가 or 삭제*/
     const handleChecked = (val, isChecked) => {
-        console.log(val)
-        console.log(isChecked)
         if(isChecked){
-            
-            checkedItems.push(val);
+            checkedItems.push(parseInt(val));
             setCheckedItems(checkedItems)
-            
-        }else if(!isChecked && checkedItems.includes(val)){
-            checkedItems.splice(checkedItems.indexOf(val), 1);
+        }else if(!isChecked && checkedItems.includes(parseInt(val))){
+            checkedItems.splice(checkedItems.indexOf(parseInt(val)), 1);
             setCheckedItems(checkedItems)
         }
+        
     }
     const inputRef = useRef([])
     const searchAddrRef = useRef();
@@ -318,7 +322,51 @@ const HotelInfo = () => {
 	    }
         
         //axios 연동 부분
-        if(!joinBoolean){
+        if(joinBoolean){
+            const frm = new FormData();
+            const peak_season_list = []
+            for(var i = 0; i<inputItems.length; i++){
+                if(inputItems[i].content.peakSeasonStart && inputItems[i].content.peakSeasonEnd){
+                    
+                    peak_season_list.push({
+                        peak_season_end : inputItems[i].content.peakSeasonStart,
+                        peak_season_start : inputItems[i].content.peakSeasonEnd
+                    })
+                }
+            }
+            /* 필수 데이터 */
+            frm.append("address",address);
+            frm.append("eng_name",hotelEnglishName);
+            frm.append("location",[addrCoord.x,addrCoord.y]);
+            frm.append("name",hotelKoreaName);
+            frm.append("phone_num",phoneValue);
+            frm.append("region_1depth_name",addrCoord.region_1depth);
+            frm.append("region_2depth_name",addrCoord.region_2depth);
+            frm.append("info",explanation);
+            frm.append("rule",rule);
+            frm.append("star",selected);
+
+           
+            if(type == 'registration'){
+                 //성수기 값이 있을 경우에만
+                if(peak_season_list.length > 0){
+                    frm.append("peak_season_list",peak_season_list)
+                }
+                //태그 값이 있을 경우에만
+                if(checkedItems.length > 0){
+                    frm.append("tags",checkedItems)
+                }
+
+                //이미지가 있을 경우
+                if(imagesFile.length > 0){
+                    frm.append("image",imagesFile)
+                }
+            }else{
+                frm.append("peak_season_list",peak_season_list)
+                frm.append("tags",checkedItems)
+                frm.append("image",imagesFile)
+            }
+            
             /*axios({
                 url: 'http://43.200.222.222:8080/hotel/register',
                 method: 'post',
@@ -350,21 +398,9 @@ const HotelInfo = () => {
                 })
                 .catch(function(error) {
                 });*/
+                
         }
-        console.log("호텔명 한글 : "+hotelKoreaName)
-        console.log("호텔명 영어 : "+hotelEnglishName)
-        console.log("호텔등급 : "+selected)
-        console.log("호텔 전화번호 : "+phoneValue)
-        console.log("호텔 주소 : "+address)
-        //console.log("좌표 x: "+addrCoord.x)
-        //console.log("좌표 y: "+addrCoord.y)
-        //console.log("1depth : "+addrCoord.region_1depth)
-        //console.log("2depth : "+addrCoord.region_2depth)
-        console.log("호텔 설명 : "+explanation)
-        console.log("호텔 규정 : " + rule)
-        console.log("부가시설 : "+checkedItems)
-        console.log("성수기 : "+ JSON.stringify(inputItems))
-        console.log("이미지 : "+showImages)
+        
         
 
     }
@@ -376,11 +412,14 @@ const HotelInfo = () => {
             setSelected(testData.data.star);
             setPhoneValue(testData.data.phone_num);
             setAddress(testData.data.address);
+            HandleCoord(testData.data.address)
             setExplanation(testData.data.info);
             setRule(testData.data.rule);
             for(var i = 0; i < testData.data.tags.length; i++){
                 checkedItems.push(testData.data.tags[i].code);
+                
             }
+            
             if(testData.data.peak_season_list.length > 0){
                 for(var i =0; i<testData.data.peak_season_list.length; i++){
                     if(i === 0){
@@ -399,11 +438,21 @@ const HotelInfo = () => {
                 }
             }
             for(var i=0; i<testData.data.image.length; i++){
-                showImages.push(testData.data.image[i])
+                showImages.push(testData.data.image[i]);
+                convertURLtoFile(testData.data.image[i]).then(result => imagesFile.push(result))
             }
-            
         }
     },[])
+
+    //서버에서 받은 이미지 URL을 File로 변환
+    const convertURLtoFile = async (url) => {
+        const response = await fetch(url);
+        const data = await response.blob();
+        const ext = url.split(".").pop(); // url 구조에 맞게 수정할 것
+        const filename = url.split("/").pop(); // url 구조에 맞게 수정할 것
+        const metadata = { type: `image/${ext}` };
+        return new File([data], filename, metadata);
+      };
     return (
         <>
         <Container className="containerMain">
@@ -441,7 +490,7 @@ const HotelInfo = () => {
                     <Form.Label htmlFor="hotelEnglishName">호텔등급<span className="essential">*필수선택</span></Form.Label>
                     <Form.Select onChange={handleChangeSelect}
                         ref={el => (inputRef.current[2] = el)}
-                        name="호텔둥급" 
+                        name="호텔둥급" value={selected}
                     >
                         <option value="">호텔 등급을 선택해주세요.</option>
                         <option value="1">1성</option>
@@ -483,17 +532,19 @@ const HotelInfo = () => {
                     <Button variant="outline-secondary" id="hotelAddressSearch" onClick={clickFucn}
                         ref={searchAddrRef}
                     >
-                        주소찾기
+                        주소찾기{click.toString()}
                     </Button>
                 </InputGroup>
                 </Col>
             </Row>
-            {click &&
+            {
+                click ?
                 <Row>
                     <Col>
                         <DaumPostcode onComplete={handleComplete}/>
                     </Col>
                 </Row>
+                : null
             }
             <Row className="inputBox">
                 <Col>
@@ -536,7 +587,7 @@ const HotelInfo = () => {
                             onChange={checkedList}
                             name="hotelService"
                             type='checkbox'
-                            checked={checkedItems.includes(item.value) ? true : false}
+                            checked={checkedItems.indexOf(item.value) !== -1 ? true : false}
                             />
                             
                         ))}
@@ -597,7 +648,7 @@ const HotelInfo = () => {
                             <input type="file" id="change-file" style={{display:"none"}}
                             accept=".png, .jpg" onChange={changeImg}
                             />
-                            <Button variant="danger" size="sm" onClick={() => handleDeleteImage('Individual',idx)}>삭제하기</Button>{' '}
+                            <Button variant="danger" size="sm" onClick={() => handleDeleteImage(idx)}>삭제하기</Button>{' '}
                         </Col>
                          
                     ))}
@@ -611,7 +662,7 @@ const HotelInfo = () => {
                     <input type="file" id="input-file" style={{display:"none"}}
                         onChange={handleAddImages} multiple accept=".png, .jpg"
                     />
-                    <Button variant="outline-danger" size="sm" onClick={() => handleDeleteImage('All')}>
+                    <Button variant="outline-danger" size="sm" onClick={() => handleDeleteAllImage()}>
                         일괄삭제
                     </Button>
                 </div>
@@ -621,7 +672,7 @@ const HotelInfo = () => {
                 <Col>
                     <div className="finalButton">
                             <Button variant="primary" size="sm" onClick={()=> handleHotelRegis()}>
-                                등록
+                                { type === 'modfiy' ? '수정' : '등록' }
                             </Button>
                             {/* 2022.08.28 (한예지) : 취소 누를 시 main 이동 */}
                             <Link to = "/">
