@@ -13,6 +13,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 /* 2022.08.28 (한예지) : daum api 사용을 위한 import */
 import DaumPostcode from 'react-daum-postcode';
 
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from 'axios';
 
 const HotelInfo = () => {
@@ -453,6 +454,31 @@ const HotelInfo = () => {
         const metadata = { type: `image/${ext}` };
         return new File([data], filename, metadata);
       };
+      const [todos, setTodos] = useState([
+        { id: "1", title: "공부" },
+        { id: "2", title: "헬스" },
+        { id: "3", title: "독서" },
+        { id: "4", title: "산책" },
+        { id: "5", title: "요리" }
+      ]);
+      const handleChange = (result) => {
+        if (!result.destination) return;
+        console.log(result);
+        const items = [...todos];
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+    
+        setTodos(items);
+      };
+      /*const handleChange = (result) => {
+        if (!result.destination) return;
+        console.log(result);
+        const items = [...showImages];
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        setShowImages(items);
+        
+      };*/
     return (
         <>
         <Container className="containerMain">
@@ -632,10 +658,35 @@ const HotelInfo = () => {
             <Row className="inputBox">
                 <Form.Label htmlFor="imgInset">호텔 이미지 (최대 10장까지 업로드가 가능합니다.)</Form.Label>
                 <Row xs={1} md={5} className="g-4">
-                    
+                <DragDropContext onDragEnd={handleChange}>
+      <Droppable droppableId="todos">
+        {(provided) => (
+          <ul
+            className="todos"
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            {todos.map(({ id, title }, index) => (
+              <Draggable key={id} draggableId={id} index={index}>
+                {(provided) => (
+                  <li
+                    ref={provided.innerRef}
+                    {...provided.dragHandleProps}
+                    {...provided.draggableProps}
+                  >
+                    {title}
+                  </li>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
+    </DragDropContext>
                     {showImages.map((image, idx) => (
                         
-                        <Col key={idx}>
+                        <Col key={idx} draggable>
                             <Card border="dark">
                                 <Card.Img variant="top" src={image} />
                             </Card>
