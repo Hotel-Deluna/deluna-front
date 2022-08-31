@@ -8,13 +8,20 @@ import {Form, Container, Row, Col, InputGroup, Button, Card, CardGroup } from 'r
 import "../css/hotelInfo.scss";
 
 /* 2022.08.28 (한예지) : react 링크이동(페이지이동) */
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 /* 2022.08.28 (한예지) : daum api 사용을 위한 import */
 import DaumPostcode from 'react-daum-postcode';
 
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from 'axios';
+
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {
+    GridContextProvider,
+    GridDropZone,
+    GridItem,
+    swap
+  } from "react-grid-dnd";
 
 const HotelInfo = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -368,7 +375,7 @@ const HotelInfo = () => {
                 frm.append("image",imagesFile)
             }
             
-            /*axios({
+            axios({
                 url: 'http://43.200.222.222:8080/hotel/register',
                 method: 'post',
                 headers: {
@@ -398,7 +405,8 @@ const HotelInfo = () => {
                     console.log(response)
                 })
                 .catch(function(error) {
-                });*/
+                });
+            
                 
         }
         
@@ -440,6 +448,7 @@ const HotelInfo = () => {
             }
             for(var i=0; i<testData.data.image.length; i++){
                 showImages.push(testData.data.image[i]);
+                //console.log(i)
                 convertURLtoFile(testData.data.image[i]).then(result => imagesFile.push(result))
             }
         }
@@ -453,32 +462,22 @@ const HotelInfo = () => {
         const filename = url.split("/").pop(); // url 구조에 맞게 수정할 것
         const metadata = { type: `image/${ext}` };
         return new File([data], filename, metadata);
-      };
-      const [todos, setTodos] = useState([
-        { id: "1", title: "공부" },
-        { id: "2", title: "헬스" },
-        { id: "3", title: "독서" },
-        { id: "4", title: "산책" },
-        { id: "5", title: "요리" }
-      ]);
+    };
+
       const handleChange = (result) => {
         if (!result.destination) return;
-        console.log(result);
-        const items = [...todos];
-        const [reorderedItem] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, reorderedItem);
-    
-        setTodos(items);
-      };
-      /*const handleChange = (result) => {
-        if (!result.destination) return;
-        console.log(result);
         const items = [...showImages];
-        const [reorderedItem] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, reorderedItem);
-        setShowImages(items);
+        const files = [...imagesFile];
         
-      };*/
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        const [fileItem] = files.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        files.splice(result.destination.index, 0,fileItem)
+        setImagesFile(files)
+        setShowImages(items);
+        console.log(imagesFile)
+        console.log(showImages)
+      };
     return (
         <>
         <Container className="containerMain">
@@ -659,50 +658,44 @@ const HotelInfo = () => {
                 <Form.Label htmlFor="imgInset">호텔 이미지 (최대 10장까지 업로드가 가능합니다.)</Form.Label>
                 <Row xs={1} md={5} className="g-4">
                 <DragDropContext onDragEnd={handleChange}>
-      <Droppable droppableId="todos">
-        {(provided) => (
-          <ul
-            className="todos"
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            {todos.map(({ id, title }, index) => (
-              <Draggable key={id} draggableId={id} index={index}>
-                {(provided) => (
-                  <li
-                    ref={provided.innerRef}
-                    {...provided.dragHandleProps}
-                    {...provided.draggableProps}
-                  >
-                    {title}
-                  </li>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </ul>
-        )}
-      </Droppable>
-    </DragDropContext>
-                    {showImages.map((image, idx) => (
-                        
-                        <Col key={idx} draggable>
-                            <Card border="dark">
-                                <Card.Img variant="top" src={image} />
-                            </Card>
-                            <Button variant="primary" size="sm">
-                            <label htmlFor="change-file" onClick={() => changeClick(idx)}>
-                                변경하기
-                            </label>
-                            
-                            </Button>
-                            <input type="file" id="change-file" style={{display:"none"}}
-                            accept=".png, .jpg" onChange={changeImg}
-                            />
-                            <Button variant="danger" size="sm" onClick={() => handleDeleteImage(idx)}>삭제하기</Button>{' '}
-                        </Col>
-                         
-                    ))}
+                    <Droppable droppableId="showImage">
+                    {(provided) => (
+                        <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        >
+                            {showImages.map((image, idx) => (
+                                <Draggable key={image} draggableId={image} index={idx}>
+                                {(provided) => 
+                                <Col
+                                ref={provided.innerRef}
+                                {...provided.dragHandleProps}
+                                {...provided.draggableProps}
+                                >
+                                    
+                                    <Card border="dark">
+                                        <Card.Img variant="top" src={image} />
+                                    </Card>
+                                    <Button variant="primary" size="sm">
+                                    <label htmlFor="change-file" onClick={() => changeClick(idx)}>
+                                        변경하기
+                                    </label>
+                                    
+                                    </Button>
+                                    <input type="file" id="change-file" style={{display:"none"}}
+                                    accept=".png, .jpg" onChange={changeImg}
+                                    />
+                                    <Button variant="danger" size="sm" onClick={() => handleDeleteImage(idx)}>삭제하기</Button>{' '}
+                                </Col>
+                                }
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                            </div>
+                    )}
+                    
+                    </Droppable>
+                </DragDropContext>
                 </Row>
                  <div className="buttonGroup">
                     <Button variant="outline-primary" size="sm">
