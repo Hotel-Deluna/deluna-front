@@ -1,8 +1,6 @@
-import React from "react";
-import AuthLayout from "./authLayout";
-import UserJoinForm from "./userJoinForm";
-import ManagerJoinForm from "./managerJoinForm";
-import { Tabs, Tab} from "react-bootstrap";
+import React, {useState} from "react";
+import AuthLayout from "../../components/auth/authLayout";
+import AuthTabs from "../../components/auth/authTabs";
 /**
  * 
  * 
@@ -12,18 +10,19 @@ import { Tabs, Tab} from "react-bootstrap";
  */
 
 const JoinPage = () => {
+    const [value, setValue] = useState('user');
+    function handleClick(firstTab) {
+        if(firstTab !== value){
+            if(firstTab === 'user'){
+                setValue('user');
+            }else{
+                setValue('partner');
+            }
+        }
+    }
     return (
         <AuthLayout>
-            <Tabs defaultActiveKey="userJoin" id="justify-tab-example" className="mb-3" justify>
-                        {/* 고객 회원가입 */}
-                        <Tab eventKey="userJoin" title="고객 회원가입">
-                                <UserJoinForm />
-                        </Tab> 
-                        {/* 사업자 회원가입 */}
-                        <Tab eventKey="partnerJoin" title="사업자 회원가입">
-                                <ManagerJoinForm />
-                        </Tab>
-                    </Tabs>
+            <AuthTabs type={'join'} />
         </AuthLayout>
     );
 }

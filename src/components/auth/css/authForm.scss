@@ -1,0 +1,33 @@
+
+//회원가입 form container
+.joinContainer{
+    padding: 0;
+    text-align: left;
+}
+.join_btns{
+    margin-bottom: 1.5rem;
+}
+.err_input{
+    background-color: red;
+}
+.err_text{
+    color: red;
+}
+.timerDiv{
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1rem;
+}
+.timerDiv > p{
+    padding: 0;
+    text-align: right;
+    color: red;
+}
+
+.visibility_visible{
+    visibility: visible;
+}
+
+.visibility_hidden{
+    visibility: hidden;
+}

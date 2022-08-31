@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Alert, Form}  from "react-bootstrap";
-import "../css/joinCheckbox.scss";
+import "./css/joinCheckbox.scss";
 /**
  * 
  * 체크박스
