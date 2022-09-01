@@ -76,7 +76,11 @@ const HotelInfo = () => {
     }
 
     /* 2022.08.28 (한예지) : 이미지 등록 관련*/
-    const [showImages, setShowImages] = useState([]);
+    const [showImages, setShowImages] = useState(
+        {
+            list : []
+        }
+    );
     const [imagesFile, setImagesFile] = useState([]);
     /* 2022.08.28 (한예지) : 이미지 등록 */
     const handleAddImages = (e) => {
@@ -358,7 +362,6 @@ const HotelInfo = () => {
                 console.log(value);
               
               }
-            
             /*axios.post('http://43.200.222.222:8080/hotel/register', frm, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -426,8 +429,8 @@ const HotelInfo = () => {
                     
                     for(var i=0; i<res.data.data.image.length; i++){
 
-                        showImages.push(res.data.data.image[i]);
-                        convertURLtoFile(res.data.data.image[i]).then(result => imagesFile.push(result))
+                        showImages.list.push({id : i, url:res.data.data.image[i]});
+                        //convertURLtoFile(res.data.data.image[i]).then(result => imagesFile.push(result))
                     }
                 }
                 //testData = res.data.data
@@ -445,11 +448,12 @@ const HotelInfo = () => {
         return new File([data], filename, metadata);
     };
     
-      const onChange = (sourceId, sourceIndex, targetIndex) => {
-        const imgUrl = swap(showImages, sourceIndex, targetIndex);
-        const imgFile = swap(imagesFile, sourceIndex, targetIndex);
-        setShowImages(imgUrl);
-        setImagesFile(imgFile);
+      function onChange(sourceId, sourceIndex, targetIndex) {
+        const result = swap(showImages[sourceId], sourceIndex, targetIndex);
+        return setShowImages({
+        ...showImages,
+        [sourceId]: result
+        });
       }
       
     return (
@@ -632,20 +636,19 @@ const HotelInfo = () => {
                 <Form.Label htmlFor="imgInset">호텔 이미지 (최대 10장까지 업로드가 가능합니다.)</Form.Label>
                 
                 <GridContextProvider onChange={onChange}>
-                    <Row xs={1} md={5} className="g-4">
+                <Row xs={1} md={5} className="g-4">
                     <GridDropZone
-                    className="dropzone"
-                    style={showImages.length === 0 ? {height:"auto"} : showImages.length < 6 ? {height:"150px"} : {height:"300px"}}
-                    id="showImages"
+                    
+                    id="list"
                     boxesPerRow={5}
                     rowHeight={150}
                     >
-                    {showImages.map((item,idx) => (
-                        <GridItem key={item}>
+                    {showImages.list.map((item,idx) => (
+                        <GridItem key={item.url}>
                         <div className="grid-item">
                             <Col>
                                 <Card border="dark">
-                                    <Card.Img variant="top" src={item} style={{pointerEvents:"none"}}/>
+                                    <Card.Img src={item.url} style={{pointerEvents:"none"}}/>
                                 </Card>
                                 <Button variant="primary" size="sm">
                                 <label htmlFor="change-file" onClick={() => changeClick(idx)}>
@@ -662,9 +665,8 @@ const HotelInfo = () => {
                         </GridItem>
                     ))}
                     </GridDropZone>
-                    </Row>
+                </Row>
                 </GridContextProvider>
-                
                  <div className="buttonGroup">
                     <Button variant="outline-primary" size="sm">
                     <label htmlFor="input-file">
