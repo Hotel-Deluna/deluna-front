@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
 import { Container, Row, Col, Button, Form, FloatingLabel} from "react-bootstrap";
 import {useDispatch, useSelector} from 'react-redux';
 import JoinCheck from "./joinCheckbox";
@@ -10,9 +11,17 @@ import "./css/authForm.scss";
  * 
  */
 
-const AuthForm = ({type, form, onChange, isEmail, isPwd, isPwdCheck}) => {
+const AuthForm = ({ type }) => {
     //const text = textMap[type];
-    console.log('form',type[0], type[1]);
+    console.log('form', type[1]);
+    const dispatch = useDispatch();
+    const { form } = useSelector(({ auth }) => ({
+        form: auth.managerJoin
+    }));
+    // input 변경 핸들러
+    const onChange = e => {
+        const {value, name} = e.target;
+    }
     const [email, setEmail] = useState(''); //email
     const [pwd, setPwd] = useState('');// 비밀번호
     const [pwdCheck, setPwdCheck] = useState(''); //비밀번호확인
@@ -35,9 +44,9 @@ const AuthForm = ({type, form, onChange, isEmail, isPwd, isPwdCheck}) => {
     //const [managerChecked, setManagerChecked] = useState(false); // 사업자인증번호확인 - false : 미확인 ,true : 인증완료
     const [timerCheck, setTimerCheck] = useState(false); //타이머 false - 타이머 돌지않음 true - 타이머 시작
 
-    // const [isEmail, setIsEmail] = useState(false); // email - @ 포함되어 있으면 true
-    //const [isPwd, setIsPwd] = useState(false); // 비밀번호 coment - 영문대소문자,숫자,특수문자 포함 8~15자리 이내 시 true
-    // const [isPwdCheck, setIsPwdCheck] = useState(false); // 비밀번호 확인 - 비밀번호와 동일하다면 true;
+    const [isEmail, setIsEmail] = useState(false); // email - @ 포함되어 있으면 true
+    const [isPwd, setIsPwd] = useState(false); // 비밀번호 coment - 영문대소문자,숫자,특수문자 포함 8~15자리 이내 시 true
+    const [isPwdCheck, setIsPwdCheck] = useState(false); // 비밀번호 확인 - 비밀번호와 동일하다면 true;
     const [isName, setIsname] = useState(false); // 대표자성명 - 1자이상 17글자 이내
     const [isBusinessNum, setIsBusinessNum] = useState(false); // 사업자번호 12자리
     const [isOpenDate, setIsOpenDate] = useState(false); // 개업일자 yyyy.mm.dd 인지
@@ -51,53 +60,53 @@ const AuthForm = ({type, form, onChange, isEmail, isPwd, isPwdCheck}) => {
     
     
     //이메일 input onChange
-    // const handleEmailChange= (e) => {
-    //     if(emailChecked === 1){
-    //         setEmailChecked(0);
-    //     }
-    //     setEmail(e.target.value);
-    //     let mailCheck = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i; //정규식 @포함
-    //     if(mailCheck.test(e.target.value)){//정규식 통과 시
-    //         setIsEmail(true);
-    //         setEmailMsg('중복 확인 버튼을 눌러주세요.');
-    //     }else{
-    //         if(isEmail) setIsEmail(false);
-    //         setEmailMsg('email 형식(@)에 맞게 작성해주세요.(공백없이)');
-    //     }
-    // }
+    const handleEmailChange= (e) => {
+        if(emailChecked === 1){
+            setEmailChecked(0);
+        }
+        setEmail(e.target.value);
+        let mailCheck = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i; //정규식 @포함
+        if(mailCheck.test(e.target.value)){//정규식 통과 시
+            setIsEmail(true);
+            setEmailMsg('중복 확인 버튼을 눌러주세요.');
+        }else{
+            if(isEmail) setIsEmail(false);
+            setEmailMsg('email 형식(@)에 맞게 작성해주세요.(공백없이)');
+        }
+    }
     //email 중복확인 버튼 시
     const handdleEmailCheckClick = (e) =>{
         setEmailChecked(2);
         alert('중복확인완료');
 
     }
-    // //비밀번호 input onChange
-    // const handlePwdChange= (e) => {
-    //     setPwd(e.target.value);
-    //     setPwdCheck('');//비밀번호확인 초기화
-    //     if(isPwdCheck) setIsPwdCheck(false); //비밀번호 확인 유효성 초기화
-    //     let pwCheck = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/; //비밀번호정규식 - 8~15자리이내
-    //     if(pwCheck.test(e.target.value)){//정규식 통과 시
-    //         setIsPwd(true);
-    //         setPwdMsg('해당 비밀번호 사용 가능합니다.');
-    //     }else {
-    //         if(isPwd) {
-    //             setIsPwd(false);
-    //         }
-    //         setPwdMsg('숫자, 영문 대or소문자, 특수문자 포함 8자리 이상 15자리 이하로 입력해주세요.');
-    //     }
-    // }
+    //비밀번호 input onChange
+    const handlePwdChange= (e) => {
+        setPwd(e.target.value);
+        setPwdCheck('');//비밀번호확인 초기화
+        if(isPwdCheck) setIsPwdCheck(false); //비밀번호 확인 유효성 초기화
+        let pwCheck = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/; //비밀번호정규식 - 8~15자리이내
+        if(pwCheck.test(e.target.value)){//정규식 통과 시
+            setIsPwd(true);
+            setPwdMsg('해당 비밀번호 사용 가능합니다.');
+        }else {
+            if(isPwd) {
+                setIsPwd(false);
+            }
+            setPwdMsg('숫자, 영문 대or소문자, 특수문자 포함 8자리 이상 15자리 이하로 입력해주세요.');
+        }
+    }
     //비밀번호 확인 input onChange
-    // const handlePwdCheckChange = (e) => {
-    //     setPwdCheck(e.target.value);
-    //     if(pwd === e.target.value){
-    //         setIsPwdCheck(true);
-    //         setPwdCheckMsg('입력하신 비밀번호와 일치합니다.');
-    //     }else{
-    //         if(isPwdCheck) setIsPwdCheck(false);
-    //         setPwdCheckMsg('입력하신 비밀번호와 일치하지않습니다.');
-    //     }
-    // }
+    const handlePwdCheckChange = (e) => {
+        setPwdCheck(e.target.value);
+        if(pwd === e.target.value){
+            setIsPwdCheck(true);
+            setPwdCheckMsg('비밀번호와 일치합니다.');
+        }else{
+            if(isPwdCheck) setIsPwdCheck(false);
+            setPwdCheckMsg('비밀번호와 일치하지않습니다.');
+        }
+    }
     //사업자 명 input onChange
     const handleNameChange = (e) => {
         let nameCheck = /^[ㄱ-ㅎㅏ-ㅣ가-힣]{1,}$/;
@@ -219,17 +228,14 @@ const AuthForm = ({type, form, onChange, isEmail, isPwd, isPwdCheck}) => {
             <Col sm = {9}>
                 {/* 이메일 input창 */}
                 <FloatingLabel controlId="email" label="이메일 주소">
-                    <Form.Control type="email" name="email" value={form.eamil} className={emailChecked === 1 ? 'is-invalid' : ''} onChange={onChange} disabled={(isEmail === true) && (emailChecked === 2) ? true : false} />
-                    {type[0] === 'join' &&
-                        (<Form.Text  id="managerEmailHelpBlock">{!isEmail  ? 'email 형식(@)으로 작성해주세요.(공백없이)': '중복 확인 버튼을 눌러주세요.'}</Form.Text>)
-                    }
-                    
+                    <Form.Control type="email" name="email" value={email} className={emailChecked === 1 ? 'is-invalid' : ''} onChange={handleEmailChange} disabled={(isEmail === true) && (emailChecked === 2) ? true : false} />
+                    <Form.Text className={isEmail && email !== '' ? 'err_text' : ''} id="managerEmailHelpBlock">{email === '' ? 'email 형식(@)으로 작성해주세요.(공백없이)': emailMsg}</Form.Text>
                 </FloatingLabel>
             </Col>
             {/* 이메일 중복확인 버튼 */}
             <Col sm = {3}>
                 <div className="d-grid join_btns">
-                   <Button variant="outline-primary" onClick={handdleEmailCheckClick} size="lg" disabled={(!isEmail) || (emailChecked === 2) ? true : false}>
+                   <Button variant="outline-primary" onClick={handdleEmailCheckClick} size="lg" disabled={(isEmail === false) || (emailChecked === 2) ? true : false}>
                         {emailChecked === 2 ? '확인완료' : '중복확인'}
                     </Button>
                 </div>
@@ -239,11 +245,8 @@ const AuthForm = ({type, form, onChange, isEmail, isPwd, isPwdCheck}) => {
             {/* 비밀번호 input창 */}
             <Col sm = {12}>
                 <FloatingLabel controlId="pwd" label="비밀번호">
-                    <Form.Control type="password" value={form.pwd} name="pwd" onChange={onChange} maxLength={15}/>
-                    {type[0] === 'join' &&
-                        (<Form.Text id="managerPasswordHelpBlock">{!isPwd ? '숫자, 영문 대or소문자, 특수문자 포함 8자리 이상 15자리 이하로 입력해주세요.' :'해당 비밀번호 사용 가능합니다.' }</Form.Text>)
-                    }
-                    
+                    <Form.Control type="password" name="pwd" value={pwd} onChange={handlePwdChange} maxLength={15}/>
+                    <Form.Text id="managerPasswordHelpBlock">{pwd === '' ? '숫자, 영문 대or소문자, 특수문자 포함 8자리 이상 15자리 이하로 입력해주세요.' :pwdMsg }</Form.Text>
                 </FloatingLabel>
             </Col>
         </Row>
@@ -251,11 +254,8 @@ const AuthForm = ({type, form, onChange, isEmail, isPwd, isPwdCheck}) => {
             {/* 비밀번호확인 input창 */}
             <Col sm = {12}>
                 <FloatingLabel controlId="pwdcheck" label="비밀번호확인">
-                    <Form.Control type="password" name="pwdcheck" value={isPwd ? form.pwdcheck : ''} onChange={onChange} maxLength={15} disabled={!isPwd ? true : false} />
-                    {isPwd && 
-                        (<Form.Text id="managerPasswordCheckHelpBlock">{isPwdCheck === '' ? '입력하신 비밀번호와 일치합니다.' : '입력하신 비밀번호와 동일하게 입력해주세요.'}</Form.Text>)
-                    }
-                    
+                    <Form.Control type="password" name="pwdcheck" value={pwdCheck} onChange={handlePwdCheckChange} maxLength={15} disabled= {(isPwd === false) ? true : false} />
+                    <Form.Text id="managerPasswordCheckHelpBlock">{pwdCheck === '' ? '위 입력한 비밀번호와 동일하게 입력하세요.' : pwdCheckMsg}</Form.Text>
                 </FloatingLabel>
             </Col>
         </Row>

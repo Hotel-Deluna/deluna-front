@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 import AuthLayout from "../../components/auth/authLayout";
-import AuthTabs from "../../components/auth/authTabs";
+import AuthTabs from "../../containers/auth/authTabs";
 /**
  * 
  * 
@@ -10,16 +10,6 @@ import AuthTabs from "../../components/auth/authTabs";
  */
 
 const JoinPage = () => {
-    const [value, setValue] = useState('user');
-    function handleClick(firstTab) {
-        if(firstTab !== value){
-            if(firstTab === 'user'){
-                setValue('user');
-            }else{
-                setValue('partner');
-            }
-        }
-    }
     return (
         <AuthLayout>
             <AuthTabs type={'join'} />

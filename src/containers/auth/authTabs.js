@@ -1,11 +1,12 @@
 import React, {useState} from "react";
-import AuthForm from "./authForm";
+import PartnerJoinForm from "../../components/auth/partnerJoinForm";
+import UserJoinForm from "../../components/auth/userJoinForm";
 import {Tabs, Tab } from "react-bootstrap";
 
 /**
  * 
  * 
- * 회원가입 페이지
+ * 사업자, 고객 tabs 컴포넌트
  * 
  * 
  */
@@ -30,23 +31,12 @@ const AuthTabs = ({ type }) => {
         <Tabs defaultActiveKey={value} onSelect={(firstTab) => handleClick(`${firstTab}`)} id="justify-tab-example" className="mb-3" justify>
             {/* 고객 회원가입 */}
             <Tab eventKey="user" title={'고객 '+title}>
-                {type === 'join'
-                    ?
-                    value === 'user' ? <AuthForm type={'user'} pageType={'join'} /> : <></>
-                    :
-                    //로그인
-                    <></>
-                }
+                {value === 'user' ? <UserJoinForm /> : <></>}
                 
             </Tab> 
                 {/* 사업자 회원가입 */}
             <Tab eventKey="partner" title={'사업자 '+title}>
-            {type === 'join'
-                ?
-                value === 'partner' ? <AuthForm type={'patner'} pageType={'join'} /> : <></>
-                :
-                <></>
-            }
+                {value === 'partner' ? <PartnerJoinForm  /> : <></>}
             </Tab>
         </Tabs>
     );
