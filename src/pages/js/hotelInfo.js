@@ -2,7 +2,7 @@
 import React, { useRef,useState, useEffect, useCallback } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
-import {Form, Container, Row, Col, InputGroup, Button, Card, CardGroup } from 'react-bootstrap';
+import {Form, Container, Row, Col, InputGroup, Button, Card, CardGroup, OffcanvasHeader } from 'react-bootstrap';
 
 /* 2022.08.28 (한예지) : 호텔등록&수정 UI를 위한 scss파일 */
 import "../css/hotelInfo.scss";
@@ -15,13 +15,12 @@ import DaumPostcode from 'react-daum-postcode';
 
 import axios from 'axios';
 
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import moment from "moment";
 import {
     GridContextProvider,
     GridDropZone,
     GridItem,
-    swap,
-    move
+    swap
   } from "react-grid-dnd";
 
 const HotelInfo = () => {
@@ -137,7 +136,6 @@ const HotelInfo = () => {
     const [address, setAddress] = useState('');
     const handleComplete = (data) => {
         let addr = '';
-        console.log(data.userSelectedType)
         if (data.userSelectedType === "R") {
           alert("지번 주소만 선택 가능합니다.")
           setClick(true)
@@ -147,7 +145,6 @@ const HotelInfo = () => {
             setAddress(addr)
             HandleCoord(addr)
         }
-        console.log(click)
       };
 
     const [addrCoord, setAddrCoord] = useState({x:'', y:'',region_1depth:'',region_2depth:''}) //2022.08.29 (한예지) : 주소 -> 좌표변환 하는 영역 kakaoMap 사용
@@ -315,8 +312,8 @@ const HotelInfo = () => {
                 if(inputItems[i].content.peakSeasonStart && inputItems[i].content.peakSeasonEnd){
                     
                     peak_season_list.push({
-                        peak_season_end : inputItems[i].content.peakSeasonStart,
-                        peak_season_start : inputItems[i].content.peakSeasonEnd
+                        peak_season_start : moment(inputItems[i].content.peakSeasonStart).format("YYYY/MM/DD"),
+                        peak_season_end : moment(inputItems[i].content.peakSeasonEnd).format("YYYY/MM/DD")
                     })
                 }
             }
@@ -331,12 +328,14 @@ const HotelInfo = () => {
             frm.append("info",explanation);
             frm.append("rule",rule);
             frm.append("star",selected);
+            
 
-
-            if(type == 'registration'){
+            if(type === 'registration'){
                  //성수기 값이 있을 경우에만
                 if(peak_season_list.length > 0){
-                    frm.append("peak_season_list",peak_season_list)
+                    //frm.append("peak_season_list",peak_season_list)
+                    frm.append("peak_season_list[0].peak_season_start",peak_season_list[0].peak_season_start)
+                    frm.append("peak_season_list[0].peak_season_end",peak_season_list[0].peak_season_end)
                 }
                 //태그 값이 있을 경우에만
                 if(checkedItems.length > 0){
@@ -345,33 +344,38 @@ const HotelInfo = () => {
 
                 //이미지가 있을 경우
                 if(imagesFile.length > 0){
-                    frm.append("image",imagesFile)
+                    for(var i=0; i<imagesFile.length; i++){
+                        frm.append("image",imagesFile[i])
+                    }
+                    
                 }
             }else{
                 frm.append("peak_season_list",peak_season_list)
                 frm.append("tags",checkedItems)
-                frm.append("image",imagesFile)
+                for(var i=0; i<imagesFile.length; i++){
+                    frm.append("image",imagesFile[i])
+                }
+            }
+            let axiosURL = ""
+            if(type === 'registration'){
+                axiosURL = "http://43.200.222.222:8080/hotel/register";
+            }else{
+                axiosURL = "http://43.200.222.222:8080/hotel/edit";
             }
             
-            for (var value of frm.values()) {
-
-                console.log(value);
-              
-              }
-            
-            /*axios.post('http://43.200.222.222:8080/hotel/register', frm, {
+            axios.post(axiosURL, frm, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization' : '1234',
             }
             })
             .then((response) => {
-                console.log(response)
+                //console.log(response)
             // 응답 처리
             })
             .catch((error) => {
             // 예외 처리
-            })*/
+            })
                 
             }
         
@@ -401,7 +405,6 @@ const HotelInfo = () => {
                     setExplanation(res.data.data.info);
                     setRule(res.data.data.rule);
                     for(var i = 0; i < res.data.data.tags.length; i++){
-                        console.log(res.data.data.tags.length)
                         checkedItems.push(res.data.data.tags[i].code);
                         
                     }
