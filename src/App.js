@@ -5,6 +5,7 @@ import Main from "./pages/js/main"
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HotelInfo from "./pages/js/hotelInfo";
 import JoinPage from './pages/js/joinPage';
+import HotelMain from "./pages/js/hotelMain";
 function App() {
   return (
     <div className="App">
@@ -14,6 +15,7 @@ function App() {
 					<Route path="/" element={<Main />}></Route>
           <Route path="/auth/hotel/info/" element={<HotelInfo />}></Route>
           <Route path="/auth/join" element={<JoinPage />}></Route>
+          <Route path="/auth/hotel/main" element={<HotelMain />}></Route>
 				</Routes>
         <Footer />
 			</BrowserRouter>
