@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
-import {Form, Col } from 'react-bootstrap';
+import {Form, Col, Row } from 'react-bootstrap';
 
 /* 2022.08.28 (한예지) : 호텔등록&수정 UI를 위한 scss파일 */
 import "./css/hotelInfo.scss";
 
-const HotelService = () => {
+const HotelService = (prop) => {
     //2022.08.29 (한예지) : 호텔 부가시설/서비스 UI뿌려주기 위한 데이터
     const checkbox = [
         {
@@ -75,15 +75,18 @@ const HotelService = () => {
         if(isChecked){
             checkedItems.push(parseInt(val));
             setCheckedItems(checkedItems)
+            prop.getCheckedItems(checkedItems)
         }else if(!isChecked && checkedItems.includes(parseInt(val))){
             checkedItems.splice(checkedItems.indexOf(parseInt(val)), 1);
             setCheckedItems(checkedItems)
+            prop.getCheckedItems(checkedItems)
         }
         
     }
 
     return (
         <>
+            <Row className="inputBox">
             <Col>
                 <Form.Label htmlFor="hotelService">부가시설/서비스</Form.Label>
                 <div className="mb3">
@@ -102,6 +105,7 @@ const HotelService = () => {
                     ))}
                 </div>
             </Col>
+            </Row>
         </>
     );
 };

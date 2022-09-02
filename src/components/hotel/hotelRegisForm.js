@@ -13,15 +13,12 @@ import { Link, useSearchParams } from 'react-router-dom'
 /* 2022.08.28 (한예지) : daum api 사용을 위한 import */
 import DaumPostcode from 'react-daum-postcode';
 
-
-import HotelService from "./hotelService";
-import ImagesUpload from "./imagesUpload";
 import axios from 'axios';
 
 import moment from "moment";
 
-const HotelInfo = () => {
-    const [searchParams, setSearchParams] = useSearchParams();     //query 값 (registration:등록, modfiy : 수정)
+const HotelInfo = (prop) => {
+    console.log(prop)
     const [hotelKoreaName, setHotelKoreaName] = useState('');     // 호텔명(한글)
     const [hotelEnglishName, setHotelEnglishName] = useState(''); // 호텔명(영문)
     const [selected, setSelected] = useState('');                //호텔등급
@@ -42,7 +39,6 @@ const HotelInfo = () => {
     ])
     const [explanation, setExplanation] = useState('');    //호텔 설명
     const [rule, setRule] = useState('');                   //호텔규정
-    const type = searchParams.get('type') //registration:등록, modfiy : 수정
 
     /* 2022.08.29 (한예지) : 호텔명 영문 input 정규식 체크 */
     const handleHotelEnglishName = (e) => {
@@ -159,10 +155,9 @@ const HotelInfo = () => {
     }
     const inputRef = useRef([])
     const searchAddrRef = useRef();
-      
+    
     return (
         <>
-        <Container className="containerMain">
             <Row className="containerTitle">
                 <Col>
                     호텔등록
@@ -281,9 +276,6 @@ const HotelInfo = () => {
                 </Col>
             </Row>
             <Row className="inputBox">
-                <HotelService />
-            </Row>
-            <Row className="inputBox">
                 <Form.Label htmlFor="hotelPeakSeason">성수기</Form.Label>
                 <Col>
                     {inputItems.map((item, index) => (
@@ -318,10 +310,6 @@ const HotelInfo = () => {
                     </div>
                 </Col>
             </Row>
-            <Row className="inputBox">
-                <ImagesUpload />
-            </Row>
-        </Container>
         </>
     );
 };

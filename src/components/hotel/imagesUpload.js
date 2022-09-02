@@ -12,9 +12,12 @@ import {
     GridItem,
     swap
   } from "react-grid-dnd";
-  
-const ImagesUpload = () => {
+
+//자식 컴포넌트
+const ImagesUpload = (props) => {
+    //props : 부모 컴포넌트에서 전달받은 최대 이미지 등록 갯수 ( 호텔 : 10, 객실 : 5)
     let imgIdx = 0;
+
     /* 2022.08.28 (한예지) : 이미지 등록 관련*/
     const [showImages, setShowImages] = useState([]);
     const [imagesFile, setImagesFile] = useState([]);
@@ -29,14 +32,16 @@ const ImagesUpload = () => {
             imageFileList.push(imageList[i])
         }
         //10장 이상일 경우 예외처리
-        if(imageUrlList.length > 10){
-            alert("이미지는 최대 10장까지 등록이 가능합니다.")
-            imageUrlList = imageUrlList.slice(0,10);
-            imageFileList = imageFileList.slice(0,10);
+        if(imageUrlList.length > props.value){
+            alert("이미지는 최대 "+props.value+"장까지 등록이 가능합니다.")
+            imageUrlList = imageUrlList.slice(0,props.value);
+            imageFileList = imageFileList.slice(0,props.value);
         }
         
         setImagesFile(imageFileList)
         setShowImages(imageUrlList)
+
+       props.getImagesFile(imagesFile);
     }
 
     /* 2022.08.28 (한예지) : 이미지 개별삭제&일괄삭제 관련*/ 
@@ -44,12 +49,14 @@ const ImagesUpload = () => {
     const handleDeleteImage = (id) => {
         setShowImages(showImages.filter((_, index) => index !== id));
         setImagesFile(imagesFile.filter((_, index) => index !== id));
+        props.getImagesFile(imagesFile);
     };
     //이미지 일괄삭제
     const handleDeleteAllImage = useCallback(() =>{
         setShowImages([]);
         setImagesFile([]);
         
+        props.getImagesFile(imagesFile);
     },[])
 
     const changeClick = (idx) => {
@@ -68,6 +75,7 @@ const ImagesUpload = () => {
         setImagesFile(imagesFile.map(index =>
             index === imgIdx ? {...index, changeImageFile} : index)
         )
+        props.getImagesFile(imagesFile)
     }
 
     //서버에서 받은 이미지 URL을 File로 변환
@@ -85,11 +93,13 @@ const ImagesUpload = () => {
         const imgFile = swap(imagesFile, sourceIndex, targetIndex);
         setShowImages(imgUrl);
         setImagesFile(imgFile);
+        props.getImagesFile(imagesFile)
     }
 
     return (
         <>
-            <Form.Label htmlFor="imgInset">호텔 이미지 (최대 10장까지 업로드가 가능합니다.)</Form.Label>
+            <Row className="inputBox">
+                <Form.Label htmlFor="imgInset">호텔 이미지 (최대 {props.value}장까지 업로드가 가능합니다.)</Form.Label>
                 <GridContextProvider onChange={onChange}>
                     <Row xs={1} md={5} className="g-4">
                     <GridDropZone
@@ -137,6 +147,7 @@ const ImagesUpload = () => {
                         일괄삭제
                     </Button>
                 </div>
+            </Row>
         </>
     );
 };
