@@ -1,7 +1,9 @@
 import { createAction, handleActions } from "redux-actions";
 import produce from "immer";
 import { takeLatest } from 'redux-saga/effects';
-import createRequestSaga, {createRequestActionTypes} from "../lib/createRequestSaga";
+import createRequestSaga, {
+    createRequestActionTypes,
+} from "../lib/createRequestSaga";
 import * as authJoinAPI from '../lib/api/authJoin';
 
 const CHANGE_FIELD = 'auth/join/CHANGE_FIELD';
@@ -41,7 +43,7 @@ export function* authJoinSaga() {
 
 const initialState = {
   partner: {
-        business_num : '',
+    business_num : '',
         email : '',
         name : '',
         opening_day : '',

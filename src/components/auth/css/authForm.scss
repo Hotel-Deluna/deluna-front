@@ -13,6 +13,12 @@
 .err_text{
     color: red;
 }
+
+.border_text{
+    font-weight : bold;
+    color: darkblue;
+}
+
 .timerDiv{
     position: absolute;
     bottom: 1.5rem;
@@ -30,4 +36,8 @@
 
 .visibility_hidden{
     visibility: hidden;
+}
+
+.d-grid > button{
+    height: 3rem;
 }
