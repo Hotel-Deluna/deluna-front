@@ -36,6 +36,9 @@ const Header = () => {
                         <Nav.Link href="#userLogin" onClick={() => GetClick("user")}>
                             고객 로그인
                         </Nav.Link>
+                        <Nav.Link href="/auth/login">
+                            로그인
+                        </Nav.Link>
                         <Nav.Link href="/auth/join">
                             회원가입
                         </Nav.Link>
