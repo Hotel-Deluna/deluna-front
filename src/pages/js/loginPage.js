@@ -12,7 +12,6 @@ import AuthTabs from "../../containers/auth/authTabs";
 const LoginPage = () => {
     return (
         <AuthLayout>
-            <joinPage />
             <AuthTabs type={'login'} />
         </AuthLayout>
     );
