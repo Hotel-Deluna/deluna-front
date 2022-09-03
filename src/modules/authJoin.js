@@ -2,7 +2,7 @@ import { createAction, handleActions } from "redux-actions";
 import produce from "immer";
 import { takeLatest } from 'redux-saga/effects';
 import createRequestSaga, {createRequestActionTypes} from "../lib/createRequestSaga";
-import * as authJoinAPI from '../lib/api/authJoin';
+import * as authAPI from '../lib/api/auth';
 
 const CHANGE_FIELD = 'auth/join/CHANGE_FIELD';
 const INITIALIZE_FORM = 'auth/join/INITIALIZE_FORM';
@@ -32,8 +32,8 @@ export const user = createAction(USER, ({ email, name, password, phone_auth_num,
 }));
 
 // saga 생성
-const partnerSaga = createRequestSaga(PARTNER, authJoinAPI.partner);
-const userSaga = createRequestSaga(USER, authJoinAPI.user);
+const partnerSaga = createRequestSaga(PARTNER, authAPI.partnerJoin);
+const userSaga = createRequestSaga(USER, authAPI.userJoin);
 export function* authJoinSaga() {
   yield takeLatest(PARTNER, partnerSaga);
   yield takeLatest(USER, userSaga);
@@ -70,30 +70,30 @@ const authJoin = handleActions(
       [form]: initialState[form],
       authJoinError: null // 폼 전환 시 회원 인증 에러 초기화
     }),
-    // 회원가입 성공
+    // 사업자회원가입 성공
     [PARTNER_SUCCESS]: (state, { payload: authJoin }) => ({
       ...state,
       authJoinError: null,
       authJoin
     }),
-    // 회원가입 실패
+    // 사업자회원가입 실패
     [PARTNER_FAILURE]: (state, { payload: error }) => ({
       ...state,
       authJoinError: error
     }),
-    // 로그인 성공
+    // 고객회원가입 성공
     [USER_SUCCESS]: (state, { payload: authJoin }) => ({
       ...state,
       authJoinError: null,
       authJoin
     }),
-    // 로그인 실패
+    // 고객회원가입 실패
     [USER_FAILURE]: (state, { payload: error }) => ({
       ...state,
       authJoinError: error
     })
   },
-  initialState
+  initialState,
 );
 
 export default authJoin;

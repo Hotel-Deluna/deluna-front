@@ -10,8 +10,20 @@ import "../../components/auth/css/authForm.scss";
  * 
  * 관리자 회원가입 컨테이너(동작제어)
  * 
- */
+ */  
 const PartnerJoin = () => {
+    const FormContainer = {
+        textAlign : 'left',
+        paddingTop : '2rem',
+        paddingBottom : '2rem',
+        paddingRight : '3rem',
+        paddingLeft : '3rem',
+        borderLeft : '1px solid #dee2e6',
+        borderRight : '1px solid #dee2e6',
+        borderBottom: '1px solid #dee2e6',
+        boxShadow: 'rgb(0 0 0 / 20%) 0px 1px 6px 2px',
+        backgroundColor: 'rgb(255, 255, 255)'
+    };
     const [Email, setEmail] = useState(''); //email
     const [requestEmail, setRequestEmail] = useState('');//회원가입시 보내는 이메일
     const [pwd, setPwd] = useState('');// 비밀번호
@@ -467,7 +479,7 @@ const PartnerJoin = () => {
         setIsCheckbox2(boolean);
       }
     return(
-        <Container className="joinContainer" fluid="xxl">
+        <Container style={FormContainer} fluid="xxl">
         <Row className="align-items-center mb-3">
             <Col sm = {9}>
                 {/* 이메일 input창 */}

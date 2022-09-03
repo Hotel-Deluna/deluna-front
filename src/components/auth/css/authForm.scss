@@ -1,14 +1,19 @@
-
+//form container
+.formContainer{
+    text-align: left;
+    padding-top: 1.5rem;
+    border-left: 1px solid ghostwhite;
+    border-Right: 1px solid ghostwhite;
+    border-bottom: 1px solid ghostwhite;
+}
 //회원가입 form container
 .joinContainer{
-    padding: 0;
     text-align: left;
+    padding-top: 1.5rem;
 }
 .join_btns{
     margin-bottom: 1.5rem;
 }
-// 로그인 form container
-.loginContainer
 .err_input{
     background-color: red;
 }

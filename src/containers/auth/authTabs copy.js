@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import PartnerJoin from "./partnerJoin";
 import UserJoin from "./userJoin";
-//import JoinForm from "./joinForm";
 import Login from "./loginForm";
 import { initializeForm } from "../../modules/auth";
 import { useDispatch } from "react-redux";
@@ -30,18 +29,18 @@ const AuthTabs = ({ type }) => {
         }else{
             setValue('partner');
         }
-        dispatch(initializeForm(type));//버튼선택 시 폼 초기화
+        dispatch(initializeForm(type));//버튼선택 시 폼 초기화 
     
     }
     return (
         <Tabs defaultActiveKey={value} onSelect={(firstTab) => handleClick(`${firstTab}`)} id="justify-tab-example" justify>
         {/* 고객 tab */}
         <Tab eventKey="user" title={'고객 '+title}>
-            {type === 'login'  ? <Login type={value} /> : <UserJoin type={type} value={value} />}
+            {type === 'login'  ? <Login type={value} /> : <UserJoin />}
         </Tab> 
             {/* 사업자 tab */}
         <Tab eventKey="partner" title={'사업자 '+title}>
-            {type === 'login' ? <Login type={value}  /> : <PartnerJoin type={type} value={value} />}
+            {type === 'login' ? <Login type={value}  /> :<PartnerJoin  />}
         </Tab>
     </Tabs>
         

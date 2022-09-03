@@ -1,6 +1,6 @@
 import React from "react"
 import { Container, Row, Col} from "react-bootstrap";
-import "./css/authLayout.scss";
+
 
 /**
  * 
@@ -8,8 +8,12 @@ import "./css/authLayout.scss";
  */
 
 const AuthLayout = ({children}) => {
+    const mainCountainer ={
+        paddingTop: '3%',
+        paddingBottom: '5%',
+    }
     return(
-        <Container className="joinMainCountainer" fluid="xxl">
+        <Container className="joinMainCountainer" style={mainCountainer} fluid="xxl">
             <Row className="justify-content-md-center">
             <Col xs lg="3" />
             <Col lg="6" key={children}>
