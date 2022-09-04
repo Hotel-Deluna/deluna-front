@@ -1,75 +1,48 @@
 /*global kakao*/
-import React, { useRef,useState, useEffect, useCallback } from "react";
+import React, { useRef,useState, useEffect } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
-import {Form, Container, Row, Col, InputGroup, Button } from 'react-bootstrap';
+import {Form, Row, Col, InputGroup, Button } from 'react-bootstrap';
 
 /* 2022.08.28 (한예지) : 호텔등록&수정 UI를 위한 scss파일 */
 import "./css/hotelInfo.scss";
 
-/* 2022.08.28 (한예지) : react 링크이동(페이지이동) */
-import { Link, useSearchParams } from 'react-router-dom'
-
 /* 2022.08.28 (한예지) : daum api 사용을 위한 import */
 import DaumPostcode from 'react-daum-postcode';
 
-import axios from 'axios';
+/* redux 영역 */
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as hotelInfoActions from '../../modules/hotelInfoReducer';
 
-import moment from "moment";
+const HotelRegisForm = (props) => {
+    //2022.09.04 (한예지) : hotelInfoReducer에 있는 key값
+    const { address, eng_name, info, ko_name,peak_season_list, phone_num, rule, star } = props.form.toJS();
+    const { HotelInfoActions } = props;
+    console.log(HotelInfoActions)
+    //주소찾기 버튼
+    const [click, setClick] = useState(false); 
 
-const HotelInfo = (prop) => {
-    console.log(prop)
-    const [hotelKoreaName, setHotelKoreaName] = useState('');     // 호텔명(한글)
-    const [hotelEnglishName, setHotelEnglishName] = useState(''); // 호텔명(영문)
-    const [selected, setSelected] = useState('');                //호텔등급
-    const [phoneValue, setPhoneValue] = useState('');           //호텔전화번호
-    const [click, setClick] = useState(false);                  //주소찾기 버튼
-    const [address, setAddress] = useState('');                 //주소
-    //kakaoMap : 주소 값으로 위도(x),경도(y), 지역 구분정보(region_1depth_name) - 특별시,도 정보, 지역 구분정보(region_2depth_name) - 시,구 정보
-    const [addrCoord, setAddrCoord] = useState({x:'', y:'',region_1depth:'',region_2depth:''}) 
-    //성수기 
-    const [inputItems, setInputItems] = useState([
-        {
-            id : 0,
-            content : {
-                peakSeasonStart : '',
-                peakSeasonEnd : ''
+    /* 2022.09.04 (한예지) : hotelInfoReducer값 updete */
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        if(name === 'ko_name'){
+            const regex = /^[가-힣|ㄱ-ㅎ\s]+$/
+            if(regex.test(value)) HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'}); 
+        }else if(name === 'eng_name'){
+            const regex = /^[a-z|A-Z\s]+$/;
+            if(regex.test(value)) HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'}); 
+        }else if(name === 'phone_num'){
+            const regex = /^[0-9\b -]{0,12}$/;
+            if(regex.test(value)){
+                const reValue = value.replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-");
+                HotelInfoActions.changeInput({name:name,value:reValue,form : 'REGISTER'});
             }
-        }
-    ])
-    const [explanation, setExplanation] = useState('');    //호텔 설명
-    const [rule, setRule] = useState('');                   //호텔규정
-
-    /* 2022.08.29 (한예지) : 호텔명 영문 input 정규식 체크 */
-    const handleHotelEnglishName = (e) => {
-        const regex = /^[a-z|A-Z\s]+$/;
-        if(regex.test(e.target.value)){
-            setHotelEnglishName(e.target.value)
-        }
+        }else{
+            HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'});
+        }  
     }
 
-    /* 2022.08.29 (한예지) : 호텔명 한글 input 정규식 체크 */
-    const handleHotelKoreaName = (e) => {
-        const regex = /^[가-힣|ㄱ-ㅎ\s]+$/;
-        if(regex.test(e.target.value)){
-            setHotelKoreaName(e.target.value)
-        }
-    }
-
-    /* 2022.08.29 (한예지) : 호텔등급 seleted */
-    const handleChangeSelect = (e) => {
-        setSelected(e.target.value);
-    }
-
-    /* 2022.08.29 (한예지) : 호텔 전화번호 input 정규식 체크 */
-    const handlePhone = (e) => {
-        const regex = /^[0-9\b -]{0,12}$/; // 하이픈 포함 최대 12자리
-        if(regex.test(e.target.value)){
-            setPhoneValue(e.target.value.replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") ); 
-        }
-    }
-
-    /* 2022.08.28 (한예지) : 주소찾기 버튼에따라 다음 주소창 true, false */
     const clickFucn = () => {
         setClick(current => !current)
     }
@@ -78,14 +51,11 @@ const HotelInfo = (prop) => {
         let addr = '';
         if (data.userSelectedType === "R") {
           alert("지번 주소만 선택 가능합니다.")
-          setClick(true)
         }else{
-            addr = data.jibunAddress
-            setClick(false)
-            setAddress(addr)
-            HandleCoord(addr)
+            HotelInfoActions.changeInput({name:"address",value:data.jibunAddress,form : 'REGISTER'}); 
+            HandleCoord(data.jibunAddress)
         }
-      };
+    };
     //2022.08.29 (한예지) : 주소 -> 좌표변환 하는 영역 kakaoMap 사용
     const HandleCoord = (addr) =>{
         // 주소-좌표 변환 객체를 생성
@@ -95,27 +65,12 @@ const HotelInfo = (prop) => {
             // 정상적으로 검색이 완료됐으면 
             if (status === kakao.maps.services.Status.OK) {
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                setAddrCoord(
-                    {
-                        x : coords.La,
-                        y : coords.Ma,
-                        region_1depth : result[0].road_address.region_1depth_name,
-                        region_2depth : result[0].road_address.region_2depth_name
-                    }
-                )
+                HotelInfoActions.changeInput({name:"location",value:[coords.La,coords.Ma],form : 'REGISTER'});
+                HotelInfoActions.changeInput({name:"region_1depth",value:result[0].road_address.region_1depth_name,form : 'REGISTER'});
+                HotelInfoActions.changeInput({name:"region_2depth",value:result[0].road_address.region_2depth_name,form : 'REGISTER'});
             } 
         });    
     };
-
-    /* 2022.08.29 (한예지) : 호텔 설명 */
-    const handleExplanation = (e) => {
-        setExplanation(e.target.value)
-    }
-
-    /* 2022.08.29 (한예지) : 호텔 규정 */
-    const handleRule = (e) => {
-        setRule(e.target.value)
-    }
 
     //성수기 추가 시 다음 indexId
     const nextId = useRef(1);
@@ -123,36 +78,77 @@ const HotelInfo = (prop) => {
     const addInput = () => {
         const input = {
             id : nextId.current,
-            content : {
-                peakSeasonStart : undefined,
-                peakSeasonEnd : undefined
-            }
+            peak_season_start : '',
+            peak_season_end : ''
         }
-        setInputItems([...inputItems, input]);
+        //setInputItems([...inputItems, input]);
+        HotelInfoActions.changeInput({
+            name:"peak_season_list",
+            value:[...peak_season_list, input],
+            form : 'REGISTER'});
         nextId.current += 1; 
     }
 
+    const inputValueChange = (e, idx) => {
+        const {name, value} = e.target;
+        const inputItemsCopy = JSON.parse(JSON.stringify(peak_season_list));
+        if(name === 'peak_season_list.peak_season_start'){
+            inputItemsCopy[idx].peak_season_start = value
+        }else{
+            inputItemsCopy[idx].peak_season_end = value
+        }
+        HotelInfoActions.changeInput({name:"peak_season_list",value:inputItemsCopy,form : 'REGISTER'});
+    }
+
     /* 2022.08.28 (한예지) : 삭제하기 누를 시 Input 삭제 */
-    const deleteInput = (idx) =>{
-        const inputItemsCopy = JSON.parse(JSON.stringify(inputItems));
-        if(inputItems.length === 1){ //1개의 input남을 경우 date 초기화
-            inputItemsCopy[0].content.peakSeasonStart = ''
-            inputItemsCopy[0].content.peakSeasonEnd = ''
-            setInputItems(inputItemsCopy)
+   const deleteInput = (idx) =>{
+        const inputItemsCopy = JSON.parse(JSON.stringify(peak_season_list));
+        if(peak_season_list.length === 1){ //1개의 input남을 경우 date 초기화
+            inputItemsCopy[0].peak_season_start = ''
+            inputItemsCopy[0].peak_season_end = ''
+            HotelInfoActions.changeInput({name:"peak_season_list",value:inputItemsCopy,form : 'REGISTER'});
         }else{ //1개 이상의 input일 경우 삭제
-            setInputItems(inputItems.filter(item => item.id !== idx))
+            HotelInfoActions.changeInput({
+                name:"peak_season_list",
+                value: peak_season_list.filter(item => item.id !== idx),
+                form : 'REGISTER'
+            });
         }
+        
     }
-    /* 2022.08.28 (한예지) : input value 동적 처리 */
-    const inputValueChange = (e, idx, type) => {
-        const inputItemsCopy = JSON.parse(JSON.stringify(inputItems));
-        if(type === 'start'){ //성수기 시작값
-            inputItemsCopy[idx].content.peakSeasonStart = e.target.value
-        }else{ //성수기 종료값
-            inputItemsCopy[idx].content.peakSeasonEnd = e.target.value
+
+    /*useEffect(() => {
+        if(Object.keys(props.value).length !== 0){
+            setHotelKoreaName(props.value.name)
+            setHotelEnglishName(props.value.eng_name)
+            setSelected(props.value.star)
+            setPhoneValue(props.value.phone_num)
+            setAddress(props.value.address)
+            setExplanation(props.value.info)
+            setRule(props.value.rule)
+
+            if(props.value.peak_season_list.length > 0){
+                for(var i =0; i<props.value.peak_season_list.length; i++){
+                    if(i === 0){
+                        inputItems[0].content.peakSeasonStart = props.value.peak_season_list[i].peak_season_start.split('T')[0]
+                        inputItems[0].content.peakSeasonEnd = props.value.peak_season_list[i].peak_season_end.split('T')[0]
+                    }else{
+                        inputItems.push({
+                            id : i,
+                            content : {
+                            peakSeasonStart : props.value.peak_season_list[i].peak_season_start.split('T')[0],
+                            peakSeasonEnd : props.value.peak_season_list[i].peak_season_end.split('T')[0]
+                        }
+                            
+                        })
+                    }
+                }
+            }
+            
+
         }
-        setInputItems(inputItemsCopy)
-    }
+    },[props.value])*/
+
     const inputRef = useRef([])
     const searchAddrRef = useRef();
     
@@ -168,11 +164,11 @@ const HotelInfo = (prop) => {
                     <Form.Label htmlFor="hotelKoreaName">호텔명(한글)<span className="essential">*필수입력</span></Form.Label>
                     <Form.Control
                         type="text"
-                        name="호텔명 한글"
+                        name="ko_name"
                         placeholder="ex) 신라스테이 서초점"
                         maxLength={30}
-                        onChange={handleHotelKoreaName}
-                        value={hotelKoreaName}
+                        onChange={handleChange}
+                        value={ko_name}
                         ref={el => (inputRef.current[0] = el)}
                     />
                 </Col>
@@ -180,19 +176,19 @@ const HotelInfo = (prop) => {
                     <Form.Label htmlFor="hotelEnglishName">호텔명(영어)<span className="essential">*필수입력</span></Form.Label>
                     <Form.Control
                         type="text"
-                        name="호텔명 영어"
+                        name="eng_name"
                         placeholder="ex) Shilla Stay Seocho"
                         maxLength={30}
-                        onChange={handleHotelEnglishName}
-                        value={hotelEnglishName}
+                        onChange={handleChange}
+                        value={eng_name}
                         ref={el => (inputRef.current[1] = el)}
                     />
                 </Col>
                 <Col>
                     <Form.Label htmlFor="hotelEnglishName">호텔등급<span className="essential">*필수선택</span></Form.Label>
-                    <Form.Select onChange={handleChangeSelect}
+                    <Form.Select onChange={handleChange}
                         ref={el => (inputRef.current[2] = el)}
-                        name="호텔둥급" value={selected}
+                        name="star" value={star}
                     >
                         <option value="">호텔 등급을 선택해주세요.</option>
                         <option value="1">1성</option>
@@ -209,11 +205,11 @@ const HotelInfo = (prop) => {
                     <Form.Label htmlFor="hotelPhoneNumber">호텔 전화번호<span className="essential">*필수입력</span></Form.Label>
                     <Form.Control
                         type="text"
-                        name="호텔 전화번호"
+                        name="phone_num"
                         placeholder="ex)02-123-4567"
                         maxLength={12}
-                        onChange={handlePhone}
-                        value={phoneValue}
+                        onChange={handleChange}
+                        value={phone_num}
                         ref={el => (inputRef.current[3] = el)}
                     />
                 </Col>
@@ -225,7 +221,7 @@ const HotelInfo = (prop) => {
                 <InputGroup className="mb-3">
                     <Form.Control
                     type="text"
-                    name="호텔 주소"
+                    name="address"
                     placeholder="ex) 지번주소만 입력 가능합니다."
                     value = {address}
                     disabled
@@ -253,9 +249,9 @@ const HotelInfo = (prop) => {
                     <Form.Group className="mb-3" controlId="hotelExplanation">
                         <Form.Label>호텔 설명<span className="essential">*필수입력</span></Form.Label>
                         <Form.Control as="textarea" rows={5} maxLength={200}
-                        onChange={handleExplanation}
-                        value = {explanation}
-                        name="호텔 설명"
+                        onChange={handleChange}
+                        value = {info}
+                        name="info"
                         ref={el => (inputRef.current[5] = el)}
                         />
                     </Form.Group>
@@ -267,9 +263,9 @@ const HotelInfo = (prop) => {
                     <Form.Group className="mb-3" controlId="hotelRule">
                         <Form.Label>호텔 규정<span className="essential">*필수입력</span></Form.Label>
                         <Form.Control as="textarea" rows={5} maxLength={200}
-                        onChange={handleRule}
+                        onChange={handleChange}
                         value={rule}
-                        name="호텔 규정"
+                        name="rule"
                         ref={el => (inputRef.current[6] = el)}
                         />
                     </Form.Group>
@@ -278,20 +274,24 @@ const HotelInfo = (prop) => {
             <Row className="inputBox">
                 <Form.Label htmlFor="hotelPeakSeason">성수기</Form.Label>
                 <Col>
-                    {inputItems.map((item, index) => (
+                    {peak_season_list.map((item, index) => (
                         <InputGroup className="mb-3" key={index}>
                             <Form.Control
                                 type="date"
-                                id="hotelPeakSeasonEnd"
-                                value = {item.content.peakSeasonStart}
-                                onChange={e => inputValueChange(e, index, 'start')}
+                                name="peak_season_list.peak_season_start"
+                                id="peak_season_list"
+                                value = {item.peak_season_start}
+                                onChange={e => inputValueChange(e, index)}
+                                
                             />
                             <InputGroup.Text className="inputText">~</InputGroup.Text>
                             <Form.Control
                                 type="date"
-                                id="hotelPeakSeasonEnd"
-                                value = {item.content.peakSeasonEnd}
-                                onChange={e => inputValueChange(e, index, 'end')}
+                                id="peak_season_list"
+                                name="peak_season_list.peak_season_end"
+                                value = {item.peak_season_end}
+                                onChange={e => inputValueChange(e, index)}
+                                
                             />
                             <Button variant="danger" onClick={() => deleteInput(item.id)}>삭제하기</Button>{' '}
                         </InputGroup>
@@ -314,4 +314,11 @@ const HotelInfo = (prop) => {
     );
 };
 
-export default HotelInfo;
+export default connect(
+    (state) => ({
+        form: state.hotelInfoReducer.getIn(['REGISTER', 'form'])
+    }),
+    (dispatch) => ({
+        HotelInfoActions: bindActionCreators(hotelInfoActions, dispatch)
+    })
+)(HotelRegisForm);

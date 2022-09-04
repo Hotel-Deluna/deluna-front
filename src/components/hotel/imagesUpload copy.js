@@ -13,18 +13,15 @@ import {
     swap
   } from "react-grid-dnd";
 
-  /* redux 영역 */
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as hotelInfoActions from '../../modules/hotelInfoReducer';
-
 //자식 컴포넌트
 const ImagesUpload = (props) => {
     //props : 부모 컴포넌트에서 전달받은 최대 이미지 등록 갯수 ( 호텔 : 10, 객실 : 5)
     let imgIdx = 0;
-    const {imageFile, imageUrl} = props.form.toJS();
-    const { HotelInfoActions } = props;
-    /*useEffect(() => {
+
+    /* 2022.08.28 (한예지) : 이미지 등록 관련*/
+    const [showImages, setShowImages] = useState([]);
+    const [imagesFile, setImagesFile] = useState([]);
+    useEffect(() => {
         let propImageUrl = [];
         let propImageFile = [];
         if(props.hotelImages.length > 0){
@@ -36,13 +33,12 @@ const ImagesUpload = (props) => {
         setShowImages(propImageUrl);
         setImagesFile(propImageFile);
     },[props.hotelImages]);        
-    */
-
+    
     /* 2022.08.28 (한예지) : 이미지 등록 */
     const handleAddImages = (e) => {
         const imageList = e.target.files;
-        let imageUrlList = [...imageUrl];
-        let imageFileList = [...imageFile]
+        let imageUrlList = [...showImages];
+        let imageFileList = [...imagesFile]
         for(let i = 0; i < imageList.length; i++){
             const currentImgeUrl = URL.createObjectURL(imageList[i]);
             imageUrlList.push(currentImgeUrl)
@@ -54,21 +50,27 @@ const ImagesUpload = (props) => {
             imageUrlList = imageUrlList.slice(0,props.maxImagesNum);
             imageFileList = imageFileList.slice(0,props.maxImagesNum);
         }
-        HotelInfoActions.chnageImages({name:"imageUrl",value: imageUrlList,form : 'HOTEL_IMAGE'});
-        HotelInfoActions.chnageImages({name:"imageFile",value: imageFileList,form : 'HOTEL_IMAGE'});
+        
+        setImagesFile(imageFileList)
+        setShowImages(imageUrlList)
+
+       props.getImagesFile(imagesFile);
     }
 
     /* 2022.08.28 (한예지) : 이미지 개별삭제&일괄삭제 관련*/ 
     //이미지 개별삭제  
     const handleDeleteImage = (id) => {
-        HotelInfoActions.chnageImages({name:"imageUrl",value: imageUrl.filter((_, index) => index !== id),form : 'HOTEL_IMAGE'});
-        HotelInfoActions.chnageImages({name:"imageFile",value: imageFile.filter((_, index) => index !== id),form : 'HOTEL_IMAGE'});
+        setShowImages(showImages.filter((_, index) => index !== id));
+        setImagesFile(imagesFile.filter((_, index) => index !== id));
+        props.getImagesFile(imagesFile);
     };
     //이미지 일괄삭제
-    const handleDeleteAllImage = () =>{
-        HotelInfoActions.chnageImages({name:"imageUrl",value: [],form : 'HOTEL_IMAGE'});
-        HotelInfoActions.chnageImages({name:"imageFile",value: [],form : 'HOTEL_IMAGE'});
-    };
+    const handleDeleteAllImage = useCallback(() =>{
+        setShowImages([]);
+        setImagesFile([]);
+        
+        props.getImagesFile(imagesFile);
+    },[])
 
     const changeClick = (idx) => {
         imgIdx = idx
@@ -78,20 +80,15 @@ const ImagesUpload = (props) => {
     const changeImg = (e) => {
         const changeImgeUrl = URL.createObjectURL(e.target.files[0]);
         const changeImageFile = e.target.files[0];
-        imageUrl[imgIdx] = changeImgeUrl;
-        imageFile[imgIdx] = changeImageFile;
-        HotelInfoActions.chnageImages({
-            name:"imageUrl",
-            value: imageUrl.map(index =>
-                index === imgIdx ? {...index, changeImgeUrl} : index),
-            form : 'HOTEL_IMAGE'
-        });
-        HotelInfoActions.chnageImages({
-            name:"imageFile",
-            value: imageFile.map(index =>
-                index === imgIdx ? {...index, changeImageFile} : index),
-            form : 'HOTEL_IMAGE'
-        });
+        showImages[imgIdx] = changeImgeUrl;
+        imagesFile[imgIdx] = changeImageFile;
+        setShowImages(showImages.map(index =>
+            index === imgIdx ? {...index, changeImgeUrl} : index)
+        )
+        setImagesFile(imagesFile.map(index =>
+            index === imgIdx ? {...index, changeImageFile} : index)
+        )
+        props.getImagesFile(imagesFile)
     }
 
     //서버에서 받은 이미지 URL을 File로 변환
@@ -105,10 +102,11 @@ const ImagesUpload = (props) => {
     };
     //이미지 순서 바꾸기
     const onChange = (sourceId, sourceIndex, targetIndex) => {
-        const imgUrl = swap(imageUrl, sourceIndex, targetIndex);
-        const imgFile = swap(imageFile, sourceIndex, targetIndex);
-        HotelInfoActions.chnageImages({name:"imageUrl",value: imgUrl,form : 'HOTEL_IMAGE'});
-        HotelInfoActions.chnageImages({name:"imageFile",value: imgFile,form : 'HOTEL_IMAGE'});
+        const imgUrl = swap(showImages, sourceIndex, targetIndex);
+        const imgFile = swap(imagesFile, sourceIndex, targetIndex);
+        setShowImages(imgUrl);
+        setImagesFile(imgFile);
+        props.getImagesFile(imagesFile)
     }
 
     return (
@@ -119,13 +117,12 @@ const ImagesUpload = (props) => {
                     <Row xs={1} md={5} className="g-4">
                     <GridDropZone
                     className="dropzone"
-                    name =""
-                    style={imageUrl.length === 0 ? {height:"auto"} : imageUrl.length < 6 ? {height:"150px"} : {height:"300px"}}
+                    style={showImages.length === 0 ? {height:"auto"} : showImages.length < 6 ? {height:"150px"} : {height:"300px"}}
                     id="showImages"
                     boxesPerRow={5}
                     rowHeight={150}
                     >
-                    {imageUrl.map((item,idx) => (
+                    {showImages.map((item,idx) => (
                         <GridItem key={item}>
                         <div className="grid-item">
                             <Col>
@@ -168,11 +165,4 @@ const ImagesUpload = (props) => {
     );
 };
 
-export default connect(
-    (state) => ({
-        form: state.hotelInfoReducer.getIn(['HOTEL_IMAGE', 'form'])
-    }),
-    (dispatch) => ({
-        HotelInfoActions: bindActionCreators(hotelInfoActions, dispatch)
-    })
-)(ImagesUpload);
+export default ImagesUpload;

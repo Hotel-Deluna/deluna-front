@@ -6,14 +6,7 @@ import {Form, Col, Row } from 'react-bootstrap';
 /* 2022.08.28 (한예지) : 호텔등록&수정 UI를 위한 scss파일 */
 import "./css/hotelInfo.scss";
 
-/* redux 영역 */
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as hotelInfoActions from '../../modules/hotelInfoReducer';
-
 const HotelService = (props) => {
-    const tags = props.form.tags;
-    const { HotelInfoActions } = props;
     //2022.08.29 (한예지) : 호텔 부가시설/서비스 UI뿌려주기 위한 데이터
     const checkbox = [
         {
@@ -69,8 +62,9 @@ const HotelService = (props) => {
     ]
 
     const [isChecked, setIsChecked] = useState(false) // 2022.08.29 (한예지) : 체크박스 체크 여부
+    const [checkedItems, setCheckedItems] = useState([]); //2022.08.29 (한예지) : 체크된 항목
 
-    /*useEffect(() => {
+    useEffect(() => {
         let propChecked = [];
         if(props.value.length > 0){
             for(var i = 0; i < props.value.length; i++){
@@ -78,7 +72,7 @@ const HotelService = (props) => {
             }
         }
         setCheckedItems(propChecked)
-    },[props.value]);*/
+    },[props.value]);
 
     /*2022.08.29 (한예지) : 체크박스 선택시 핸들링*/
     const checkedList = (e) => {
@@ -89,14 +83,13 @@ const HotelService = (props) => {
     /*2022.08.28 (한예지) : 체크박스 true, false에 따라 선택된항목 추가 or 삭제*/
     const handleChecked = (val, isChecked) => {
         if(isChecked){
-            HotelInfoActions.changeCheckbox({name:"tags",value:[...tags, parseInt(val)],form : 'HOTEL_SERVICE'})
-
-        }else if(!isChecked && tags.includes(parseInt(val))){
-            HotelInfoActions.changeCheckbox({
-                name:"tags",
-                value: tags.filter(item => item !== parseInt(val)),
-                form : 'HOTEL_SERVICE'})
-            ;
+            checkedItems.push(parseInt(val));
+            setCheckedItems(checkedItems)
+            props.getCheckedItems(checkedItems)
+        }else if(!isChecked && checkedItems.includes(parseInt(val))){
+            checkedItems.splice(checkedItems.indexOf(parseInt(val)), 1);
+            setCheckedItems(checkedItems)
+            props.getCheckedItems(checkedItems)
         }
         
     }
@@ -114,9 +107,9 @@ const HotelService = (props) => {
                         label={item.name}
                         value={item.value}
                         onChange={checkedList}
-                        name="hotelServic1e"
+                        name="hotelService"
                         type='checkbox'
-                        checked={tags.indexOf(item.value) !== -1 ? true : false}
+                        checked={checkedItems.indexOf(item.value) !== -1 ? true : false}
                         />
                         
                     ))}
@@ -127,11 +120,4 @@ const HotelService = (props) => {
     );
 };
 
-export default connect(
-    (state) => ({
-        form: state.hotelInfoReducer.getIn(['HOTEL_SERVICE', 'form'])
-    }),
-    (dispatch) => ({
-        HotelInfoActions: bindActionCreators(hotelInfoActions, dispatch)
-    })
-)(HotelService);
+export default HotelService;
