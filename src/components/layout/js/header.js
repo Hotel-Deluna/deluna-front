@@ -114,7 +114,7 @@ const Header = () => {
                                     </Nav.Link>
                                 </Nav>
                             </Navbar.Collapse>
-                            <ModifyForm type={'1'} setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} />
+                            {isModalOpen && ( <ModifyForm type={'1'} setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} />)};
                         </Container>
                     </Navbar>
                     
