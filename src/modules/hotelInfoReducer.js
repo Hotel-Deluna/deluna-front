@@ -11,7 +11,7 @@ export const changeCheckbox = createAction(CHANGE_CHECKBOX);
 export const chnageImages = createAction(CHANGE_IMAGE);
 
 const initialState = Map({
-    //호텔등록 INPUT 
+    //호텔등록&수정 INPUT 
     REGISTER : ({
         form: Map({
             address: "",
@@ -44,7 +44,8 @@ const initialState = Map({
             imageFile : [],
             imageUrl : [],
         })
-}   )
+    }),
+
     
 });
 export default handleActions({
@@ -54,7 +55,6 @@ export default handleActions({
     },
     [CHANGE_CHECKBOX] : (state, action) => {
         const { form, name, value } = action.payload;
-        console.log(form)
         return state.setIn([form, 'form', name], value);
     },
     [CHANGE_IMAGE] : (state, action) => {

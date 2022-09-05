@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useRef,useState, useEffect } from "react";
+import React, { useRef,useState,forwardRef, useImperativeHandle } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
 import {Form, Row, Col, InputGroup, Button } from 'react-bootstrap';
@@ -15,13 +15,17 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as hotelInfoActions from '../../modules/hotelInfoReducer';
 
+import { useSearchParams } from 'react-router-dom'
+
 const HotelRegisForm = (props) => {
     //2022.09.04 (한예지) : hotelInfoReducer에 있는 key값
     const { address, eng_name, info, ko_name,peak_season_list, phone_num, rule, star } = props.form.toJS();
     const { HotelInfoActions } = props;
-    console.log(HotelInfoActions)
     //주소찾기 버튼
     const [click, setClick] = useState(false); 
+
+    //query 값 (registration:등록, modfiy : 수정)
+    const [searchParams, setSearchParams] = useSearchParams();
 
     /* 2022.09.04 (한예지) : hotelInfoReducer값 updete */
     const handleChange = (e) => {
@@ -40,7 +44,8 @@ const HotelRegisForm = (props) => {
             }
         }else{
             HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'});
-        }  
+        }
+          
     }
 
     const clickFucn = () => {
@@ -66,8 +71,8 @@ const HotelRegisForm = (props) => {
             if (status === kakao.maps.services.Status.OK) {
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
                 HotelInfoActions.changeInput({name:"location",value:[coords.La,coords.Ma],form : 'REGISTER'});
-                HotelInfoActions.changeInput({name:"region_1depth",value:result[0].road_address.region_1depth_name,form : 'REGISTER'});
-                HotelInfoActions.changeInput({name:"region_2depth",value:result[0].road_address.region_2depth_name,form : 'REGISTER'});
+                HotelInfoActions.changeInput({name:"region_1depth_name",value:result[0].road_address.region_1depth_name,form : 'REGISTER'});
+                HotelInfoActions.changeInput({name:"region_2depth_name",value:result[0].road_address.region_2depth_name,form : 'REGISTER'});
             } 
         });    
     };
@@ -117,46 +122,32 @@ const HotelRegisForm = (props) => {
         
     }
 
-    /*useEffect(() => {
-        if(Object.keys(props.value).length !== 0){
-            setHotelKoreaName(props.value.name)
-            setHotelEnglishName(props.value.eng_name)
-            setSelected(props.value.star)
-            setPhoneValue(props.value.phone_num)
-            setAddress(props.value.address)
-            setExplanation(props.value.info)
-            setRule(props.value.rule)
-
-            if(props.value.peak_season_list.length > 0){
-                for(var i =0; i<props.value.peak_season_list.length; i++){
-                    if(i === 0){
-                        inputItems[0].content.peakSeasonStart = props.value.peak_season_list[i].peak_season_start.split('T')[0]
-                        inputItems[0].content.peakSeasonEnd = props.value.peak_season_list[i].peak_season_end.split('T')[0]
-                    }else{
-                        inputItems.push({
-                            id : i,
-                            content : {
-                            peakSeasonStart : props.value.peak_season_list[i].peak_season_start.split('T')[0],
-                            peakSeasonEnd : props.value.peak_season_list[i].peak_season_end.split('T')[0]
-                        }
-                            
-                        })
-                    }
-                }
-            }
-            
-
-        }
-    },[props.value])*/
-
     const inputRef = useRef([])
     const searchAddrRef = useRef();
+    /*const handleInput = () =>{
+        let joinBoolean = true;
+        for(let i = 0; i<inputRef.current.length; i++){
+            if(!inputRef.current[i].value || inputRef.current[i].value === ''){
+                
+                if(i !== 4){
+                    inputRef.current[i].focus();
+                }else{
+                    searchAddrRef.current.focus()
+                }
+                joinBoolean = false
+                break;
+            }
+	    }
+
+    }*/
+    
+
     
     return (
         <>
             <Row className="containerTitle">
                 <Col>
-                    호텔등록
+                    { searchParams.get('type') === 'modfiy' ? '호텔수정' : '호텔등록' }
                 </Col>
             </Row>
             <Row className="inputBox">
