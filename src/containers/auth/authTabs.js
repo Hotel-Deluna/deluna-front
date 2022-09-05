@@ -23,25 +23,30 @@ const AuthTabs = ({ type }) => {
     const title = textMap[type];
     const [value, setValue] = useState('user');
     const dispatch = useDispatch();
-
     function handleClick(firstTab) {        
         if(firstTab === 'user'){
             setValue('user');
         }else{
             setValue('partner');
         }
-        dispatch(initializeForm(type));//버튼선택 시 폼 초기화
-    
     }
+    //  useEffect(() => {
+    //      dispatch(initializeForm('login'));
+    //  }, []);
     return (
         <Tabs defaultActiveKey={value} onSelect={(firstTab) => handleClick(`${firstTab}`)} id="justify-tab-example" justify>
         {/* 고객 tab */}
         <Tab eventKey="user" title={'고객 '+title}>
-            {type === 'login'  ? <Login type={value} /> : <UserJoin type={type} value={value} />}
+            {type === 'join' && value == 'user' && (<UserJoin />)}
+            {type === 'login' && value == 'user' && (<Login type={'user'} />)}
+            {/* {type === 'login'  ? 
+                (value === 'user' ? <Login type={value} /> : <></>)
+            : <UserJoin />} */}
         </Tab> 
-            {/* 사업자 tab */}
+            {/* 사업자 회원가입 */}
         <Tab eventKey="partner" title={'사업자 '+title}>
-            {type === 'login' ? <Login type={value}  /> : <PartnerJoin type={type} value={value} />}
+            {type === 'join' && value == 'partner' && (<UserJoin />)}
+            {type === 'login' && value == 'partner' && (<Login type={'partner'} />)}
         </Tab>
     </Tabs>
         

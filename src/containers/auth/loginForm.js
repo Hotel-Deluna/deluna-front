@@ -1,59 +1,77 @@
 import { useEffect, useState, useNavigate } from "react";
 import AuthLoginForm from "../../components/auth/authLoginForm";
-import { changeField,initializeForm, login } from "../../modules/auth";
+import { changeField, resetField, initializeForm, login } from "../../modules/auth";
 import { useDispatch, useSelector } from "react-redux";
 /**
  * 
  * 로그인 컨테이너
  */
- const textMap = {
-    partner : '2',
-    user : '1',
- };
-const Login =({type}) => {
-    const role = textMap[type];
-    console.log(role);
+ /*const textMap = {
+    user : '1', 고객- 1
+    partner : '2',사업자-2 
+*/
+
+const Login =() => {
+    //console.log(role);
     const [errCount, setErrCount] = useState(0);
     const [autoLogin, setAutoLogin] = useState(false);
+    const [type, setType] = useState('1');//고객- 1, 사업자-2 
     const dispatch = useDispatch();
     const { form, auth, authError } = useSelector(({ auth }) => ({
         form: auth.login,
         auth : auth.auth,
         authError : auth.authError
     }));
+    const menuChange = (type, e) => {
+        console.log(type, e);
+        if((type === '2' && e === 'partner') || (type === '1' && e === 'user')){
+            setType(type);
+            dispatch( resetField({ form : 'login',key : 'email' }));
+            dispatch( resetField({ form : 'login',key : 'password' }));
+            dispatch(//role 값 교체
+                changeField({
+                    form : 'login',
+                    key : 'role',
+                    value : type
+                })
+            );
+        }
+    }
 
-    // //첫 렌더링 시 폼 초기화
-    // useEffect(() => {
-    //     dispatch(initializeForm('login'));
-    // }, [dispatch]);
+    //  //첫 렌더링 시 폼 초기화
+     useEffect(() => {
+        console.log("I run only Once.");
+        dispatch(initializeForm('login'));
+     }, []);
+    //console.log('form', form);
 
     const onChange = e =>{
         const {name, value} = e.target;
-        console.log(name, value);
+        ////console.log(name, value);
         dispatch(
             changeField({
                 form : 'login',
                 key : name,
                 value : value
             })
-        );//테스트
+        );
         dispatch(
             changeField({
                 form : 'login',
                 key : 'role',
-                value : role
+                value : type
             })
-        );//테스트
+        );
     }
     const onCheck =(checked)=> {
-        console.log(checked);
+        ////console.log(checked);
         setAutoLogin(checked);
     }
     //소셜로그인 선택 시
     const onClick = e => {
         //소셜로그인 부분
         const { name } = e.target;
-        console.log(name);
+        ////console.log(name);
     }
     // 로그인 버튼시
      const onSubmit = e => {
@@ -64,30 +82,31 @@ const Login =({type}) => {
         if(!mailCheck.test(form.email)){ setErrCount(1)}
         if(!pwCheck.test(form.password)){ setErrCount(2) }
         if(!mailCheck.test(form.email) && !pwCheck.test(form.password)){ setErrCount(3) }
-
+        console.log('aa');
         if(mailCheck.test(form.email) && pwCheck.test(form.password)){//정규식통과시 로그인 api연동
-             console.log(form.email, form.password, form.role);
+             //console.log(form.email, form.password, form.role);
              const { email,  password, role } = form;
              dispatch(login({ email, password, role }));
+             console.log('bb');
         }
     }
     //const navigate = useNavigate();
 
-     //회원가입성공/실패처리
+     //로그인성공/실패처리
      useEffect(() => {
         if(authError){
             //에러
-            alert('실패!');
+            //alert('실패!');
             console.log(authError);
-            //return;
+            return;
         }
         if(auth){
-            console.log('로그인성공');
+            //console.log('로그인성공');
             //토큰값 받아오기
             console.log(auth);
             //navigate('/');
             //window.location.href = "./auth/token/login";
-            const token = 'token';//data["token"];
+            const token = 'token';//data["token"]; 
             localStorage.setItem('jwtToken', token);
             if(autoLogin){//자동로그인 체크한경우에만
                 const refreshtoken = 'refreshToken';//data["refreshToken"];//자동로그인
@@ -98,7 +117,7 @@ const Login =({type}) => {
     }, [auth, authError]);
 
     return(
-        <AuthLoginForm type={type} form={form} onChange={onChange} onClick={onClick} onSubmit={onSubmit} errCount={errCount} onCheck={onCheck} autoLoginCheck={autoLogin}/>
+        <AuthLoginForm type={type} menuChange={menuChange} form={form} onChange={onChange} onClick={onClick} onSubmit={onSubmit} errCount={errCount} onCheck={onCheck} autoLoginCheck={autoLogin}/>
     );
 }
 

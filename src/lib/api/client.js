@@ -1,8 +1,6 @@
 import axios from "axios";
 
 const client = axios.create;
-
-
 /*
 //api 주소를 다른 곳으로 사용함
 client.defaults.baseURL = 'http://43.200.222.222:8080';

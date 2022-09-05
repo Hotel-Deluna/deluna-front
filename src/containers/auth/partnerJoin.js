@@ -343,8 +343,7 @@ const PartnerJoin = () => {
     // 인증번호 타이머
     const [minutes, setMinutes] = useState();
     const [seconds, setSeconds] = useState();
-    const [countDown, setCountDown] = useState();
-
+    const [timer, setTimer] = useState();
     useEffect(() => {
     let countdown = setInterval(() => {
             if (parseInt(seconds) > 0) {
@@ -366,6 +365,7 @@ const PartnerJoin = () => {
                 } else {
                   setSeconds(59);
                   setMinutes(parseInt(minutes) - 1);
+                  setTimer(countdown);
                 }
               }
     }, 1000);
@@ -405,7 +405,7 @@ const PartnerJoin = () => {
                 if(res.data.result === "OK"){ //성공
                     setRequestCertifyNum(certifyNum.certifyValue);
                     setCertifyChecked(2);
-                    clearInterval(countDown);
+                    clearInterval(timer);
                     setTimerCheck(false);//타이머종료
                     setMinutes();
                     setSeconds();
@@ -438,10 +438,10 @@ const PartnerJoin = () => {
         dispatch(partner({business_num, email, name, opening_day, password, phone_num}));
     };
 
-    //첫 렌더링 시 폼 초기화
-    useEffect(() => {
-        dispatch(initializeForm('partner'));
-    }, [dispatch]);
+    // //첫 렌더링 시 폼 초기화
+    // useEffect(() => {
+    //     dispatch(initializeForm('partner'));
+    // }, [dispatch]);
 
      //회원가입성공/실패처리
     useEffect(() => {
@@ -483,8 +483,8 @@ const PartnerJoin = () => {
         <Row className="align-items-center mb-3">
             <Col sm = {9}>
                 {/* 이메일 input창 */}
-                <FloatingLabel controlId="email" label="이메일 주소">
-                    <Form.Control type="email" name="email" value={inputValue} ref={emailInput} className={emailChecked === 1 ? 'is-invalid' : ''} onChange={handleEmailChange} disabled={(isEmail === true) && (emailChecked === 2) ? true : false} />
+                <FloatingLabel label="이메일 주소">
+                    <Form.Control type="email" name="Email" value={inputValue} ref={emailInput} className={emailChecked === 1 ? 'is-invalid' : ''} onChange={handleEmailChange} disabled={(isEmail === true) && (emailChecked === 2) ? true : false} />
                     <Form.Text className={emailChecked === 1 ? 'err_text' : ''} id="managerEmailHelpBlock">{Email === '' ? 'email 형식(@)으로 작성해주세요.(공백없이)': emailMsg}</Form.Text>
                 </FloatingLabel>
             </Col>
@@ -500,7 +500,7 @@ const PartnerJoin = () => {
         <Row className="g-2 mb-3">
             {/* 비밀번호 input창 */}
             <Col sm = {12}>
-                <FloatingLabel controlId="pwd" label="비밀번호">
+                <FloatingLabel label="비밀번호">
                     <Form.Control type="password" name="pwd" value={pwd} onChange={handlePwdChange} maxLength={15} />
                     <Form.Text id="managerPasswordHelpBlock">{pwd === '' ? '숫자, 영문 대or소문자, 특수문자 포함 8자리 이상 15자리 이하로 입력해주세요.' :pwdMsg }</Form.Text>
                 </FloatingLabel>
@@ -509,7 +509,7 @@ const PartnerJoin = () => {
         <Row className="g-2 mb-3">
             {/* 비밀번호확인 input창 */}
             <Col sm = {12}>
-                <FloatingLabel controlId="pwdcheck" label="비밀번호확인">
+                <FloatingLabel label="비밀번호확인">
                     <Form.Control type="password" name="pwdcheck" value={pwdCheck} onChange={handlePwdCheckChange} maxLength={15} disabled= {(isPwd === false) ? true : false} />
                     <Form.Text id="managerPasswordCheckHelpBlock">{pwdCheck === '' ? '위 입력한 비밀번호와 동일하게 입력하세요.' : pwdCheckMsg}</Form.Text>
                 </FloatingLabel>
@@ -517,14 +517,14 @@ const PartnerJoin = () => {
         </Row>
         <Row className="align-items-center mb-3">
                     <Col sm = {4}>
-                    <FloatingLabel controlId="name" label="사업주명">
+                    <FloatingLabel label="사업주명">
                     <Form.Control type="name" name="name"  value={Name}  maxLength={17} onChange={handdleNameChange} 
                     />
                     <Form.Text id="businessName">한글만 입력</Form.Text>
                     </FloatingLabel>
                     </Col>
                     <Col sm = {4}>
-                        <FloatingLabel controlId="businessNum" label="사업자등록번호">
+                        <FloatingLabel label="사업자등록번호">
                         <Form.Control type="text" name="businessNum" value={businessNum} onChange={handleBusinessNumChange} />
                         <Form.Text id="businessNum" muted>-제외 숫자만 10자리 입력</Form.Text>
                         </FloatingLabel>
@@ -548,7 +548,7 @@ const PartnerJoin = () => {
         <Row className="align-items-center mb-3">
             {/* 휴대폰번호 input창 */}
             <Col sm = {9}>
-                <FloatingLabel controlId="phoneNum" label="휴대폰번호">
+                <FloatingLabel label="휴대폰번호">
                     <Form.Control type="text" name="phoneNum" onChange={handlePhoneNumberChange} value={isPhoneNum ? hPhoneNum : phoneNum} disabled={(disabled(true, certifyChecked))} />
                     {certifyChecked < 2 && (
                         <Form.Text id="managerPhoneNumberHelpBlock" className={timerCheck && 'border_text' }>{phoneNum === '' ? '하이픈(-) 제외 숫자만 11~12자리 입력'  : phoneNumMsg}</Form.Text>
@@ -574,7 +574,7 @@ const PartnerJoin = () => {
             <Row className="align-items-center mb-3">
             {/*  인증번호 input창 */}
             <Col sm = {9}>
-                <FloatingLabel controlId="certifyNum" label="인증번호 확인">
+                <FloatingLabel label="인증번호 확인">
                     <Form.Control type="text" name="certifyNum" className={certifyChecked === 2  ? 'is-invalid' : ''} ref={certifyInput} value={certifyValue} onChange={handdleCertifyInputChange} disabled={disabled((phoneChecked === 2 ? true : false), certifyChecked)} maxLength={'6'} />
                     {certifyChecked < 2 && (
                         <Form.Text id="managerPhoneNumberHelpBlock" className={(certifyChecked ===1 && ('error_text'))}>{certifyChecked === 0 ? '휴대전화로 전송된 6자리 인증번호 입력' : certifyNumMsg}</Form.Text>

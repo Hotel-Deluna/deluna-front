@@ -1,6 +1,7 @@
 import React from "react";
 import AuthLayout from "../../components/auth/authLayout";
-import AuthTabs from "../../containers/auth/authTabs";
+//import AuthTabs from "../../containers/auth/authTabs";
+import Login from "../../containers/auth/loginForm";
 /**
  * 
  * 
@@ -12,7 +13,8 @@ import AuthTabs from "../../containers/auth/authTabs";
 const LoginPage = () => {
     return (
         <AuthLayout>
-            <AuthTabs type={'login'} />
+            <Login />
+            {/* <AuthTabs type={'login'} /> */}
         </AuthLayout>
     );
 }

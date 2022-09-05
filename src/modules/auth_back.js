@@ -6,33 +6,24 @@ import * as authAPI from '../lib/api/auth';
 
 const CHANGE_FIELD = 'auth/CHANGE_FIELD';
 const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
-const RESET_FIELD = 'auth/RESET_FIELD';
-const PLUS_FIELD = 'auth/PLUS_FIELD';
-const SLICE_FIELD = 'auth/SLICE_FIELD';
 
-//로그인
+//회원가입
 const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createRequestActionTypes(
   'auth/LOGIN'
 );
-//회원가입
+//로그인
 const [JOIN, JOIN_SUCCESS, JOIN_FAILURE] = createRequestActionTypes(
   'auth/JOIN'
 );
 
-//정보조회 - SELECTUSER : 고객, SELECTPARTNER :사업자 
-const [SELECTUSER, SELECTUSER_SUCCESS, SELECTUSER_FAILURE] = createRequestActionTypes(
-  'auth/SELECTUSER'
-);
-const [SELECTPARTNER, SELECTPARTNER_SUCCESS, SELECTPARTNER_FAILURE] = createRequestActionTypes(
-  'auth/SELECTPARTNER'
+//정보조회
+const [SELECT, SELECT_SUCCESS, SELECT_FAILURE] = createRequestActionTypes(
+  'auth/SELECT'
 );
 
 //정보수정
-const [MODIFYUSER, MODIFYUSER_SUCCESS, MODIFYUSER_FAILURE] = createRequestActionTypes(
-  'auth/MODIFYUSER'
-);
-const [MODIFYPARTNER, MODIFYPARTNER_SUCCESS, MODIFYPARTNER_FAILURE] = createRequestActionTypes(
-  'auth/MODIFYPARTNER'
+const [MODIFY, MODIFY_SUCCESS, MODIFY_FAILURE] = createRequestActionTypes(
+  'auth/MODIFY'
 );
 
 export const changeField = createAction(
@@ -43,33 +34,8 @@ export const changeField = createAction(
     value // 실제 바꾸려는 값
   }),
 );
-
-export const resetField = createAction(
-  RESET_FIELD,
-  ({ form, key }) => ({
-    form, // 
-    key, // 초기화 키값
-  }),
-);
-
-export const plusField = createAction(
-  PLUS_FIELD,
-  ({ form, key }) => ({
-    form, // 
-    key, // 초기화 키값
-  }),
-);
-
-export const sliceField = createAction(
-  SLICE_FIELD,
-  ({ form, key }) => ({
-    form, // 
-    key, // 초기화 키값
-  }),
-);
-
 export const initializeForm = createAction(INITIALIZE_FORM, form => form); // partner / user
-
+//export const initializeForm2 = createAction(INITIALIZE_FORM2, form => form); // partner / user
 //로그인
 export const login = createAction(LOGIN, ({  email, password, role  }) => ({
   email, password, role 
@@ -84,36 +50,35 @@ export const userJoin = createAction (JOIN, ({email, name, password, phone_auth_
 }));
 
 //고객 정보 조회
-export const userSelect = createAction(SELECTUSER, ({  token  }) => ({
+export const userSelect = createAction(SELECT, ({  token  }) => ({
   token 
 }));
 //사업자 정보 조회
-export const partnerSelect = createAction(SELECTPARTNER, ({  token  }) => ({
+export const partnerSelect = createAction(SELECT, ({  token  }) => ({
   token
 }));
 
 //고객 정보 수정
-export const userModify = createAction (MODIFYUSER, ({token, email, name, phone_auth_num, phone_num}) => ({
+export const userModify = createAction (MODIFY, ({token, email, name, phone_auth_num, phone_num}) => ({
   token, email, name, phone_auth_num, phone_num
 }));
 //사업자 정보 수정
-export const partnerModify = createAction(MODIFYPARTNER, ({token, business_num, email, name, opening_day, phone_num})=> ({
+export const partnerModify = createAction(MODIFY, ({token, business_num, email, name, opening_day, phone_num})=> ({
   token, business_num, email, name, opening_day, phone_num
 }));
 
 // saga 생성
 //로그인
 const loginSaga = createRequestSaga(LOGIN, authAPI.login);
-
 //회원가입
 const partnerJoinSaga = createRequestSaga(JOIN, authAPI.partnerJoin);
 const userJoinSaga = createRequestSaga(JOIN, authAPI.userJoin);
 //정보조회
-const userSelectSaga = createRequestSaga(SELECTUSER, authAPI.userSelect);
-const partnerSelectSaga = createRequestSaga(SELECTPARTNER, authAPI.partnerSelect);
+const userSelectSaga = createRequestSaga(SELECT, authAPI.userSelect);
+const partnerSelectSaga = createRequestSaga(SELECT, authAPI.partnerSelect);
 //정보수정
-const userModifySaga = createRequestSaga(MODIFYUSER, authAPI.userModify);
-const partnerModifySaga = createRequestSaga(MODIFYPARTNER, authAPI.partnerModify);
+const userModifySaga = createRequestSaga(MODIFY, authAPI.userModify);
+const partnerModifySaga = createRequestSaga(MODIFY, authAPI.partnerModify);
 
 export function* authSaga() {
   //로그인
@@ -122,11 +87,11 @@ export function* authSaga() {
   yield takeLatest(JOIN, partnerJoinSaga);
   yield takeLatest(JOIN, userJoinSaga);
   //정보조회
-  yield takeLatest(SELECTUSER, userSelectSaga);
-  yield takeLatest(SELECTPARTNER, partnerSelectSaga);
+  yield takeLatest(SELECT, userSelectSaga);
+  yield takeLatest(SELECT, partnerSelectSaga);
   //정보수정
-  yield takeLatest(MODIFYUSER, userModifySaga);
-  yield takeLatest(MODIFYPARTNER, partnerModifySaga);
+  yield takeLatest(MODIFY, userModifySaga);
+  yield takeLatest(MODIFY, partnerModifySaga);
 }
 
 const initialState = {
@@ -171,18 +136,6 @@ const auth = handleActions(
       produce(state, draft => {
         draft[form][key] = value; // 예: state.username을 바꾼다
       }),
-    [RESET_FIELD]: (state, { payload: { form, key } }) =>
-      produce(state, draft => {
-        draft[form][key] = ''; //값 초기화
-      }),
-    [PLUS_FIELD]: (state, { payload: { form, key, value } }) =>
-    produce(state, draft => {
-      draft[form].push = {[key] : value};//키 추가
-    }),
-    [SLICE_FIELD]: (state, { payload: { form, key, value } }) =>
-    produce(state, draft => {
-      draft[form].slice = {[key] : value};//키 삭제
-    }),
     [INITIALIZE_FORM]: (state, { payload: {form} }) => ({
       ...state,
       [form]: initialState[form],
@@ -210,47 +163,25 @@ const auth = handleActions(
       ...state,
       auth: error
     }),
-    // 고객정보조회 성공
-    [SELECTUSER_SUCCESS]: (state, { payload: authSelect }) => ({
+    // 정보조회 성공
+    [SELECT_SUCCESS]: (state, { payload: authSelect }) => ({
       ...state,
       authSelectError: null,
       authSelect
     }),
-    // 고객정보조회 실패
-    [SELECTUSER_FAILURE]: (state, { payload: error }) => ({
+    // 회원정보조회 실패
+    [SELECT_FAILURE]: (state, { payload: error }) => ({
       ...state,
       authSelectError: error
     }),
-    // 사업자정보조회 성공
-    [SELECTPARTNER_SUCCESS]: (state, { payload: authSelect }) => ({
-      ...state,
-      authSelectError: null,
-      authSelect
-    }),
-    // 사업자정보조회 실패
-    [SELECTPARTNER_FAILURE]: (state, { payload: error }) => ({
-      ...state,
-      authSelectError: error
-    }),
-    // 고객정보수정 성공
-    [MODIFYUSER_SUCCESS]: (state, { payload: authModify }) => ({
+    // 정보수정 성공
+    [MODIFY_SUCCESS]: (state, { payload: authModify }) => ({
       ...state,
       authModifyError: null,
       authModify
     }),
-    // 고객정보수정 실패
-    [MODIFYUSER_FAILURE]: (state, { payload: error }) => ({
-      ...state,
-      authModifyError: error
-    }),
-    // 사업자정보수정 성공
-    [MODIFYPARTNER_SUCCESS]: (state, { payload: authModify }) => ({
-      ...state,
-      authModifyError: null,
-      authModify
-    }),
-    // 사업자정보수정 실패
-    [MODIFYPARTNER_FAILURE]: (state, { payload: error }) => ({
+    // 정보수정 실패
+    [MODIFY_FAILURE]: (state, { payload: error }) => ({
       ...state,
       authModifyError: error
     }),

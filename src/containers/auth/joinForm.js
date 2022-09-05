@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AuthCommonForm from "../../components/auth/authJoinForm";
 import { changeField,initializeForm, login } from "../../modules/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,11 +33,13 @@ const JoinForm = ({type, value}) => {
             value : '',
             hyphen_value : '',
             isCheck : false,
-            msg : ''
+            msg : '',
+            btnCheck : 0 //버튼을 통해 api연동시의 버튼 상태값 미확인 - 0 ,실패 - 1  확인 - 2
         },
         phone_auth_num : {
             isCheck : false,
-            msg : ''
+            msg : '',
+            btnCheck : 0 //버튼을 통해 api연동시의 버튼 상태값 미확인 - 0 ,실패 - 1  확인 - 2
         },
         checkBox1 : {
             value : false

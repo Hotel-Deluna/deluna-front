@@ -4,7 +4,7 @@ import { startLoading, finishLoading } from '../modules/loading';
 export const createRequestActionTypes = type => {
   const SUCCESS = `${type}_SUCCESS`;
   const FAILURE = `${type}_FAILURE`;
-  console.log(type, SUCCESS, FAILURE);
+  //console.log(type, SUCCESS, FAILURE);
 
   return [type, SUCCESS, FAILURE];
 };
@@ -12,9 +12,9 @@ export const createRequestActionTypes = type => {
 export default function createRequestSaga(type, request) {
   const SUCCESS = `${type}_SUCCESS`;
   const FAILURE = `${type}_FAILURE`;
-  console.log(type, request);
+  //console.log(type, request);
   return function*(action) {
-    console.log(action);
+    //console.log(action);
     yield put(startLoading(type)); // 로딩 시작
     try {
       const response = yield call(request, action.payload);
@@ -22,16 +22,16 @@ export default function createRequestSaga(type, request) {
         type: SUCCESS,
         payload: response.data
       });
-      console.log(response, request);
+      console.log('saga',response, request);
     } catch (e) {
       yield put({
         type: FAILURE,
         payload: e,
         error: true
       });
-      console.log('err',e);
+      //console.log('err',e);
     }
     yield put(finishLoading(type, action.payload)); // 로딩 끝
-    console.log('err',action.payload);
+    //console.log('err',action.payload);
   };
 }
