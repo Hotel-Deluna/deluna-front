@@ -1,5 +1,5 @@
 
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, setEffect} from "react";
 import {Container, Row, Col, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { Link, useSearchParams } from 'react-router-dom'
@@ -7,30 +7,27 @@ import { Link, useSearchParams } from 'react-router-dom'
 import HotelRegisForm from "../../components/hotel/hotelRegisForm";
 import HotelService from "../../components/hotel/hotelService";
 import ImagesUpload from "../../components/hotel/imagesUpload";
-import * as hotelInfoActions from '../../modules/hotelInfoReducer';
 //axios관리 redux
 import {hotel_register, hotel_edit, hotel_info} from "../../modules/hotelInfoActions";
 
 //redux 조회 및 연결
-import { useSelector,connect } from 'react-redux';
+import { useSelector,connect, useDispatch } from 'react-redux';
+import * as hotelInfoReducer from '../../modules/hotelInfoReducer';
 
 //날짜 변환
 import moment from "moment";
 
-const HotelInfo = ({hotel_register, hotel_edit, hotel_info,register, edit,info}) => {
-    //query 값 (registration:등록, modfiy : 수정)
+
+const HotelInfo = ({hotel_register, hotel_edit, hotel_info,register, edit,info,inputValue, hotelService, hotelImage}) => {
     const [searchParams, setSearchParams] = useSearchParams();
 
+    //query 값 (registration:등록, modfiy : 수정)
+    const [type, setType] = useState(searchParams.get('type'))
+
+    const [hotelNum, setHotelNum] = useState(searchParams.get('hotel_num'))
     /* 부모컴포넌트 -> 자식컴포넌트 */
     //최대 이미지 등록 갯수 ( 호텔 : 10, 객실 : 5) ImagesUpload 컴포넌트에 전달
     const [maxImagesNum, setMaxImagesNum] = useState(10);
-
-    const inputValue = useSelector(state => state.hotelInfoReducer.getIn(['REGISTER', 'form'])).toJS();
-    const hotelService = useSelector(state => state.hotelInfoReducer.getIn(['HOTEL_SERVICE', 'form']));
-    const hotelImage = useSelector(state => state.hotelInfoReducer.getIn(['HOTEL_IMAGE', 'form'])).toJS();
-
-    
-    
     const test = () => {
         const frm = new FormData();
         const peak_season = []
@@ -54,7 +51,8 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info,register, edit,info})
         frm.append("info",inputValue.info);
         frm.append("rule",inputValue.rule);
         frm.append("star",inputValue.star);
-            
+        
+
 
         //성수기 값이 있을 경우에만
         if(peak_season.length > 0){
@@ -74,22 +72,29 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info,register, edit,info})
             }
             
         }
-        hotel_register(frm)
-        
+        if(type === 'modfiy') hotel_edit(frm);
+        else hotel_register(frm);
     }
-    //const number = useSelector(state => state.hotelInfoReducer.getIn(['REGISTER', 'form']));
-
-    
+    const dispatch = useDispatch();
     useEffect(() => {
-        if(searchParams.get('type') === 'modfiy'){
-            console.log(searchParams.get('type'))
-            hotel_info("1234")
-            
+        if(type === 'modfiy' && hotelNum) {
+            axios.post('http://43.200.222.222:8080/hotel/info',{
+                hotel_num : parseInt(hotelNum)
+            }).then((res)=>{
+                if(res.data.result === 'OK'){
+                    dispatch(hotelInfoReducer.insertInput({ data : res.data.data}));
+                    dispatch(hotelInfoReducer.converFile({ data : res.data.data.image}));
+                }
+            })
+        
         }
-     }, [searchParams.get('type')]);
+        return () => {
+        }
+    }, [setType,setHotelNum]);
     return (
         <>
             <Container className="containerMain">
+                
                 {/* 호텔 정보 입력 컴포넌트*/}
                 <HotelRegisForm />
                 {/* 호텔 부가서비스/서비스 체크박스 컴포넌트 */}
@@ -117,14 +122,18 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info,register, edit,info})
     );
 };
 export default connect(
-    ({ hotelInfoActions }) => ({
+    ({ hotelInfoActions, hotelInfoReducer}) => ({
         register: hotelInfoActions.register, //등록
         edit : hotelInfoActions.edit, //수정
-        info : hotelInfoActions.info //조회
-      }),
-      {
+        info : hotelInfoActions.info, //조회
+        inputValue : hotelInfoReducer.getIn(['REGISTER', 'form']).toJS(), //입력된 input값
+        hotelService : hotelInfoReducer.getIn(['HOTEL_SERVICE', 'form']), //체크된 호텔서비스/부가서비스 값
+        hotelImage : hotelInfoReducer.getIn(['HOTEL_IMAGE', 'form']), //호텔 url,파일 리스트
+    }),
+    {
         hotel_register,
         hotel_edit,
-        hotel_info
+        hotel_info,
+
     }
 )(HotelInfo)

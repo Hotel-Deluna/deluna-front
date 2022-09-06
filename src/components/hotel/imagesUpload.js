@@ -22,35 +22,22 @@ import * as hotelInfoActions from '../../modules/hotelInfoReducer';
 const ImagesUpload = (props) => {
     //props : 부모 컴포넌트에서 전달받은 최대 이미지 등록 갯수 ( 호텔 : 10, 객실 : 5)
     let imgIdx = 0;
-    const {imageFile, imageUrl} = props.form.toJS();
+    const {imageFile, imageUrl} = props.form;
     const { HotelInfoActions } = props;
-    /*useEffect(() => {
-        let propImageUrl = [];
-        let propImageFile = [];
-        if(props.hotelImages.length > 0){
-            for(var i=0; i<props.hotelImages.length; i++){
-                propImageUrl.push(props.hotelImages[i]);
-                convertURLtoFile(props.hotelImages[i]).then(result => propImageFile.push(result));
-            }
-        }
-        setShowImages(propImageUrl);
-        setImagesFile(propImageFile);
-    },[props.hotelImages]);        
-    */
 
     /* 2022.08.28 (한예지) : 이미지 등록 */
     const handleAddImages = (e) => {
         const imageList = e.target.files;
         let imageUrlList = [...imageUrl];
-        let imageFileList = [...imageFile]
+        let imageFileList = [...imageFile];
         for(let i = 0; i < imageList.length; i++){
             const currentImgeUrl = URL.createObjectURL(imageList[i]);
-            imageUrlList.push(currentImgeUrl)
-            imageFileList.push(imageList[i])
+            imageUrlList.push(currentImgeUrl);
+            imageFileList.push(imageList[i]);
         }
-        //10장 이상일 경우 예외처리
+        //최대갯수 이상일 경우 예외처리
         if(imageUrlList.length > props.maxImagesNum){
-            alert("이미지는 최대 "+props.maxImagesNum+"장까지 등록이 가능합니다.")
+            alert("이미지는 최대 "+props.maxImagesNum+"장까지 등록이 가능합니다.");
             imageUrlList = imageUrlList.slice(0,props.maxImagesNum);
             imageFileList = imageFileList.slice(0,props.maxImagesNum);
         }
@@ -71,7 +58,7 @@ const ImagesUpload = (props) => {
     };
 
     const changeClick = (idx) => {
-        imgIdx = idx
+        imgIdx = idx;
     }
 
     /* 2022.08.29(한예지) : 이미지 변경 */
@@ -93,24 +80,13 @@ const ImagesUpload = (props) => {
             form : 'HOTEL_IMAGE'
         });
     }
-
-    //서버에서 받은 이미지 URL을 File로 변환
-    const convertURLtoFile = async (url) => {
-        const response = await fetch(url);
-        const data = await response.blob();
-        const ext = url.split(".").pop(); // url 구조에 맞게 수정할 것
-        const filename = url.split("/").pop(); // url 구조에 맞게 수정할 것
-        const metadata = { type: `image/${ext}` };
-        return new File([data], filename, metadata);
-    };
     //이미지 순서 바꾸기
     const onChange = (sourceId, sourceIndex, targetIndex) => {
         const imgUrl = swap(imageUrl, sourceIndex, targetIndex);
         const imgFile = swap(imageFile, sourceIndex, targetIndex);
         HotelInfoActions.chnageImages({name:"imageUrl",value: imgUrl,form : 'HOTEL_IMAGE'});
         HotelInfoActions.chnageImages({name:"imageFile",value: imgFile,form : 'HOTEL_IMAGE'});
-    }
-
+    }      
     return (
         <>
             <Row className="inputBox">

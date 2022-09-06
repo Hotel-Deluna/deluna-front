@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useRef,useState,forwardRef, useImperativeHandle } from "react";
+import React, { useRef,useState,useEffect } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
 import {Form, Row, Col, InputGroup, Button } from 'react-bootstrap';
@@ -58,9 +58,13 @@ const HotelRegisForm = (props) => {
           alert("지번 주소만 선택 가능합니다.")
         }else{
             HotelInfoActions.changeInput({name:"address",value:data.jibunAddress,form : 'REGISTER'}); 
-            HandleCoord(data.jibunAddress)
         }
     };
+    useEffect(() => {
+        if(address) HandleCoord(address);
+        return () => {
+        }
+    }, [address]);
     //2022.08.29 (한예지) : 주소 -> 좌표변환 하는 영역 kakaoMap 사용
     const HandleCoord = (addr) =>{
         // 주소-좌표 변환 객체를 생성
@@ -77,12 +81,11 @@ const HotelRegisForm = (props) => {
         });    
     };
 
-    //성수기 추가 시 다음 indexId
-    const nextId = useRef(1);
+
     /* 2022.08.28 (한예지) : 성수기 추가버튼 누를 시 Input 추가 */
     const addInput = () => {
         const input = {
-            id : nextId.current,
+            id : peak_season_list.length,
             peak_season_start : '',
             peak_season_end : ''
         }
@@ -91,7 +94,6 @@ const HotelRegisForm = (props) => {
             name:"peak_season_list",
             value:[...peak_season_list, input],
             form : 'REGISTER'});
-        nextId.current += 1; 
     }
 
     const inputValueChange = (e, idx) => {

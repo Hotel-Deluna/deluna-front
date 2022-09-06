@@ -70,16 +70,6 @@ const HotelService = (props) => {
 
     const [isChecked, setIsChecked] = useState(false) // 2022.08.29 (한예지) : 체크박스 체크 여부
 
-    /*useEffect(() => {
-        let propChecked = [];
-        if(props.value.length > 0){
-            for(var i = 0; i < props.value.length; i++){
-                propChecked.push(props.value[i].code);
-            }
-        }
-        setCheckedItems(propChecked)
-    },[props.value]);*/
-
     /*2022.08.29 (한예지) : 체크박스 선택시 핸들링*/
     const checkedList = (e) => {
         setIsChecked(!isChecked);

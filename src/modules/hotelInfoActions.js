@@ -2,6 +2,7 @@ import { createAction, handleActions } from "redux-actions";
 import { call, put, takeLatest } from "redux-saga/effects";
 import * as api from "../lib/api/hotelInfo";
 
+//redux 조회 및 연결
 const HOTEL_REGISTER = "HOTEL_REGISTER" //호텔 등록 요청
 const HOTEL_REGISTER_SUCCESS = "HOTEL_REGISTER_SUCCESS" //호텔 등록요청 성공시
 const HOTEL_REGISTER_FALL = "HOTEL_REGISTER_FALL" //호텔 등록요청 실패시 
@@ -56,12 +57,15 @@ export function* hotelInfoActionsSage(){
 function* hotelRegisterSage(action){
     try {
         const register = yield call(api.hotel_register, action.payload);
+       // FormData의 value 확인
+        for (let value of action.payload.values()) {
+            console.log(value);
+        }
         yield put({
             type : HOTEL_REGISTER_SUCCESS,
             payload : register.data
         });
     }catch(e){
-        console.log(e)
         yield put({
             type : HOTEL_REGISTER_FALL,
             payload : e,
@@ -75,8 +79,9 @@ function* hotelEditSage(action){
     try {
         const edit = yield call(api.hotel_edit, action.payload);
         // FormData의 value 확인
+
         for (let value of action.payload.values()) {
-        console.log(value);
+            console.log(value);
         }
         yield put({
             type : HOTEL_EDIT_SUCCESS,
