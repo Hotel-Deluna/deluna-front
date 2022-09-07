@@ -8,11 +8,11 @@ import HotelRegisForm from "../../components/hotel/hotelRegisForm";
 import HotelService from "../../components/hotel/hotelService";
 import ImagesUpload from "../../components/hotel/imagesUpload";
 //axios관리 redux
-import {hotel_register, hotel_edit, hotel_info} from "../../modules/hotelInfoActions";
+import {hotel_register, hotel_edit, hotel_info} from "../../modules/hotel/hotelInfoActions";
 
 //redux 조회 및 연결
 import { useSelector,connect, useDispatch } from 'react-redux';
-import * as hotelInfoReducer from '../../modules/hotelInfoReducer';
+import * as hotelInfoReducer from '../../modules/hotel/hotelInfoReducer';
 
 //날짜 변환
 import moment from "moment";
@@ -123,7 +123,6 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
     //호텔 수정 요청 response 처리
     useEffect(() => {
         if(edit) {
-            console.log(edit)
             if(edit.result === 'OK'){ //성공
                 alert("호텔 정보 수정이 완료되었습니다.")
             }else{ //실패

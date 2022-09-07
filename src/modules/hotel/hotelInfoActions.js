@@ -1,6 +1,6 @@
 import { createAction, handleActions } from "redux-actions";
 import { call, put, takeLatest } from "redux-saga/effects";
-import * as api from "../lib/api/hotelInfo";
+import * as api from "../../lib/api/hotel";
 
 //redux 조회 및 연결
 const HOTEL_REGISTER = "HOTEL_REGISTER" //호텔 등록 요청
@@ -65,14 +65,14 @@ const hotelInfoActions = handleActions(
 
 export default hotelInfoActions;
 
-export function* hotelInfoActionsSage(){
-    yield takeLatest(HOTEL_REGISTER,hotelRegisterSage);
-    yield takeLatest(HOTEL_EDIT,hotelEditSage);
-    yield takeLatest(HOTEL_INFO,hotelInfoSage);
+export function* hotelInfoActionsSaga(){
+    yield takeLatest(HOTEL_REGISTER,hotelRegisterSaga);
+    yield takeLatest(HOTEL_EDIT,hotelEditSaga);
+    yield takeLatest(HOTEL_INFO,hotelInfoSaga);
 }
 
 //호텔 등록
-function* hotelRegisterSage(action){
+function* hotelRegisterSaga(action){
     try {
         const register = yield call(api.hotel_register, action.payload);
       
@@ -97,7 +97,7 @@ function* hotelRegisterSage(action){
 }
 
 //호텔 수정
-function* hotelEditSage(action){
+function* hotelEditSaga(action){
 
     try {
         const edit = yield call(api.hotel_edit, action.payload);
@@ -123,7 +123,7 @@ function* hotelEditSage(action){
 }
 
 //호텔 상세정보 조회
-function* hotelInfoSage(action){
+function* hotelInfoSaga(action){
     try {
         const info = yield call(api.hotel_info, action.payload);
         yield put({

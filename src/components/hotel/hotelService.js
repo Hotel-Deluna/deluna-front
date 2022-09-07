@@ -9,7 +9,7 @@ import "./css/hotelInfo.scss";
 /* redux 영역 */
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as hotelInfoActions from '../../modules/hotelInfoReducer';
+import * as hotelInfoActions from '../../modules/hotel/hotelInfoReducer';
 
 const HotelService = (props) => {
     const tags = props.form.tags;
