@@ -31,12 +31,30 @@ const hotelInfoActions = handleActions(
             ...state,
             register : action.payload,
         }),
+        //호텔등록 실패시
+        [HOTEL_REGISTER_FALL] : (state, action) => ({ 
+            ...state,
+            edit : action.payload,
+        }),
+
         //호텔수정 성공시
         [HOTEL_EDIT_SUCCESS] : (state, action) => ({ 
             ...state,
             edit : action.payload,
         }),
+        //호텔수정 실패시
+        [HOTEL_EDIT_FALL] : (state, action) => ({ 
+            ...state,
+            edit : action.payload,
+        }),
+
+        //호텔조회 성공시
         [HOTEL_INFO_SUCCESS] : (state, action) => ({ 
+            ...state,
+            info : action.payload,
+        }),
+        //호텔조회 실패시
+        [HOTEL_INFO_FALL] : (state, action) => ({ 
             ...state,
             info : action.payload,
         }),
@@ -57,6 +75,7 @@ export function* hotelInfoActionsSage(){
 function* hotelRegisterSage(action){
     try {
         const register = yield call(api.hotel_register, action.payload);
+      
        // FormData의 value 확인
         for (let value of action.payload.values()) {
             console.log(value);
@@ -68,7 +87,10 @@ function* hotelRegisterSage(action){
     }catch(e){
         yield put({
             type : HOTEL_REGISTER_FALL,
-            payload : e,
+            payload : {
+                result : 'serverError',
+                message : e
+            },
             error: true,
         })
     }
@@ -76,21 +98,25 @@ function* hotelRegisterSage(action){
 
 //호텔 수정
 function* hotelEditSage(action){
+
     try {
         const edit = yield call(api.hotel_edit, action.payload);
         // FormData의 value 확인
-
-        for (let value of action.payload.values()) {
+        /*for (let value of action.payload.values()) {
             console.log(value);
-        }
+        }*/
         yield put({
             type : HOTEL_EDIT_SUCCESS,
             payload : edit.data
         });
     }catch(e){
+        console.log(e)
         yield put({
             type : HOTEL_EDIT_FALL,
-            payload : e,
+            payload : {
+                result : 'serverError',
+                message : e
+            },
             error: true,
         })
     }
@@ -107,7 +133,10 @@ function* hotelInfoSage(action){
     }catch(e){
         yield put({
             type : HOTEL_INFO_FALL,
-            payload : e,
+            payload : {
+                result : 'serverError',
+                message : e
+            },
             error: true,
         })
     }
