@@ -4,7 +4,6 @@ import googleLogo from '../logos/google_logo.png';
 import kakaoLogo from '../logos/kakao_logo.png';
 import naverLogo from '../logos/naver_logo.png';
 const AuthLoginForm = ({ type,form, onChange, onSubmit, onClick, onCheck, menuChange, autoLoginCheck,errCount}) => {
-    
     const FormContainer = {
         textAlign : 'left',
         paddingTop : '2rem',

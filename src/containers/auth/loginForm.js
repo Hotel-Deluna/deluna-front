@@ -40,9 +40,9 @@ const Login =() => {
 
     //  //첫 렌더링 시 폼 초기화
      useEffect(() => {
-        console.log("I run only Once.");
+        // console.log("I run only Once.");
         dispatch(initializeForm('login'));
-     }, []);
+     }, [dispatch]);
     //console.log('form', form);
 
     const onChange = e =>{

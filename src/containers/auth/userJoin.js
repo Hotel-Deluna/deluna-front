@@ -239,7 +239,7 @@ const UserJoin = () => {
                     setMinutes(1);
                     setSeconds(0);
                     setCertifyToggle(true);
-                    setPhoneNumMsg('입력하신 번호로 문자가 발송되었습니다. 인증번호를 입력해주세요.');
+                    setPhoneNumMsg('입력하신 번호로 문자가 발송되었습니다.');
                 }else{// 실패
                     if(certifyCount > 0){setCertifyCount(certifyCount-1);}
                     alert('문자발송에 실패하였습니다. 잠시후 다시 이용 부탁드립니다.');

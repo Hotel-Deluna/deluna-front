@@ -284,7 +284,7 @@ const PartnerJoin = () => {
                         value : e.target.value.replace(/-/g, '')
                     })
                 );//테스트
-                console.log('phone_num : ', e.target.value.replace(/-/g, ''));
+                //console.log('phone_num : ', e.target.value.replace(/-/g, ''));
                 
             }else{
                 setIsPhoneNum(false);
@@ -383,14 +383,14 @@ const PartnerJoin = () => {
         let certifyCheck = /^[0-9\b -]{6}$/;
         if(certifyCheck.test(value)){
             setIsCertifyNum(true);
-            // dispatch( user 테스트
-            //     changeField({
-            //         form : 'user',
-            //         key : 'phone_auth_num',
-            //         value : value
-            //     })
-            // );//테스트
-            // console('phone_auth_num', value);
+            dispatch( 
+                changeField({
+                    form : 'user',
+                    key : 'phone_auth_num',
+                    value : value
+                })
+            );//테스트
+            console('phone_auth_num', value);
         }else{
             setIsCertifyNum(false);
         }
@@ -558,7 +558,7 @@ const PartnerJoin = () => {
                         <p className={timerCheck ? 'visibility_visible' : 'visibility_hidden'}>
                             {minutes}:{seconds < 10 ? `0${seconds}` : seconds} 
                         </p>
-                </div>
+                    </div>
                 </FloatingLabel>
             </Col>
             {/* 휴대폰번호 인증요청 버튼 */}

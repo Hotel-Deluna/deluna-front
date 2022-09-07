@@ -9,6 +9,7 @@ const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
 const RESET_FIELD = 'auth/RESET_FIELD';
 const PLUS_FIELD = 'auth/PLUS_FIELD';
 const SLICE_FIELD = 'auth/SLICE_FIELD';
+const RESET_RESPONSE = 'auth/RESET_RESPONSE';
 
 //로그인
 const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createRequestActionTypes(
@@ -68,6 +69,13 @@ export const sliceField = createAction(
   }),
 );
 
+export const resetResponse = createAction(
+  RESET_RESPONSE,
+  ({ key }) => ({
+    key
+  })
+);
+
 export const initializeForm = createAction(INITIALIZE_FORM, form => form); // partner / user
 
 //로그인
@@ -93,12 +101,12 @@ export const partnerSelect = createAction(SELECTPARTNER, ({  token  }) => ({
 }));
 
 //고객 정보 수정
-export const userModify = createAction (MODIFYUSER, ({token, email, name, phone_auth_num, phone_num}) => ({
-  token, email, name, phone_auth_num, phone_num
+export const userModify = createAction (MODIFYUSER, ({token, name, phone_auth_num, phone_num}) => ({
+  token, name, phone_auth_num, phone_num
 }));
 //사업자 정보 수정
-export const partnerModify = createAction(MODIFYPARTNER, ({token, business_num, email, name, opening_day, phone_num})=> ({
-  token, business_num, email, name, opening_day, phone_num
+export const partnerModify = createAction(MODIFYPARTNER, ({token, business_num, name, opening_day, phone_num})=> ({
+  token, business_num, name, opening_day, phone_num
 }));
 
 // saga 생성
@@ -131,9 +139,9 @@ export function* authSaga() {
 
 const initialState = {
   login: {
-        email : '',
-        password : '',
-        role : '',
+    email : '',
+    password : '',
+    role : '',
   },
   join : {
     business_num : '', 
@@ -147,6 +155,7 @@ const initialState = {
   select : {
     token : '',
   },
+  
   modify : {
     token : '',
     business_num : '', 
@@ -186,6 +195,11 @@ const auth = handleActions(
     [INITIALIZE_FORM]: (state, { payload: {form} }) => ({
       ...state,
       [form]: initialState[form],
+      authError: null // 폼 전환 시 회원 인증 에러 초기화
+    }),
+    [RESET_RESPONSE]: (state, { payload: {key} }) => ({
+      ...state,
+      [key] : null,
       authError: null // 폼 전환 시 회원 인증 에러 초기화
     }),
     // 로그인 성공
