@@ -7,7 +7,8 @@ import * as hotelMainReducer from "../../modules/hotel/hotelMainReducer";
 /* redux 영역 */
 import { connect } from "react-redux";
 const MyhotelList = (props) => { 
-    const hotelList = props.form.list
+    const hotelList = props.form.list;
+    //console.log(window.innerWidth < 770)
     return (
         <>
             <div className="containerTitle">나의 호텔 리스트</div>

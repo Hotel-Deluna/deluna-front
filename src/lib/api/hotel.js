@@ -36,3 +36,7 @@ axios.post('http://43.200.222.222:8080/hotel/owner-hotel-list',
         'Authorization' : '1234',
     }
 });
+
+//호텔 부가시설/서비스 태그 조회 API
+export const hotel_code = () =>
+axios.get('http://43.200.222.222:8080/common/code/hotel');

@@ -296,7 +296,7 @@ const HotelRegisForm = (props) => {
             </Row>
             <Row className="inputBox">
                 <Col>
-                    <div className="d-grid gap-2">
+                    <div className="d-grid gap-2 plus">
                         <Button variant="outline-primary" size="sm" onClick={addInput}>
                             추가하기
                         </Button>

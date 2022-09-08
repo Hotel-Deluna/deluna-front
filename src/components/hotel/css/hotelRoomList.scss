@@ -1,0 +1,54 @@
+.roomListTitle{
+    color:red;
+}
+
+.bd-placeholder-img{
+    width: 100%;
+    height: 100%;
+}
+
+.card-title {
+    font-size:1.3rem;
+    text-align: left;
+    font-weight: bolder;
+}
+.card-text{
+    text-align: left;
+    margin-bottom: 0rem;
+    width: 80%;
+}
+.card-text > img{
+    width: 15px;
+    height: 15px;
+    margin-right: 2px;
+}
+
+.card-body > .btn{
+    --bs-btn-padding-y: 0.7rem;
+    position: relative;
+    left : 40%;
+    display: inline-flex;
+    bottom: 3.5rem;
+    left: 8rem;
+}
+.card{
+    --bs-card-title-spacer-y : 0;
+}
+
+small{
+    font-size: 0.7rem;
+}
+
+.roomListContainer{
+    --bs-gutter-x: 10rem;
+}
+.col-md-8{
+    --bs-gutter-x: 0rem
+}
+@media screen and (max-width: 770px){
+    .roomListContainer{
+        --bs-gutter-x: 1.5rem;
+    }
+  }
+
+

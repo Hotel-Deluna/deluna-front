@@ -7,6 +7,7 @@ import HotelInfo from "./pages/js/hotelInfo";
 import JoinPage from './pages/js/joinPage';
 import LoginPage from './pages/js/loginPage';
 import HotelMain from "./pages/js/hotelMain";
+import HotelRoomList from "./pages/js/hotelRoomList";
 function App() {
   return (
     <div className="App">
@@ -18,6 +19,7 @@ function App() {
           <Route path="/auth/join" element={<JoinPage />}></Route>
           <Route path="/auth/login" element={<LoginPage />}></Route>
           <Route path="/auth/hotel/main" element={<HotelMain />}></Route>
+          <Route path="/auth/hotel/roomList" element={<HotelRoomList />}></Route>
 				</Routes>
         <Footer />
 			</BrowserRouter>
