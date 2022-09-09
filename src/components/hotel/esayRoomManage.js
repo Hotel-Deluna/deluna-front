@@ -5,7 +5,7 @@ import testImg from '../../pages/images/test.png';
 import * as hotelMainReducer from "../../modules/hotel/hotelMainReducer";
 import {my_hotel_list, hotel_code} from "../../modules/hotel/hotelMainActions";
 import { connect, useDispatch } from 'react-redux';
-
+import RoomBatchDelete from "./roomBatchDelete";
 import "./css/hotelRoomList.scss"
 import star from "./images/star.png";
 import noStar from "./images/no_star.png"
@@ -15,11 +15,24 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
     const codeList = code.code;
     const [searchValue, setSearchValue] = useState('');
     const [searchCont, setSearchCont] = useState(0);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [hotelNum, setHotelNum] = useState('');
+   // const [tagsName, setTagsName] = useState([]);
     const searchValueChange = (e) =>{
         setSearchValue(e.target.value);
     }
     const search = () => {
         setSearchCont(searchCont+1);
+    }
+
+    const onSetModalOpen = (open, index, index2) => {
+        setHotelNum(hotelListValue[index].room_list[index2].room_num)
+        setModalOpen(open)
+    }
+
+    //roomBatchDelete.js(자식컴포넌트) 에게 전달받은 modal false : modal창 닫기 위해서
+    const getData = (modalOpen) => {
+        setModalOpen(modalOpen);
     }
     const dispatch = useDispatch();
     
@@ -47,14 +60,22 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
 
     //호텔 부가서비스/시설 공통코드 조회 상태에 따라 dispatch or 예외처리
     useEffect(() => {
-        console.log(hotelCode)
         if(hotelCode){
             if(hotelCode.result === 'OK'){
+                // for(var i=0; i<hotelCode.data.length; i++){
+                //     for(var j=0; j<hotelList.data.length; j++){
+                //         if (hotelList.data[j].tags.includes(hotelCode.data[i].code)) tagsName.push(hotelCode.data[i].name);
+
+                //     }
+                // }
                 dispatch(hotelMainReducer.selectHotelCode({ data : hotelCode.data}));
+                /*{codeList.map((item2, index2) => (
+                    item.tags.includes(item2.code) ? (item2.name+',') : null
+                ))}*/
             }
         }
     },[hotel_code,hotelCode])
-
+    ///item.tags.includes(item2.code)
     return (
         <>
             <Row className="containerTitle">
@@ -95,7 +116,14 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
                                 <small className="text-muted">총 객실 수 : {item.room_list.length}</small>
                             </p>
                             {/* <span key={index2}>
-                                {item.tags.includes(item2.code) ? item2.name+',' : ''}
+                                <p className="card-text">
+                                <small className="text-muted">
+                                부가 서비스 :  {codeList.map((item2, index2) => (
+                                    item.tags.includes(item2.code) ? (item2.name+',') : null
+                                ))}
+                                </small>
+                                    item.tags.includes(item2.code) ? (index2 <= item.tags.length-1 ? item2.name+',' : item2.name) : null
+                            </p>
                             </span> */}
                             <p className="card-text">
                                 <small className="text-muted">
@@ -153,15 +181,22 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
                                                                 </td>
                                                                 <td id="roomCorrec">
                                                                     <Button variant="outline-dark" onClick={() => alert("객실 수정 모달 연동")}>수정</Button>
-                                                                    <Button variant="outline-danger" onClick={() => alert("객실 삭제 모달 연동")}>삭제</Button>
+                                                                    <Button variant="outline-danger" onClick={() => onSetModalOpen(true,index,index2)}>삭제</Button>
                                                                 </td>
-                                                                
                                                             </tr>
+                                                            
                                                             :null
                                                         ))}
                                                         </tbody>
                                                 </Table>
+                                                <div>
+                                                {
+                                                modalOpen && (
+                                                    <RoomBatchDelete room_num={hotelNum} modalOpen={modalOpen} getData={getData}/>
+                                                )}
+                                                </div>
                                                 <Button id="moreRoom" variant="outline-secondary" onClick={() => alert('객실상세 페이지 이동')}>객실 더보기</Button>
+                                                
                                             </CardBody> 
                                         </Card>
                                     </UncontrolledCollapse>
@@ -175,8 +210,6 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
                 </div>
             </div>   
             ))}
-                
-
         </>
     )
 };

@@ -40,3 +40,32 @@ axios.post('http://43.200.222.222:8080/hotel/owner-hotel-list',
 //호텔 부가시설/서비스 태그 조회 API
 export const hotel_code = () =>
 axios.get('http://43.200.222.222:8080/common/code/hotel');
+
+//객실 일괄삭제시 모달창 정보조회 API
+export const room_batch_delete_info = (data) =>
+axios.post('http://43.200.222.222:8080/hotel/room/delete/info',
+    {
+        room_num : data
+    },
+    {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization' : '1234',
+    }
+});
+
+//객실 일괄삭제 요청 API
+export const room_batch_delete = (data) =>
+axios.delete('http://43.200.222.222:8080/hotel/room/delete', {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization' : '1234',
+    },
+    data: {
+        room_num: data
+    }
+});
+
+//객실 태그 조회 API
+export const room_code = () =>
+axios.get('http://43.200.222.222:8080/common/code/room');
