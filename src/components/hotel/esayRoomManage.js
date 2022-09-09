@@ -10,6 +10,8 @@ import "./css/hotelRoomList.scss"
 import star from "./images/star.png";
 import noStar from "./images/no_star.png"
 
+//테스트 모달
+import RoomIndividualDelete from "./roomIndividualDelete";
 const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, code}) => {
     const hotelListValue = form.list;
     const codeList = code.code;
@@ -17,6 +19,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
     const [searchCont, setSearchCont] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
     const [hotelNum, setHotelNum] = useState('');
+
    // const [tagsName, setTagsName] = useState([]);
     const searchValueChange = (e) =>{
         setSearchValue(e.target.value);
@@ -180,7 +183,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
                                                                     }
                                                                 </td>
                                                                 <td id="roomCorrec">
-                                                                    <Button variant="outline-dark" onClick={() => alert("객실 수정 모달 연동")}>수정</Button>
+                                                                    <Button variant="outline-dark" onClick={() => alert("수정 연동")}>수정</Button>
                                                                     <Button variant="outline-danger" onClick={() => onSetModalOpen(true,index,index2)}>삭제</Button>
                                                                 </td>
                                                             </tr>
@@ -195,6 +198,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
                                                     <RoomBatchDelete room_num={hotelNum} modalOpen={modalOpen} getData={getData}/>
                                                 )}
                                                 </div>
+                                                
                                                 <Button id="moreRoom" variant="outline-secondary" onClick={() => alert('객실상세 페이지 이동')}>객실 더보기</Button>
                                                 
                                             </CardBody> 

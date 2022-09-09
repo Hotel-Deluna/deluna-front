@@ -1,13 +1,16 @@
-#batchDelete{
+#batchDelete, #individualDelete{
     font-size: 0.8rem;
 }
-#batchDelete .container{
+#batchDelete .container, #individualDelete .container{
     margin-top: 20px;
 }
 #batchDelete .row{
     margin-bottom: 20px;
 }
-
+#individualDelete .row{
+    margin-bottom: 20px;
+    text-align: center;
+}
 .accentContent{
     color: red;
     font-weight: bold;
