@@ -9,7 +9,7 @@ import RoomBatchDelete from "./roomBatchDelete";
 import "./css/hotelRoomList.scss"
 import star from "./images/star.png";
 import noStar from "./images/no_star.png"
-
+import { useSearchParams } from 'react-router-dom';
 //테스트 모달
 import RoomIndividualDelete from "./roomIndividualDelete";
 const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, code}) => {
@@ -19,7 +19,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
     const [searchCont, setSearchCont] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
     const [hotelNum, setHotelNum] = useState('');
-
+    const [searchParams, setSearchParams] = useSearchParams();
    // const [tagsName, setTagsName] = useState([]);
     const searchValueChange = (e) =>{
         setSearchValue(e.target.value);
@@ -41,10 +41,9 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
     
     //진입 시 모든 리스트가 보여줘야 함
     useEffect(() => {
-        my_hotel_list(searchValue);
+        my_hotel_list(searchParams.get('hotelName'));
         hotel_code();
     },[])
-
     //사업자가 검색버튼 누를 때 리스트 재조회
     useEffect(() => {
         my_hotel_list(searchValue);

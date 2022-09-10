@@ -94,3 +94,15 @@ axios.delete('http://43.200.222.222:8080/hotel/room/delete', {
         room_detail_num : data
     }
 });
+
+//호텔삭제 요청 API
+export const hotel_delete = (data) =>
+axios.delete('http://43.200.222.222:8080/hotel/delete', {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization' : '1234',
+    },
+    data: {
+        data
+    }
+});

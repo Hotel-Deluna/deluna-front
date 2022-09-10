@@ -208,13 +208,11 @@ function* individualDeleteInfoSaga(action){
 }
 
 function* individualDeleteSaga(action){
-    console.log(action)
     if(action.type == 'INDIVIDUAL_DELETE_CONFIRM'){
         return initialState;
     }else{
         try {
             const individualDelete = yield call(api.room_individual_delete, action.payload);
-            console.log(individualDelete)
             yield put({
                 type : INDIVIDUAL_DELETE_SUCCESS,
                 payload : individualDelete.data

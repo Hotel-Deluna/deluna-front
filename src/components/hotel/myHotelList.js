@@ -1,14 +1,28 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Table, Button} from 'react-bootstrap';
 import testImg from '../../pages/images/test.png';
 import { Link } from 'react-router-dom';
 import * as hotelMainReducer from "../../modules/hotel/hotelMainReducer";
-
+import HotelDelete from "./hotelDelete";
 /* redux 영역 */
 import { connect } from "react-redux";
 const MyhotelList = (props) => { 
     const hotelList = props.form.list;
-    //console.log(window.innerWidth < 770)
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [hotelNum, setHotelNum] = useState('');
+    const [hotelName, setHotelName] = useState('');
+    const onSetModalOpen = (open, hotel_num, hotel_name) => {
+        setHotelNum(hotel_num);
+        setModalOpen(open);
+        setHotelName(hotel_name)
+    }
+
+    //roomBatchDelete.js(자식컴포넌트) 에게 전달받은 modal false : modal창 닫기 위해서
+    const getData = (modalOpen) => {
+        setModalOpen(modalOpen);
+    }
+
     return (
         <>
             <div className="containerTitle">나의 호텔 리스트</div>
@@ -40,9 +54,13 @@ const MyhotelList = (props) => {
                                         <Button variant="outline-dark">수정</Button>
                                     </Link>
                                 </td>
-                                <td><Button variant="outline-dark">조회/변경</Button></td>
+                                <td>
+                                    <Link to = {"/auth/hotel/roomList?hotelName="+item.name}>
+                                        <Button variant="outline-dark">조회/변경</Button>
+                                    </Link>
+                                </td>
                                 <td><Button variant="outline-dark">보기</Button></td>
-                                <td><Button variant="danger">삭제</Button></td>
+                                <td><Button variant="danger" onClick={() => onSetModalOpen(true,item.hotel_num,item.name)}>삭제</Button></td>
                             </tr>
                             
                         ))}
@@ -57,6 +75,12 @@ const MyhotelList = (props) => {
                     
                     }
                 </Table>
+                <div>
+                {
+                modalOpen && (
+                    <HotelDelete hotel_name={hotelName} hotel_num={hotelNum} modalOpen={modalOpen} getData={getData}/>
+                )}
+                </div>
         </>
     )
 };
