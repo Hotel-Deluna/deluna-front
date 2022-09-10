@@ -77,9 +77,9 @@ function* hotelRegisterSaga(action){
         const register = yield call(api.hotel_register, action.payload);
       
        // FormData의 value 확인
-        for (let value of action.payload.values()) {
+        /*for (let value of action.payload.values()) {
             console.log(value);
-        }
+        }*/
         yield put({
             type : HOTEL_REGISTER_SUCCESS,
             payload : register.data
@@ -110,7 +110,6 @@ function* hotelEditSaga(action){
             payload : edit.data
         });
     }catch(e){
-        console.log(e)
         yield put({
             type : HOTEL_EDIT_FALL,
             payload : {

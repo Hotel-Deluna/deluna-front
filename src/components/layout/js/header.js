@@ -11,7 +11,7 @@ import logo from "../imges/delunaLogo.png";
 import "../css/header.scss";
 
 import ModifyForm from "../../../containers/auth/modifyForm";
-
+import AuthSecession from "../../auth/authSecession";
 const Header = () => {
     const [currentClick, setCurrentClick] = React.useState(null);
     
@@ -22,6 +22,15 @@ const Header = () => {
     const showModal = () => {
         setIsModalOpen(true);
     };
+
+    //고객&사업자 회원탈퇴
+    const [secessionModal, setSecessionModal] = useState(false);
+    const showSecessionModal = () => {
+        setSecessionModal(true);
+    }
+    const closeSecessionModal = (modalOpen) => {
+        setSecessionModal(modalOpen)
+    }
     //미로그인시 뿌려줄 header
     if(!currentClick){
         return (
@@ -74,6 +83,9 @@ const Header = () => {
                                         <NavDropdown.Item href="#passwordChange">
                                             비밀번호 변경
                                         </NavDropdown.Item>
+                                        <NavDropdown.Item onClick={showSecessionModal}>
+                                            회원 탈퇴하기
+                                        </NavDropdown.Item>
                                     </NavDropdown>
 
                                     <Nav.Link href="#logout" onClick={() => GetClick(null)}>
@@ -82,6 +94,7 @@ const Header = () => {
                                 </Nav>
                             </Navbar.Collapse>
                             {isModalOpen && ( <ModifyForm type={'0'} setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} />)};
+                            {secessionModal && ( <AuthSecession type={0} modalOpen={secessionModal} closeSecessionModal={closeSecessionModal} />)};
                         </Container>
                     </Navbar>
                     
@@ -107,6 +120,9 @@ const Header = () => {
                                         <NavDropdown.Item href="#passwordChange">
                                             비밀번호 변경
                                         </NavDropdown.Item>
+                                        <NavDropdown.Item onClick={showSecessionModal}>
+                                            회원 탈퇴하기
+                                        </NavDropdown.Item>
                                     </NavDropdown>
 
                                     <Nav.Link href="#logout" onClick={() => GetClick(null)}>
@@ -115,6 +131,7 @@ const Header = () => {
                                 </Nav>
                             </Navbar.Collapse>
                             {isModalOpen && ( <ModifyForm type={'1'} setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} />)};
+                            {secessionModal && ( <AuthSecession type={1} modalOpen={secessionModal} closeSecessionModal={closeSecessionModal} />)};
                         </Container>
                     </Navbar>
                     

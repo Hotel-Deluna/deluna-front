@@ -64,7 +64,6 @@ export default handleActions({
     },
     [CHANGE_IMAGE] : (state, action) => {
         const { form, name, value } = action.payload;
-        console.log(value)
         return state.setIn([form, 'form', name], value);
     },
     [INSERT_INPUT] : (state, action) => {

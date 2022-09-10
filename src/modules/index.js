@@ -16,6 +16,8 @@ import hotelMainReducer from "./hotel/hotelMainReducer";
 import roomDeleteActions, {roomBatchDeleteActionsSaga} from "./hotel/roomDeleteActions";
 //객실삭제(일괄삭제) 상태관리하는 redux
 import roomDeleteReducer from "./hotel/roomDeleteReducer";
+//고객 or 사업자 회원탈퇴 axios 통신
+import secessionActions, {secessionActionsSaga} from "./secessionActions";
 const rootReducer = combineReducers({
     authJoin,
     auth,
@@ -26,11 +28,11 @@ const rootReducer = combineReducers({
     hotelMainActions,
     roomDeleteReducer,
     roomDeleteActions,
+    secessionActions
 })
 export function* rootSaga(){
-    console.log(authSaga);
     yield all([authJoinSaga(), authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),
-        roomBatchDeleteActionsSaga()
+        roomBatchDeleteActionsSaga(),secessionActionsSaga()
     ]);
 }
 export default rootReducer;
