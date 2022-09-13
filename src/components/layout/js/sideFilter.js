@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/sideFilter.scss";
 import {Map, MapMarker} from "react-kakao-maps-sdk";
-import {Button} from 'react-bootstrap';
 function SideFilter() {
     const [info, setInfo] = useState();
     const [markers, setMarkers] = useState([]);
@@ -23,13 +22,21 @@ function SideFilter() {
                 style={{
                     width: "100%",
                     height: "100px",
-                    pointerEvents:"none"
-
                 }}
                 level={3}
                 onCreate={setMap}
                 >
-                <Button variant="primary">Primary</Button>
+                {markers.map((marker) => (
+                    <MapMarker
+                    key={`marker-${marker.content}-${marker.position.lat},${marker.position.lng}`}
+                    position={marker.position}
+                    onClick={() => setInfo(marker)}
+                    >
+                    {info &&info.content === marker.content && (
+                        <div style={{color:"#000"}}>{marker.content}</div>
+                    )}
+                    </MapMarker>
+                ))}
                 </Map>
             </div>
     )
