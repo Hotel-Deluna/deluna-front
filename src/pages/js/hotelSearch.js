@@ -1,5 +1,6 @@
 import React from "react";
-import {Form, Button,Container,Row,Col} from "react-bootstrap";
+import {Form, Button,Container,Row,Col,InputGroup} from "react-bootstrap";
+
 import '../css/hotelSearch.scss';
 
 function HotelSearch() {
@@ -10,12 +11,12 @@ function HotelSearch() {
             <div className="searchBox">
                     <Form>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Control type="region" placeholder="" />
-                            <Form.Control type="region" placeholder="" />
-                            <Form.Control type="region" placeholder="" />
-                            <Form.Control type="region" placeholder="" />
+                            <Form.Control type="text" placeholder="" />
+                            <Form.Control aria-label="FirstDate" type="date"/>
+                            <Form.Control aria-label="LastDate" type="date"/>
+                            <Form.Control type="text" placeholder="" />
                             <Button variant="warning">검색하기</Button>
-                        </Form.Group>  
+                        </Form.Group>
                         
                     </Form>
             </div>

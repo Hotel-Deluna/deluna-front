@@ -1,8 +1,8 @@
 .searchBox{
-    width: 90%;
     margin-top: 10px;
     box-shadow: 0 5px 10px 0 gray;
     position: relative;
+    height: 80%;
 }
 
 .searchBox .form-control{
@@ -10,10 +10,16 @@
 }
 
 .searchBox .mb-3{
+    width: 100%;
+    display: flex;
+    margin-top: 10px
+
+}
+.searchBox form{
     display: flex;
 }
-
 .searchBox input {
+    flex-wrap: wrap;
     margin-left: 10px;
 }
 
