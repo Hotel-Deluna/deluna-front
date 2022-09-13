@@ -1,0 +1,24 @@
+.searchBox{
+    width: 90%;
+    margin-top: 10px;
+    box-shadow: 0 5px 10px 0 gray;
+    position: relative;
+}
+
+.searchBox .form-control{
+    background-color: #e9ecef;
+}
+
+.searchBox .mb-3{
+    display: flex;
+}
+
+.searchBox input {
+    margin-left: 10px;
+}
+
+.searchBox button{
+    width: 50%;
+    margin-left: 10px;
+    margin-right: 10px;
+}
