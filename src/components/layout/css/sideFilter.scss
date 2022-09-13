@@ -1,7 +1,43 @@
 .sideBar{
-    width: 20%;
-    height: 400px; //--> sticky가 적용될 요소는 꼭 height값이 있어야 함
+    height: 600px; //--> sticky가 적용될 요소는 꼭 height값이 있어야 함
     position: sticky;
     top: 0;
-    background: yellowgreen;
+    margin-top: 10px;
+}
+
+#kakaoSearch{
+    position:absolute;
+    top:0;
+    left:0;
+    padding:5px;
+    z-index:10;
+    margin-top:10%;
+    margin-left:10%;
+    width: 80%;
+}
+
+.sideBarBox{
+    margin-bottom: 10px;
+}
+
+.sideBarBox p{
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    font-weight: bold;
+    
+}
+#star{
+    text-align: left;
+    vertical-align: top; 
+}
+.sideBarBox .form-check-inline{
+    display: block;
+    font-size: 0.8rem;
+    margin-right: 0.7rem;
+    text-align: left;
+}
+@media screen and (max-width: 770px){
+    
 }

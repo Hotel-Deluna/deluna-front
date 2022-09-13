@@ -18,6 +18,8 @@ import roomDeleteActions, {roomBatchDeleteActionsSaga} from "./hotel/roomDeleteA
 import roomDeleteReducer from "./hotel/roomDeleteReducer";
 //고객 or 사업자 회원탈퇴 axios 통신
 import secessionActions, {secessionActionsSaga} from "./secessionActions";
+//고객이 검색필터를 통해 axios 통심
+import hotelSearchActions,{hotelSearchActionsSaga} from "./client/hotelSearchActions";
 const rootReducer = combineReducers({
     authJoin,
     auth,
@@ -28,11 +30,12 @@ const rootReducer = combineReducers({
     hotelMainActions,
     roomDeleteReducer,
     roomDeleteActions,
-    secessionActions
+    secessionActions,
+    hotelSearchActions
 })
 export function* rootSaga(){
     yield all([authJoinSaga(), authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),
-        roomBatchDeleteActionsSaga(),secessionActionsSaga()
+        roomBatchDeleteActionsSaga(),secessionActionsSaga(),hotelSearchActionsSaga()
     ]);
 }
 export default rootReducer;

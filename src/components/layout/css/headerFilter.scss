@@ -31,5 +31,31 @@
     width: 100%;
     margin-right: 10px;
 }
+#star > img{
+    width: 30px;
+    margin-right: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+
+@media screen and (max-width: 770px){
+    .searchBox form{
+        display: block;
+    }
+    .searchBox .mb-3{
+        width: 100%;
+        display: flex;
+        margin-top: 0px;
+        margin-left: 0px;
+    }
+    .searchBox .input-group button{
+        width: 100%;
+        margin-right: 0px;
+    } 
+    .searchBox{
+        height: 100%;
+    } 
+}
 
 
