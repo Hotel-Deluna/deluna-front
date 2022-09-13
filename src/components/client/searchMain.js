@@ -74,9 +74,7 @@ const SearchMain = ({hotel_list, hotelList, room_code, roomCode}) => {
                         <img src={(item.star - 5 >= 0 ? star : noStar)}></img>
                     </Card.Text>
                     <Card.Text>
-                        {roomCodeList.map((item2, index2) => (
-                            item.tags.includes(item2.code) ? (item2.name+',') : null
-                        ))}
+                        반려동물, 흡연, 스파, 오션뷰, 마사지, 와이파이
                     </Card.Text>
                     <Card.Text id="roomSelection">
                         예약가능 {item.minimum_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} ~
