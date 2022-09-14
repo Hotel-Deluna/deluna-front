@@ -19,8 +19,9 @@ import star_5_foc from "../imges/star_5_foc.png";
 
 import Sevice from "../../../components/hotel/hotelService";
 /* redux 영역 */
-import { connect } from "react-redux";
+import { connect,useDispatch } from "react-redux";
 import {hotel_code} from "../../../modules/hotel/hotelMainActions";
+import * as hotelSearchReducer from "../../../modules/client/hotelSearchReducer"
 import MultiRangeSlider from "./multiRangeSlider";
 function SideFilter({hotel_code, hotelCode}) {
     const [info, setInfo] = useState();
@@ -29,15 +30,28 @@ function SideFilter({hotel_code, hotelCode}) {
     const [star, setStar] = useState();
 
     const [hotelTags, setHotelTags] = useState([]);
+
+    const [min, setMin] = useState();
+    const [max, setMax] = useState();
+    const dispatch = useDispatch();
+
     const handleStar = (val) => {
         if(val === star) setStar('');
         else setStar(val);
+
+        dispatch(hotelSearchReducer.filterData({name : 'star',value:star}));
+    }
+    const handlePrice = (min, max) => {
+        setMin(min);
+        setMax(max);
+    }
+    const clickPrice = () => {
+        dispatch(hotelSearchReducer.filterData({name : 'minimum_price',value:min}));
+        dispatch(hotelSearchReducer.filterData({name : 'maximum_price',value:max}));
     }
     useEffect(() => {
         if (!map) return
         const ps = new kakao.maps.services.Places()
-    
-        
       }, [map])
     useEffect(() => {
         hotel_code();
@@ -51,9 +65,6 @@ function SideFilter({hotel_code, hotelCode}) {
             }
         }
     },[hotel_code,hotelCode])
-
-   
-    
     return (
             <div className="sideBar">
                 <div className = "sideBarBox">
@@ -97,11 +108,12 @@ function SideFilter({hotel_code, hotelCode}) {
                     ))}
                 </div>
                 <div className="sideBarBox">
-                    <p>가격</p>
+                    <p>가격 <Button onClick={() => clickPrice()}>가격적용</Button></p>
                     <MultiRangeSlider
                     min={0}
                     max={1000000}
-                    onChange={({ min, max }) => {}}/>
+                    onChange={({ min, max }) => {handlePrice(min, max)}}/>
+                    
                 </div>
             </div>
     )
@@ -112,7 +124,7 @@ export default connect(
         hotelCode : hotelMainActions.code
     }),
     {
-        hotel_code
+        hotel_code,
 
     }
 )(SideFilter);

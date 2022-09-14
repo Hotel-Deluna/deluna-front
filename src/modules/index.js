@@ -20,6 +20,7 @@ import roomDeleteReducer from "./hotel/roomDeleteReducer";
 import secessionActions, {secessionActionsSaga} from "./secessionActions";
 //고객이 검색필터를 통해 axios 통심
 import hotelSearchActions,{hotelSearchActionsSaga} from "./client/hotelSearchActions";
+import hotelSearchReducer from "./client/hotelSearchReducer";
 const rootReducer = combineReducers({
     authJoin,
     auth,
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
     roomDeleteReducer,
     roomDeleteActions,
     secessionActions,
-    hotelSearchActions
+    hotelSearchActions,
+    hotelSearchReducer
 })
 export function* rootSaga(){
     yield all([authJoinSaga(), authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),
