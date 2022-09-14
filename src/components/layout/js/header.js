@@ -12,15 +12,22 @@ import "../css/header.scss";
 
 import ModifyForm from "../../../containers/auth/modifyForm";
 import AuthSecession from "../../auth/authSecession";
+import RoomRegister from "../../../containers/hotel/roomRegister";
 const Header = () => {
     const [currentClick, setCurrentClick] = React.useState(null);
     
     const GetClick = (type) => {
         setCurrentClick(type);
     };
+    //정보수정
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
         setIsModalOpen(true);
+    };
+    //객실등록수정
+    const [roomModalOpen, setRoomModalOpen] = useState(false);
+    const showRoomModal = () => {
+        setRoomModalOpen(true);
     };
 
     //고객&사업자 회원탈퇴
@@ -111,7 +118,7 @@ const Header = () => {
                             <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
                                 <Nav className="me-auto">
                                     <Nav.Link href="#hotelManagement">호텔관리</Nav.Link>
-                                    <Nav.Link href="#guestroomManagement">객실관리</Nav.Link>
+                                    <Nav.Link onClick={showRoomModal}>객실관리</Nav.Link>
                                     <Nav.Link href="#reservationManagement">예약관리</Nav.Link>
                                 </Nav>
                                 <Nav>
@@ -132,6 +139,7 @@ const Header = () => {
                             </Navbar.Collapse>
                             {isModalOpen && ( <ModifyForm type={'1'} setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} />)};
                             {secessionModal && ( <AuthSecession type={1} modalOpen={secessionModal} closeSecessionModal={closeSecessionModal} />)};
+                            {roomModalOpen && (<RoomRegister setRoomModalOpen={setRoomModalOpen} roomModalOpen={roomModalOpen} />)}
                         </Container>
                     </Navbar>
                     

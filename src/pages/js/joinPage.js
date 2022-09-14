@@ -1,6 +1,7 @@
 import React from "react";
 import AuthLayout from "../../components/auth/authLayout";
-import AuthTabs from "../../containers/auth/authTabs";
+//import AuthTabs from "../../containers/auth/authTabs";
+import JoinForm from "../../containers/auth/joinForm";
 /**
  * 
  * 
@@ -12,7 +13,7 @@ import AuthTabs from "../../containers/auth/authTabs";
 const JoinPage = () => {
     return (
         <AuthLayout>
-            <AuthTabs type={'join'} />
+            <JoinForm />
         </AuthLayout>
     );
 }

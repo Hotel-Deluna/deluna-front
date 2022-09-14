@@ -11,13 +11,17 @@ const PLUS_FIELD = 'auth/PLUS_FIELD';
 const SLICE_FIELD = 'auth/SLICE_FIELD';
 const RESET_RESPONSE = 'auth/RESET_RESPONSE';
 
+
 //로그인
 const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createRequestActionTypes(
   'auth/LOGIN'
 );
-//회원가입
-const [JOIN, JOIN_SUCCESS, JOIN_FAILURE] = createRequestActionTypes(
-  'auth/JOIN'
+//회원가입 = JOINUSER - 고객 
+const [JOINUSER, JOINUSER_SUCCESS, JOINUSER_FAILURE] = createRequestActionTypes(
+  'auth/JOINUSER'
+);
+const [JOINPARTNER, JOINPARTNER_SUCCESS, JOINPARTNER_FAILURE] = createRequestActionTypes(
+  'auth/JOINPARTNER'
 );
 
 //정보조회 - SELECTUSER : 고객, SELECTPARTNER :사업자 
@@ -83,11 +87,11 @@ export const login = createAction(LOGIN, ({  email, password, role  }) => ({
   email, password, role 
 }));
 //사업자 회원가입
-export const partnerJoin = createAction(JOIN, ({business_num, email, name, opening_day, password, phone_num})=> ({
+export const partnerJoin = createAction(JOINPARTNER, ({business_num, email, name, opening_day, password, phone_num})=> ({
   business_num, email, name, opening_day, password, phone_num
 }));
 //고객 회원가입
-export const userJoin = createAction (JOIN, ({email, name, password, phone_auth_num, phone_num}) => ({
+export const userJoin = createAction (JOINUSER, ({email, name, password, phone_auth_num, phone_num}) => ({
   email, name, password, phone_auth_num, phone_num
 }));
 
@@ -114,8 +118,8 @@ export const partnerModify = createAction(MODIFYPARTNER, ({token, business_num, 
 const loginSaga = createRequestSaga(LOGIN, authAPI.login);
 
 //회원가입
-const partnerJoinSaga = createRequestSaga(JOIN, authAPI.partnerJoin);
-const userJoinSaga = createRequestSaga(JOIN, authAPI.userJoin);
+const partnerJoinSaga = createRequestSaga(JOINPARTNER, authAPI.partnerJoin);
+const userJoinSaga = createRequestSaga(JOINUSER, authAPI.userJoin);
 //정보조회
 const userSelectSaga = createRequestSaga(SELECTUSER, authAPI.userSelect);
 const partnerSelectSaga = createRequestSaga(SELECTPARTNER, authAPI.partnerSelect);
@@ -127,8 +131,8 @@ export function* authSaga() {
   //로그인
   yield takeLatest(LOGIN, loginSaga);
   //회원가입
-  yield takeLatest(JOIN, partnerJoinSaga);
-  yield takeLatest(JOIN, userJoinSaga);
+  yield takeLatest(JOINPARTNER, partnerJoinSaga);
+  yield takeLatest(JOINUSER, userJoinSaga);
   //정보조회
   yield takeLatest(SELECTUSER, userSelectSaga);
   yield takeLatest(SELECTPARTNER, partnerSelectSaga);
@@ -200,7 +204,6 @@ const auth = handleActions(
     [RESET_RESPONSE]: (state, { payload: {key} }) => ({
       ...state,
       [key] : null,
-      authError: null // 폼 전환 시 회원 인증 에러 초기화
     }),
     // 로그인 성공
     [LOGIN_SUCCESS]: (state, { payload: auth }) => ({
@@ -213,16 +216,27 @@ const auth = handleActions(
       ...state,
       authError: error
     }),
-    // 회원가입 성공
-    [JOIN_SUCCESS]: (state, { payload: auth }) => ({
+    //고객 회원가입 성공
+    [JOINUSER_SUCCESS]: (state, { payload: auth }) => ({
       ...state,
       authError: null,
       auth
     }),
-    // 회원가입 실패
-    [JOIN_FAILURE]: (state, { payload: error }) => ({
+    //고객 회원가입 실패
+    [JOINUSER_FAILURE]: (state, { payload: error }) => ({
       ...state,
-      auth: error
+      authError: error
+    }),
+    //사업자 회원가입 성공
+    [JOINPARTNER_SUCCESS]: (state, { payload: auth }) => ({
+      ...state,
+      authError: null,
+      auth
+    }),
+    //사업자 회원가입 실패
+    [JOINPARTNER_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      authError: error
     }),
     // 고객정보조회 성공
     [SELECTUSER_SUCCESS]: (state, { payload: authSelect }) => ({

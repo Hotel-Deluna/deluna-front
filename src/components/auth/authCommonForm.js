@@ -1,22 +1,41 @@
 import React , {useRef, useState}from "react";
 import Timer from "./timer";
+import JoinCheck from "./joinCheckbox";
 //import Modal from "react-modal";
 import { Container, Row, Col,Form, FloatingLabel, Button } from "react-bootstrap";
+import "./css/authForm.scss";
+import { setIn } from "immutable";
 
-const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onChangeNum, onClick, onSubmit, timerCheck, reTimerCheck, resetCertify}) => {
-    //console.log(timerType);
+const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onChangeNum, onClick, onSubmit, timerCheck, reTimerCheck, resetCertify,  highFunction1, highFunction2}) => {
+    //console.log(form);
     return(
         <Row className="justify-content-md-center" style={{marginTop: '1rem'}}>
         {/* <Col xs lg="1" /> */}
         <Col lg="12">
             <Container fluid="xxl">
                 <Row className="align-items-center mb-3">
+                    {page === 'join'
+                    ? 
+                    <><Col sm={9}>
+                                <FloatingLabel label="이메일 주소">
+                                    <Form.Control type="email" name="email" value={form.email} className={setInfo.email.btnCheck === 1 ? 'is-invalid' : ''} onChange={onChange} disabled={(setInfo.email.isCheck === true) && (setInfo.email.btnCheck === 2) ? true : false} />
+                                    <Form.Text className={setInfo.email.btnCheck === 1 ? 'err_text' : ''} id="managerEmailHelpBlock">{form.email === '' ? 'email 형식(@)으로 작성해주세요.(공백없이)' : setInfo.email.msg}</Form.Text>
+                                </FloatingLabel>
+                            </Col><Col sm={3}>
+                                    <div className={setInfo.email.btnCheck === 2 ? "d-grid mx-auto" : "d-grid join_btns mx-auto"}>
+                                        <Button name='emailBtn' variant="outline-primary" onClick={onClick} size="lg" disabled={setInfo.email.btnCheck === 2 ? true : (setInfo.email.isCheck === true ? false : true) }>
+                                            {setInfo.email.btnCheck === 2 ? '확인완료' : '중복확인'}
+                                        </Button>
+                                    </div>
+                                </Col></>
+                    :
                     <Col sm = {12}>
-                        {/* 이메일 input창 */}
-                        <FloatingLabel controlId="email" label="이메일 주소">
-                            <Form.Control type="email" name="email" value={form.email} disabled />
-                        </FloatingLabel>
+                    {/* 이메일 input창 */}
+                    <FloatingLabel controlId="email" label="이메일 주소">
+                        <Form.Control type="email" name="email" value={form.email} disabled />
+                    </FloatingLabel>
                     </Col>
+                    }
                 </Row>
                 {type === '0' 
                 ? <Row className="align-items-center mb-3">
@@ -107,11 +126,21 @@ const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onCh
                         </div>
                     </Col>
                 </Row>)}
+                {page === 'join' && (
+                    <Row className="align-items-center mb-3">
+                        <Col sm = {12}>
+                            {/* 개인정보/기업정보 약관동의 checkbox */}
+                            {type === '1' ? <JoinCheck value={type} getDataCheckbox1={highFunction1} />
+                            :
+                            <JoinCheck value={type} getDataCheckbox1={highFunction1} getDataCheckbox2={highFunction2} />}
+                        </Col>
+                     </Row>
+                )}
                 <Row className="justify-content-md-center mb-3">
                     <Col xs lg="5">
                         <div className="d-grid">
                             {page === 'join' 
-                            ? <Button type="submit" onClick={onSubmit} variant="primary" size="lg">회원가입</Button> 
+                            ? <Button type="submit" onClick={onSubmit} variant="primary" size="lg" disabled={!setInfo.name.isCheck || setInfo.email.btnCheck < 2 || setInfo.phoneNum.btnCheck < 2 ? true : false}>회원가입</Button> 
                             :  <Button type="submit" onClick={onSubmit} variant="primary" size="lg" disabled={(setInfo.name.isSame && setInfo.phoneNum.isSame && setInfo.businessNum && setInfo.opening_day.isSame ) && true }>수정</Button>} 
                         </div>
                     </Col>

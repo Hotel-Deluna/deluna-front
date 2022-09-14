@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
 import { all } from 'redux-saga/effects';
-import authJoin, {authJoinSaga} from './authJoin';
 import auth, {authSaga} from './auth';
 import loading from "./loading";
 
@@ -22,7 +21,6 @@ import secessionActions, {secessionActionsSaga} from "./secessionActions";
 import hotelSearchActions,{hotelSearchActionsSaga} from "./client/hotelSearchActions";
 import hotelSearchReducer from "./client/hotelSearchReducer";
 const rootReducer = combineReducers({
-    authJoin,
     auth,
     loading,
     hotelInfoReducer,
@@ -36,7 +34,7 @@ const rootReducer = combineReducers({
     hotelSearchReducer
 })
 export function* rootSaga(){
-    yield all([authJoinSaga(), authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),
+    yield all([authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),
         roomBatchDeleteActionsSaga(),secessionActionsSaga(),hotelSearchActionsSaga()
     ]);
 }

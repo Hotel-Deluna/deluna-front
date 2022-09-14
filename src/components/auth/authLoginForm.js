@@ -3,6 +3,10 @@ import { Container, Row, Col, Form, Nav, Button, Tabs, Tab} from "react-bootstra
 import googleLogo from '../logos/google_logo.png';
 import kakaoLogo from '../logos/kakao_logo.png';
 import naverLogo from '../logos/naver_logo.png';
+import { KAKAO_AUTH_URL, NAVER_AUTH_URL } from "../../lib/api/Oauth";
+import NaverLogin from 'react-naver-login';
+import KakaoLogin from 'react-kakao-login';
+import GoogleLogin from 'react-google-login';
 const AuthLoginForm = ({ type,form, onChange, onSubmit, onClick, onCheck, menuChange, autoLoginCheck,errCount}) => {
     const FormContainer = {
         textAlign : 'left',
@@ -60,7 +64,7 @@ const AuthLoginForm = ({ type,form, onChange, onSubmit, onClick, onCheck, menuCh
     return(
 
         <><Tabs defaultActiveKey='user' onSelect={(e)=> menuChange(type === '1' ? '2' : '1', e)} id="justify-tab-example" justify>
-        <Tab eventKey="user" title={'고객 회원가입'}>
+        <Tab eventKey="user" title={'고객 로그인'}>
         {type === '1' &&(
                 <Container style={FormContainer} fluid="xxl">
                 <form type="post" onSubmit={onSubmit}>
@@ -126,26 +130,35 @@ const AuthLoginForm = ({ type,form, onChange, onSubmit, onClick, onCheck, menuCh
                     <Row className="align-items-center mb-2">
                         <Col sm={4}>
                             <div className="d-grid">
-                                <Button name="kakao" variant="light" style={btnBorder} onClick={onClick}>
-                                    <img name="kakao" style={simbolSize} src={kakaoLogo} alt="kakaoLogo" onClick={onClick} />
-                                    카카오
-                                </Button>
+                                <KakaoLogin token={'d2d4a9384b4046015886ef4f2785a2ec'} needProfile={true} useLoginForm={true} persistAccessToken={true} throughTalk={true} onSuccess={console.log} onFail={console.error} onLogout={console.info} render={({ onClick }) => (
+                                    <Button name="kakao" variant="light" style={btnBorder} onClick={(e)=> {e.preventDefault(); onClick()}}>
+                                        <img name="kakao" style={simbolSize} src={kakaoLogo} alt="kakaoLogo" />
+                                        카카오
+                                    </Button>
+                                )} />
+                                
                             </div>
                         </Col>
                         <Col sm={4}>
                             <div className="d-grid">
-                                <Button name="google" variant="light" style={btnBorder} onClick={onClick}>
-                                    <img name="google" style={simbolSize} src={googleLogo} alt="googleLogo" onClick={onClick} />
-                                    구글
-                                </Button>
+                                <GoogleLogin clientId="915721263519-d5ddrs302m727d2r8p58q68f93g5d2hv.apps.googleusercontent.com" render={renderProps => (
+                                    <Button name="google" variant="light" style={btnBorder} onClick={renderProps.onClick} disabled={renderProps.disabled}>
+                                        <img name="google" style={simbolSize} src={googleLogo} alt="googleLogo" />
+                                        구글
+                                    </Button>
+                                )} onSuccess={(e)=> console.log('ㅠㅠ',e)} onFailure={console.log} responseType="code,token" cookiePolicy={"single_host_origin"} />
                             </div>
                         </Col>
                         <Col sm={4}>
                             <div className="d-grid">
-                                <Button name="naver" variant="light" style={btnBorder} onClick={onClick}>
+                                <NaverLogin clientId='ujTxeGQ6iDErvd2yX3L9'  callbackUrl='http://localhost:3000/auth/login' render={renderProps => (
+                                    <Button name="naver" variant="light" style={btnBorder} onClick={renderProps.onClick} disabled={renderProps.disabled}>
                                     <img name="naver" style={simbolSize} src={naverLogo} alt="naverLogo" />
                                     네이버
                                 </Button>
+                                )} onSuccess={(e) => console.log('aa',e)} onFailure={(result)=>console.error(result)} responseType="code,token" />
+                                    
+                                
                             </div>
                         </Col>
                     </Row>
@@ -172,7 +185,7 @@ const AuthLoginForm = ({ type,form, onChange, onSubmit, onClick, onCheck, menuCh
         )}
         </Tab>
         {/* 사업자 회원가입 */}
-        <Tab eventKey="partner" title={'사업자 회원가입'}>
+        <Tab eventKey="partner" title={'사업자 로그인'}>
             {type === '2' && (
                 <Container style={FormContainer} fluid="xxl">
                 <form type="post" onSubmit={onSubmit}>
