@@ -23,7 +23,6 @@ const initialState = Map({
 export default handleActions({
     [POST_ROOM_BATCH_DELETE_IFNO] : (state, action) => {
         const {data} = action.payload;
-        console.log(data)
         return state.setIn(['ROOM_BATCH_DELETE_INFO', 'form', 'info'], data);
     },
     [POST_ROOM_INDIVIDUAL_DELETE_INFO] : (state, action) => {

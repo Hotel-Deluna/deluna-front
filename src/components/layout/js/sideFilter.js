@@ -21,50 +21,111 @@ import Sevice from "../../../components/hotel/hotelService";
 /* redux 영역 */
 import { connect,useDispatch } from "react-redux";
 import {hotel_code} from "../../../modules/hotel/hotelMainActions";
+import {room_code} from "../../../modules/hotel/roomDeleteActions";
 import * as hotelSearchReducer from "../../../modules/client/hotelSearchReducer"
 import MultiRangeSlider from "./multiRangeSlider";
-function SideFilter({hotel_code, hotelCode}) {
+function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
     const [info, setInfo] = useState();
     const [markers, setMarkers] = useState([]);
     const [map, setMap] = useState();
+
+    //호텔등급
     const [star, setStar] = useState();
-
+    //호텔 부가서비스/시설 태그 조회한 API값
     const [hotelTags, setHotelTags] = useState([]);
+    //호텔 객실시설 태그 조회한 API값
+    const [roomTags, setRoomTags] = useState([]);
 
+    //최대금액
     const [min, setMin] = useState();
+    //최소금액
     const [max, setMax] = useState();
+
+    //선택한 호텔태그
+    const [hotelTag, setHotelTag] = useState([]);
+    //선택한 객실태그
+    const [roomTag, setRoomTag] = useState([]);
     const dispatch = useDispatch();
 
     const handleStar = (val) => {
-        if(val === star) setStar('');
-        else setStar(val);
-
-        dispatch(hotelSearchReducer.filterData({name : 'star',value:star}));
+        if(val === star) {
+            setStar('');
+            dispatch(hotelSearchReducer.filterData({name : 'star',value:null}));
+        }else{
+            setStar(val);
+            dispatch(hotelSearchReducer.filterData({name : 'star',value:val}));
+        }
+        
     }
+
     const handlePrice = (min, max) => {
         setMin(min);
         setMax(max);
     }
+    
     const clickPrice = () => {
         dispatch(hotelSearchReducer.filterData({name : 'minimum_price',value:min}));
         dispatch(hotelSearchReducer.filterData({name : 'maximum_price',value:max}));
+    }
+
+    const [isChecked, setIsChecked] = useState(false) // 2022.08.29 (한예지) : 체크박스 체크 여부
+
+    /*2022.08.29 (한예지) : 체크박스 선택시 핸들링*/
+    const hotelCheckedList = (e) => {
+        setIsChecked(!isChecked);
+        handleHotelChecked(e.target.value, e.target.checked)
+    }
+
+    /*2022.08.28 (한예지) : 체크박스 true, false에 따라 선택된항목 추가 or 삭제*/
+    const handleHotelChecked = (val, isChecked) => {
+        if(isChecked){
+            setHotelTag([...hotelTag, parseInt(val)]);
+            dispatch(hotelSearchReducer.filterData({name : 'tags',value:[...hotelTag, parseInt(val)]}));
+        }else if(!isChecked && hotelTag.includes(parseInt(val))){
+            setHotelTag(hotelTags.filter((el) => el !== parseInt(val)));
+            dispatch(hotelSearchReducer.filterData({name : 'tags',value:hotelTag.filter((el) => el !== parseInt(val))}));
+        }
+            
+    }
+    /*2022.08.29 (한예지) : 체크박스 선택시 핸들링*/
+    const roomCheckedList = (e) => {
+        setIsChecked(!isChecked);
+        handleRoomChecked(e.target.value, e.target.checked)
+    }
+    const handleRoomChecked = (val, isChecked) => {
+        if(isChecked){
+            setRoomTag([...roomTag, parseInt(val)]);
+            //dispatch(hotelSearchReducer.filterData({name : 'tags',value:[...roomTag, parseInt(val)]}));
+        }else if(!isChecked && roomTag.includes(parseInt(val))){
+            setRoomTag(roomTag.filter((el) => el !== parseInt(val)));
+            //dispatch(hotelSearchReducer.filterData({name : 'tags',value:roomTag.filter((el) => el !== parseInt(val))}));
+        }
     }
     useEffect(() => {
         if (!map) return
         const ps = new kakao.maps.services.Places()
       }, [map])
+
     useEffect(() => {
         hotel_code();
+        room_code();
     },[])
 
     useEffect(() => {
         if(hotelCode){
             if(hotelCode.result === 'OK'){
                 setHotelTags(hotelCode.data)
-                
             }
         }
     },[hotel_code,hotelCode])
+
+    useEffect(() => {
+        if(roomCode){
+            if(roomCode.result === 'OK'){
+                setRoomTags(roomCode.data)
+            }
+        }
+    },[room_code,roomCode])
     return (
             <div className="sideBar">
                 <div className = "sideBarBox">
@@ -103,6 +164,22 @@ function SideFilter({hotel_code, hotelCode}) {
                         value={item.code}
                         name="hotelServic1e"
                         type='checkbox'
+                        onChange={hotelCheckedList}
+                        />
+                        
+                    ))}
+                </div>
+                <div className="sideBarBox">
+                    <p>객실시설</p>
+                    {roomTags.map((item, index) => (
+                        <Form.Check
+                        inline
+                        key={index}
+                        label={item.name}
+                        value={item.code}
+                        name="hotelServic1e"
+                        type='checkbox'
+                        onChange={roomCheckedList}
                         />
                         
                     ))}
@@ -120,11 +197,14 @@ function SideFilter({hotel_code, hotelCode}) {
 }
 
 export default connect(
-    () =>  ({ hotelMainActions}) => ({
-        hotelCode : hotelMainActions.code
+    () =>  ({ hotelMainActions,hotelSearchReducer,roomDeleteActions}) => ({
+        hotelCode : hotelMainActions.code,
+        roomCode : roomDeleteActions.code
+
     }),
     {
         hotel_code,
+        room_code
 
     }
 )(SideFilter);

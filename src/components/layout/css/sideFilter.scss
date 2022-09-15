@@ -1,8 +1,9 @@
 .sideBar{
-    height: 600px; //--> sticky가 적용될 요소는 꼭 height값이 있어야 함
+    height: 100%; //--> sticky가 적용될 요소는 꼭 height값이 있어야 함
     position: sticky;
     top: 0;
     margin-top: 10px;
+    margin-bottom: 50%;
 }
 
 #kakaoSearch{

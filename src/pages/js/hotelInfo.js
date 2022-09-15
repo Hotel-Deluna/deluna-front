@@ -22,7 +22,7 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
     const [searchParams, setSearchParams] = useSearchParams();
     /* 부모컴포넌트 -> 자식컴포넌트 */
     //최대 이미지 등록 갯수 ( 호텔 : 10, 객실 : 5) ImagesUpload 컴포넌트에 전달
-    const [maxImagesNum, setMaxImagesNum] = useState(10);
+    const [maxImagesNum, setMaxImagesNum] = useState(5);
     const [btnDisabled,setBtnDisabled] = useState(true);
     const onClick = () => {
         const frm = new FormData();
