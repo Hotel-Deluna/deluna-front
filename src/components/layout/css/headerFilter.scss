@@ -37,8 +37,34 @@
     margin-top: 5px;
     cursor: pointer;
 }
-
-
+#searchTextBox{
+    position: absolute;
+    width: 18rem;
+    margin-top: -15px;
+    z-index: 10;
+}
+#roomPersBox{
+    position: absolute;
+    width: 200px;
+    margin-top: -15px;
+    z-index: 10;
+    margin-left: 60%;
+}
+#searchTextBox .card-text, #roomPersBox .card-text{
+    width: 100%;
+    margin-bottom : 10px;
+    cursor: pointer;
+    //border-bottom: 1px solid rgb(218, 218, 218);
+}
+#roomPersBox .card-text{
+    font-size: 0.9rem;
+}
+#searchTextBox .card-text svg{
+    margin-right: 5px;
+}
+.searchBox .mb-3 input{
+    font-size: 0.8rem;
+}
 @media screen and (max-width: 770px){
     .searchBox form{
         display: block;

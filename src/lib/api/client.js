@@ -39,3 +39,17 @@ axios.post('http://43.200.222.222:8080/hotel/search/list/filter',data,
         'Content-Type': 'application/json'
     }
 });
+
+//검색바 - 검색어에 일치하는 지역명, 호텔명, 호텔주소, 장소 있는지 조회
+export const search_bar = (data) =>
+axios.get('http://43.200.222.222:8080/hotel/search/bar',
+    {
+        params : {
+            text : data
+        }
+    },
+    {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
