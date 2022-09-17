@@ -130,7 +130,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
                             <p className="card-text">
                                 <small className="text-muted">
                                 부가 서비스 :  {codeList.map((item2, index2) => (
-                                    item.tags.includes(item2.code) ? (item2.name+',') : null
+                                    item.tags.includes(item2.code) ? (' ☑'+item2.name) : null
                                 ))}
                                 </small>
                             

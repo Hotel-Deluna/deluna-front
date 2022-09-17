@@ -68,21 +68,35 @@ function HeaderFilter({search_bar,searchList}) {
                             <InputGroup className="mb-3">
                                 <InputGroup.Text id="basic-addon1"><BiBed/></InputGroup.Text>
                                 <Form.Control aria-describedby="basic-addon1" onChange={searchText}
+                                onClick={() => setRoomPers(false)}
                                 value={searchClickValue} placeholder="호텔명 또는 지역 입력"
                                 />
                                 
                                 </InputGroup>
                                 
                                 <InputGroup className="mb-3">
-                                    <Form.Control aria-label="FirstDate" type="date"/>
+                                    <Form.Control aria-label="FirstDate" type="date"
+                                        onClick={() => {
+                                            setRoomPers(false)
+                                            setSearch(false)
+                                        }}
+                                    />
                                 </InputGroup>
                                 <InputGroup className="mb-3">
-                                    <Form.Control aria-label="LastDate" type="date"/>
+                                    <Form.Control aria-label="LastDate" type="date"
+                                        onClick={() => {
+                                            setRoomPers(false)
+                                            setSearch(false)
+                                        }}
+                                    />
                                 </InputGroup>
                                 <InputGroup className="mb-3">
                                     <InputGroup.Text id="basic-addon1"><BsPerson/></InputGroup.Text>
                                     <Form.Control type="text"
-                                    onClick={() => setRoomPers(true)} value={'객실 '+roomCount+'개, 인원 ' + persCount+'명'}
+                                    onClick={() => {
+                                        setRoomPers(true)
+                                        setSearch(false)
+                                    }} value={'객실 '+roomCount+'개, 인원 ' + persCount+'명'}
                                     />
                                 </InputGroup>
                             <InputGroup className="mb-3">

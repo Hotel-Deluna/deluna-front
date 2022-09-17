@@ -65,23 +65,30 @@
 .searchBox .mb-3 input{
     font-size: 0.8rem;
 }
+#searchContainer{
+    position: relative;
+}
 @media screen and (max-width: 770px){
-    .searchBox form{
-        display: block;
-    }
-    .searchBox .mb-3{
+    #searchContainer{
         width: 100%;
-        display: flex;
-        margin-top: 0px;
-        margin-left: 0px;
+        overflow-x:auto;
     }
-    .searchBox .input-group button{
-        width: 100%;
-        margin-right: 0px;
-    } 
-    .searchBox{
-        height: 100%;
-    } 
+    // .searchBox form{
+    //     display: block;
+    // }
+    // .searchBox .mb-3{
+    //     width: 100%;
+    //     display: flex;
+    //     margin-top: 0px;
+    //     margin-left: 0px;
+    // }
+    // .searchBox .input-group button{
+    //     width: 100%;
+    //     margin-right: 0px;
+    // } 
+    // .searchBox{
+    //     height: 100%;
+    // } 
 }
 
 
