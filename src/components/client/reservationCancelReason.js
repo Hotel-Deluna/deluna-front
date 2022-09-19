@@ -23,7 +23,7 @@ const ReservationCancelReason = ({reservation_num, reservation_name, modalOpen, 
     useEffect(() => {
         if(reservationCancelReason){
             if(reservationCancelReason.result === 'OK'){
-                console.log(reservationCancelReason.data.content)
+                
             }else{
                 alert("취소사유 조회에 실패하였습니다. 잠시 후 다시 이용해주세요.");
             }  

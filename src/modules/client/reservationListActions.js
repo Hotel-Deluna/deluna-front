@@ -9,11 +9,16 @@ const RESERVTION_LIST_FALL = "RESERVTION_LIST_FALL"; //고객 예약내역 조�
 const RESERVATION_CANCEL_REASON = "RESERVATION_CANCEL_REASON"; //예약취소 조회 요청
 const RESERVATION_CANCEL_REASON_SUCCESS = "RESERVATION_CANCEL_REASON_SUCCESS"; //예약취소 조회 성공
 const RESERVATION_CANCEL_REASON_FALL = "RESERVATION_CANCEL_REASON_FALL"; //예약취소 조회 실패
+
+const NONMEMBER_RESERVTION_LIST = "RESERVTION_LIST"; //비회원 예약내역 조회 요청
+const NONMEMBER_RESERVTION_LIST_SUCCESS = "RESERVTION_LIST_SUCCESS"; //비회원 예약내역 조회 요청 성공
+const NONMEMBER_RESERVTION_LIST_FALL = "RESERVTION_LIST_FALL"; //비회원 예약내역 조회 요청 실패
+
 export const reservation_list = createAction(RESERVTION_LIST, (data) => data);
 export const reservation_cancel_reason = createAction(RESERVATION_CANCEL_REASON, (data) => data);
-
+export const nonmember_reservation_list = createAction(NONMEMBER_RESERVTION_LIST, (data) => data);
 const initialState = {
-    reservtionList : null,
+    reservationList : null,
     reservationCancelReason : null
 }
 
@@ -36,6 +41,15 @@ const reservationListActions = handleActions(
             ...state,
             reservationCancelReason : action.payload
         }),
+
+        [NONMEMBER_RESERVTION_LIST_SUCCESS] : (state, action) => ({
+            ...state,
+            reservationList : action.payload
+        }),
+        [NONMEMBER_RESERVTION_LIST_FALL] : (state, action) => ({
+            ...state,
+            reservationList : action.payload
+        }),
     },
     initialState
 )
@@ -45,6 +59,7 @@ export default reservationListActions;
 export function* reservationListActionsSaga(){
     yield takeLatest(RESERVTION_LIST, reservationListSaga);
     yield takeLatest(RESERVATION_CANCEL_REASON, reservationCancelReasonSaga);
+    yield takeLatest(NONMEMBER_RESERVTION_LIST, nonmberReservationListSaga);
 }
 
 function* reservationListSaga(action){
@@ -75,6 +90,24 @@ function* reservationCancelReasonSaga(action){
     }catch(e){
         yield put({
             type : RESERVATION_CANCEL_REASON_FALL,
+            payload : {
+                result : 'serverError',
+                message : e
+            },
+            error: true,
+        })
+    }
+}
+function* nonmberReservationListSaga(action){
+    try {
+        const reservation_list = yield call(api.nonMeber_reservation_list, action.payload);
+        yield put({
+            type : NONMEMBER_RESERVTION_LIST_SUCCESS,
+            payload : reservation_list.data
+        });
+    }catch(e){
+        yield put({
+            type : NONMEMBER_RESERVTION_LIST_FALL,
             payload : {
                 result : 'serverError',
                 message : e

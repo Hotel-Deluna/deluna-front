@@ -59,8 +59,7 @@ export const reservation_list = (data) =>
 axios.post('http://43.200.222.222:8080/reservation/memberReservationList',data,
     {
     headers: {
-        'Content-Type': 'application/json',
-        'Authorization' : '1234'
+        'Content-Type': 'application/json'
     }
 });
 
@@ -69,7 +68,15 @@ export const reservation_cancel_reason = (data) =>
 axios.post('http://43.200.222.222:8080/reservation/memberReservationDeleteContent',data,
     {
     headers: {
-        'Content-Type': 'application/json',
-        'Authorization' : '1234'
+        'Content-Type': 'application/json'
+    }
+});
+
+//비회원 예약취소 사유 조회
+export const nonMeber_reservation_list = (data) =>
+axios.post('http://43.200.222.222:8080/reservation/unMemberInfo',data,
+    {
+    headers: {
+        'Content-Type': 'application/json'
     }
 });

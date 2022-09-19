@@ -15,6 +15,9 @@ const ReservationList = ({reservation_list, reservationList}) => {
     const [reservationNum, setReservationNum] = useState('');
     const [reservationName, setReservationName]= useState('');
 
+    //테스트코드
+    const [member, setMember] = useState('nonMember');
+
     const onSetModalOpen = (open, index) => {
         setReservationNum(reservation[index].reservation_num)
         setReservationName(reservation[index].reservation_name)
@@ -28,16 +31,19 @@ const ReservationList = ({reservation_list, reservationList}) => {
      //예약 취소보기 모달 관려 끝
 
     useEffect(() => {
-        reservation_list({
-            reservation_status : tabs,
-            user_num: "000001"
-        })
+        if(member === 'member'){
+            reservation_list({
+                reservation_status : tabs,
+                user_num: "000001"
+            })
+        }
     },[tabs]);
 
     useEffect(() => {
         if(reservationList){
             if(reservationList.result === 'OK'){
-                setReservation(reservationList.data);
+                if(member === 'member') setReservation(reservationList.data);
+                else setReservation([reservationList.data])
             }else{
                 alert("예약내역을 조회할 수 없습니다. 잠시 후 다시 이용해주세요.");
             }
@@ -45,6 +51,8 @@ const ReservationList = ({reservation_list, reservationList}) => {
     },[reservation_list,reservationList]);
     return (
         <>
+        {
+            member === 'member'?
             <div id="searchTabs">
                 <Tabs
                 defaultActiveKey="1"
@@ -59,6 +67,9 @@ const ReservationList = ({reservation_list, reservationList}) => {
                     <Tab eventKey="4" title="이용완료"></Tab>
                 </Tabs>
             </div>
+            :null
+        }
+            
             {
                 reservation.length > 0 ?
                     <Table bordered>

@@ -13,6 +13,7 @@ import "../css/header.scss";
 import ModifyForm from "../../../containers/auth/modifyForm";
 import AuthSecession from "../../auth/authSecession";
 import RoomRegister from "../../../containers/hotel/roomRegister";
+import Reservation from "../../client/nonMemberReservation";
 const Header = () => {
     const [currentClick, setCurrentClick] = React.useState(null);
     
@@ -38,6 +39,15 @@ const Header = () => {
     const closeSecessionModal = (modalOpen) => {
         setSecessionModal(modalOpen)
     }
+
+    //비회원 예약내역 조회
+    const [reservation, setReservation] = useState(false);
+    const showReservationModal = () => {
+        setReservation(true);
+    };
+    const closeReservation = (modalOpen) => {
+        setReservation(modalOpen);
+    }
     //미로그인시 뿌려줄 header
     if(!currentClick){
         return (
@@ -49,7 +59,7 @@ const Header = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
                         <Nav>
-                            <Nav.Link href="#reservation">
+                            <Nav.Link onClick={showReservationModal}>
                                 예약내역
                             </Nav.Link>
                             <Nav.Link href="#buisnessmanLogin" onClick={() => GetClick("buisnessman")}>
@@ -66,6 +76,7 @@ const Header = () => {
                             </Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
+                    {reservation && ( <Reservation modalOpen={reservation} closeReservation={closeReservation} />)};
                 </Container>
             </Navbar>
             
@@ -82,7 +93,7 @@ const Header = () => {
                             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                             <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
                                 <Nav>
-                                    <Nav.Link href="#reservation">
+                                    <Nav.Link href="/reservationList">
                                         예약내역
                                     </Nav.Link>
                                     <NavDropdown title="고객(아이디)님" id="navbarScrollingDropdown">
