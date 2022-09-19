@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom'
 import {nonmember_reservation_list} from "../../modules/client/reservationListActions";
 //객실번호 필요(일괄삭제)
 const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation_list,reservationList}) => {
-    console.log(modalOpen)
     const [show, setShow] = useState(modalOpen);
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');

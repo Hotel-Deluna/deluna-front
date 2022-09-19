@@ -36,8 +36,6 @@ export default handleActions({
     // },
     [FILTER_DATA] : (state, action) => {
         const {name, value} = action.payload;
-        console.log(name);
-        console.log(value); 
         if(name === 'hotel_num'){
             return state.setIn(['FILTER_DATA', 'form', name], value)
         }else if(name === 'location'){
