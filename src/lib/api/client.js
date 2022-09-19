@@ -53,3 +53,23 @@ axios.get('http://43.200.222.222:8080/hotel/search/bar',
         'Content-Type': 'application/json'
     }
 });
+
+//고객 예약내역 리스트
+export const reservation_list = (data) =>
+axios.post('http://43.200.222.222:8080/reservation/memberReservationList',data,
+    {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization' : '1234'
+    }
+});
+
+//고객 예약취소 사유 조회
+export const reservation_cancel_reason = (data) => 
+axios.post('http://43.200.222.222:8080/reservation/memberReservationDeleteContent',data,
+    {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization' : '1234'
+    }
+});

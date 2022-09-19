@@ -38,12 +38,11 @@ const SearchMain = ({hotel_list, hotelList, room_code, roomCode,filterData,hotel
     useEffect(() => {
         if(hotelList){
             if(hotelList.result === 'OK'){
-                //setList(hotelList.data)
-                for(var i = 0; i<hotelList.data.length; i++){
-                    hotelNum.push(hotelList.data[i].hotel_num)
-                }
-                setHotelNum(hotelNum);
                 if(hotelNum.length > 0){
+                    for(var i = 0; i<hotelList.data.length; i++){
+                        hotelNum.push(hotelList.data[i].hotel_num)
+                    }
+                    setHotelNum(hotelNum);
                     dispatch(hotelSearchReducer.filterData({name : 'hotel_num',value:hotelNum}));
                 }
             }else{
@@ -89,39 +88,45 @@ const SearchMain = ({hotel_list, hotelList, room_code, roomCode,filterData,hotel
                 <Tab eventKey="3" title="가격 낮은 순"></Tab>
             </Tabs>
         </div>
-        {list.map((item, index) => (
-            <Card id="searchMain" key={index}>
-            <div className="row no-gutters">
-            <div className="col-3">
-                <Card.Img variant="top" src={testImg} id="hotelImg"/>
-            </div>
-            <div className="col-9">
-                <Card.Body>
-                    <Card.Title>{item.name}</Card.Title>
-                    <Card.Text>
-                        <img src={(item.star - 1 >= 0 ? star : noStar)}></img>
-                        <img src={(item.star - 2 >= 0 ? star : noStar)}></img>
-                        <img src={(item.star - 3 >= 0 ? star : noStar)}></img>
-                        <img src={(item.star - 4 >= 0 ? star : noStar)}></img>
-                        <img src={(item.star - 5 >= 0 ? star : noStar)}></img>
-                    </Card.Text>
-                    <Card.Text>
-                        
-                        {roomCodeList.map((item2, index2) => (
-                            item.tags.includes(item2.code) ?  (' ☑'+item2.name) : null
-                        ))}
-                        
-                    </Card.Text>
-                    <Card.Text id="roomSelection">
-                        예약가능 {item.minimum_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} ~
-                        <Button variant="outline-dark">객실 선택</Button>
-                    </Card.Text>
-                </Card.Body>
-            </div>
-            
-            </div>
-            </Card>
-        ))} 
+        {
+            list.length > 0 ? 
+                list.map((item, index) => (
+                    <Card id="searchMain" key={index}>
+                    <div className="row no-gutters">
+                    <div className="col-3">
+                        <Card.Img variant="top" src={testImg} id="hotelImg"/>
+                    </div>
+                    <div className="col-9">
+                        <Card.Body>
+                            <Card.Title>{item.name}</Card.Title>
+                            <Card.Text>
+                                <img src={(item.star - 1 >= 0 ? star : noStar)}></img>
+                                <img src={(item.star - 2 >= 0 ? star : noStar)}></img>
+                                <img src={(item.star - 3 >= 0 ? star : noStar)}></img>
+                                <img src={(item.star - 4 >= 0 ? star : noStar)}></img>
+                                <img src={(item.star - 5 >= 0 ? star : noStar)}></img>
+                            </Card.Text>
+                            <Card.Text>
+                                
+                                {roomCodeList.map((item2, index2) => (
+                                    item.tags.includes(item2.code) ?  (' ☑'+item2.name) : null
+                                ))}
+                                
+                            </Card.Text>
+                            <Card.Text id="roomSelection">
+                                예약가능 {item.minimum_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} ~
+                                <Button variant="outline-dark">객실 선택</Button>
+                            </Card.Text>
+                        </Card.Body>
+                    </div>
+                    
+                    </div>
+                    </Card>
+                ))
+            : 
+                '예약가능한 호텔이 없습니다.'
+        }
+        
         
         </>
 

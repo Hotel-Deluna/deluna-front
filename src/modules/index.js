@@ -20,6 +20,7 @@ import secessionActions, {secessionActionsSaga} from "./secessionActions";
 //고객이 검색필터를 통해 axios 통심
 import hotelSearchActions,{hotelSearchActionsSaga} from "./client/hotelSearchActions";
 import hotelSearchReducer from "./client/hotelSearchReducer";
+import reservationListActions,{reservationListActionsSaga} from "./client/reservationListActions";
 const rootReducer = combineReducers({
     auth,
     loading,
@@ -31,11 +32,13 @@ const rootReducer = combineReducers({
     roomDeleteActions,
     secessionActions,
     hotelSearchActions,
-    hotelSearchReducer
+    hotelSearchReducer,
+    reservationListActions
 })
 export function* rootSaga(){
     yield all([authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),
-        roomBatchDeleteActionsSaga(),secessionActionsSaga(),hotelSearchActionsSaga()
+        roomBatchDeleteActionsSaga(),secessionActionsSaga(),hotelSearchActionsSaga(),
+        reservationListActionsSaga()
     ]);
 }
 export default rootReducer;
