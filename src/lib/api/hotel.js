@@ -5,7 +5,7 @@ export const hotel_register = (data) =>
 axios.post('http://43.200.222.222:8080/hotel/register',data,{
     headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization' : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXV0aCI6IiIsImlkIjoxLCJleHAiOjE2NjQyNzU5MzB9.KuQmYmHtsdJhrfmrfGPp32rDgCCAjANJJYTz7prYjVtYeYNye0czeMk8NT7gQtcZPzOpU-aiwbg1nJhW2miKeQ'
+        'Authorization' : localStorage.getItem('accessToken'),
     }
 });
 
@@ -14,7 +14,7 @@ export const hotel_edit = (data) =>
 axios.patch('http://43.200.222.222:8080/hotel/edit',data,{
     headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization' : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXV0aCI6IiIsImlkIjoxLCJleHAiOjE2NjQyNzU5MzB9.KuQmYmHtsdJhrfmrfGPp32rDgCCAjANJJYTz7prYjVtYeYNye0czeMk8NT7gQtcZPzOpU-aiwbg1nJhW2miKeQ'
+        'Authorization' : localStorage.getItem('accessToken'),
     }
 });
 
@@ -35,7 +35,7 @@ axios.post('http://43.200.222.222:8080/hotel/owner-hotel-list',
     {
     headers: {
         'Content-Type': 'application/json',
-        'Authorization' : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXV0aCI6IiIsImlkIjoxLCJleHAiOjE2NjQyNzU5MzB9.KuQmYmHtsdJhrfmrfGPp32rDgCCAjANJJYTz7prYjVtYeYNye0czeMk8NT7gQtcZPzOpU-aiwbg1nJhW2miKeQ',
+        'Authorization' : localStorage.getItem('accessToken'),
     }
 });
 
@@ -101,7 +101,7 @@ axios.delete('http://43.200.222.222:8080/hotel/room/delete', {
 export const hotel_delete = (data) =>
 axios.delete('http://43.200.222.222:8080/hotel/delete', {
     headers: {
-        'Authorization' : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXV0aCI6IiIsImlkIjoxLCJleHAiOjE2NjQyNzU5MzB9.KuQmYmHtsdJhrfmrfGPp32rDgCCAjANJJYTz7prYjVtYeYNye0czeMk8NT7gQtcZPzOpU-aiwbg1nJhW2miKeQ'
+        'Authorization' : localStorage.getItem('accessToken'),
     },
     data: {
         "hotel_num": data.hotel_num,
