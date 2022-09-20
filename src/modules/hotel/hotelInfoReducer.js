@@ -1,6 +1,7 @@
 import { Form } from "react-bootstrap";
 import { createAction, handleActions } from "redux-actions";
 import {Map} from "immutable"
+import moment from "moment";
 // 액션 타입
 const CHANGE_INPUT = "CHANGE_INPUT" //input 값 변경
 const CHANGE_CHECKBOX = "CHANGE_CHECKBOX" //호텔 체크박스 값 변경
@@ -9,11 +10,14 @@ const CHANGE_IMAGE = "CHANGE_IMAGE" // 호텔이미지 변경
 const INSERT_INPUT = "INSERT_INPUT"; //조회 성공후 초기값 dispatch
 const CONVER_FILE = "CONVER_FILE" //서버 URL -> 파일 변환 (멀티파트를 위해)
 
+const RESET = "RESET";
 export const changeInput = createAction(CHANGE_INPUT); //{ form, name, value }
 export const changeCheckbox = createAction(CHANGE_CHECKBOX);
 export const chnageImages = createAction(CHANGE_IMAGE);
 export const insertInput = createAction(INSERT_INPUT);
 export const converFile = createAction(CONVER_FILE);
+export const reset = createAction(RESET);
+
 
 const initialState = Map({
     //호텔등록&수정 INPUT 
@@ -73,21 +77,21 @@ export default handleActions({
             for(var i =0; i<data.peak_season_list.length; i++){
                     peak_season_list.push({
                         id : i,
-                        peak_season_start : data.peak_season_list[i].peak_season_start.split('T')[0],
-                        peak_season_end : data.peak_season_list[i].peak_season_end.split('T')[0]
+                        peak_season_start : moment(data.peak_season_list[i].peak_season_start).format("YYYY-MM-DD"),
+                        peak_season_end : moment(data.peak_season_list[i].peak_season_end).format("YYYY-MM-DD")
                     })
             }
+        }else{
+            peak_season_list.push({
+                id : 0,
+                peak_season_start : '',
+                peak_season_end : ''
+            }) 
         }
-        data.image = [
-            "https://cdn.pixabay.com/photo/2016/12/13/05/15/puppy-1903313_1280.jpg",
-            "https://cdn.pixabay.com/photo/2016/05/09/10/42/weimaraner-1381186_1280.jpg"
-        ]
-        
-        data.address = '경기 평택시 서정동 879-1'
         return state.setIn(['REGISTER', 'form', 'ko_name'], data.name)
                     .setIn(['REGISTER', 'form', 'eng_name'], data.eng_name)
                     .setIn(['REGISTER', 'form', 'star'], data.star)
-                    .setIn(['REGISTER', 'form', 'phone_num'], data.phone_num)
+                    .setIn(['REGISTER', 'form', 'phone_num'], data.phone_num.replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-"))
                     .setIn(['REGISTER', 'form', 'address'], data.address)
                     .setIn(['REGISTER', 'form', 'info'], data.info)
                     .setIn(['REGISTER', 'form', 'rule'], data.rule)
@@ -105,7 +109,12 @@ export default handleActions({
                 convertURLtoFile(data[i]).then(result => imageFiles.push(result));
             }
         }
+        
+        
         return state.setIn(['HOTEL_IMAGE', 'form', 'imageFile'], imageFiles)
+    },
+    [RESET] : () => {
+        return initialState;
     }
 }, initialState)
 

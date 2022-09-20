@@ -8,12 +8,12 @@ import {my_hotel_list} from "../../modules/hotel/hotelMainActions";
 import * as hotelMainReducer from '../../modules/hotel/hotelMainReducer';
 import { connect, useDispatch } from 'react-redux';
 
-const HotelMain = ({my_hotel_list,hotelList}) => {
+const HotelMain = ({my_hotel_list,hotelList,hotelDelete}) => {
      //store에 Data전달을 위해
      const dispatch = useDispatch();
     useEffect(() => {
         my_hotel_list("");
-    },[])
+    },[hotelDelete])
     useEffect(() => {
         if(hotelList){
             if(hotelList.result === 'OK'){
@@ -23,6 +23,7 @@ const HotelMain = ({my_hotel_list,hotelList}) => {
             }
         }
     },[my_hotel_list,hotelList])
+    
     return (
         <>
                 <Container>
@@ -41,6 +42,7 @@ const HotelMain = ({my_hotel_list,hotelList}) => {
 export default connect(
     () =>  ({ hotelMainActions}) => ({
         hotelList: hotelMainActions.hotelList, //나(사업자)의 호텔리스트 조회 상태값
+        hotelDelete : hotelMainActions.hotelDelete
     }),
     {
         my_hotel_list, //나(사업자)의 호텔리스트 조회 액션

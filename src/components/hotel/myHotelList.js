@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Table, Button} from 'react-bootstrap';
-import testImg from '../../pages/images/test.png';
 import { Link } from 'react-router-dom';
 import * as hotelMainReducer from "../../modules/hotel/hotelMainReducer";
 import HotelDelete from "./hotelDelete";
@@ -47,8 +46,8 @@ const MyhotelList = (props) => {
                             <tr className="table-light" key={index}>
                                 <td>{item.name}</td>
                                 <td>{item.address}</td>
-                                <td>{item.phone_num}</td>
-                                <td><img src={testImg}></img></td>
+                                <td>{item.phone_num ? item.phone_num.replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") : ''}</td>
+                                <td><img src={item.image[0]}></img></td>
                                 <td>
                                     <Link to = {"/auth/hotel/info?type=modfiy"+"&hotel_num="+item.hotel_num}>
                                         <Button variant="outline-dark">수정</Button>

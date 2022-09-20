@@ -5,7 +5,7 @@ export const hotel_register = (data) =>
 axios.post('http://43.200.222.222:8080/hotel/register',data,{
     headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization' : '1234',
+        'Authorization' : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXV0aCI6IiIsImlkIjoxLCJleHAiOjE2NjQyNzU5MzB9.KuQmYmHtsdJhrfmrfGPp32rDgCCAjANJJYTz7prYjVtYeYNye0czeMk8NT7gQtcZPzOpU-aiwbg1nJhW2miKeQ'
     }
 });
 
@@ -14,7 +14,7 @@ export const hotel_edit = (data) =>
 axios.patch('http://43.200.222.222:8080/hotel/edit',data,{
     headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization' : '1234',
+        'Authorization' : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXV0aCI6IiIsImlkIjoxLCJleHAiOjE2NjQyNzU5MzB9.KuQmYmHtsdJhrfmrfGPp32rDgCCAjANJJYTz7prYjVtYeYNye0czeMk8NT7gQtcZPzOpU-aiwbg1nJhW2miKeQ'
     }
 });
 
@@ -28,12 +28,14 @@ axios.post('http://43.200.222.222:8080/hotel/info',{
 export const my_hotel_list = (data) =>
 axios.post('http://43.200.222.222:8080/hotel/owner-hotel-list',
     {
-        text : data
+        text : data,
+        page: 1,
+        page_cnt: 10,
     },
     {
     headers: {
         'Content-Type': 'application/json',
-        'Authorization' : '1234',
+        'Authorization' : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXV0aCI6IiIsImlkIjoxLCJleHAiOjE2NjQyNzU5MzB9.KuQmYmHtsdJhrfmrfGPp32rDgCCAjANJJYTz7prYjVtYeYNye0czeMk8NT7gQtcZPzOpU-aiwbg1nJhW2miKeQ',
     }
 });
 
@@ -99,10 +101,10 @@ axios.delete('http://43.200.222.222:8080/hotel/room/delete', {
 export const hotel_delete = (data) =>
 axios.delete('http://43.200.222.222:8080/hotel/delete', {
     headers: {
-        'Content-Type': 'application/json',
-        'Authorization' : '1234',
+        'Authorization' : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXV0aCI6IiIsImlkIjoxLCJleHAiOjE2NjQyNzU5MzB9.KuQmYmHtsdJhrfmrfGPp32rDgCCAjANJJYTz7prYjVtYeYNye0czeMk8NT7gQtcZPzOpU-aiwbg1nJhW2miKeQ'
     },
     data: {
-        data
+        "hotel_num": data.hotel_num,
+        "reason": data.reason
     }
 });

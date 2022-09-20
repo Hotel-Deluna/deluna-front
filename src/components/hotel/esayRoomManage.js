@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {Row, Col,Button, Table, InputGroup,Form} from 'react-bootstrap';
 import { UncontrolledCollapse, Card, CardBody } from 'reactstrap';
-import testImg from '../../pages/images/test.png';
 import * as hotelMainReducer from "../../modules/hotel/hotelMainReducer";
 import {my_hotel_list, hotel_code} from "../../modules/hotel/hotelMainActions";
 import { connect, useDispatch } from 'react-redux';
@@ -10,16 +9,16 @@ import "./css/hotelRoomList.scss"
 import star from "./images/star.png";
 import noStar from "./images/no_star.png"
 import { useSearchParams } from 'react-router-dom';
-//테스트 모달
-import RoomIndividualDelete from "./roomIndividualDelete";
+
 const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, code}) => {
+    const [searchParams, setSearchParams] = useSearchParams();
     const hotelListValue = form.list;
     const codeList = code.code;
-    const [searchValue, setSearchValue] = useState('');
+    const [searchValue, setSearchValue] = useState(searchParams.get('hotelName'));
     const [searchCont, setSearchCont] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
     const [hotelNum, setHotelNum] = useState('');
-    const [searchParams, setSearchParams] = useSearchParams();
+    
    // const [tagsName, setTagsName] = useState([]);
     const searchValueChange = (e) =>{
         setSearchValue(e.target.value);
@@ -37,18 +36,19 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
     const getData = (modalOpen) => {
         setModalOpen(modalOpen);
     }
+
     const dispatch = useDispatch();
     
     //진입 시 모든 리스트가 보여줘야 함
     useEffect(() => {
-        my_hotel_list(searchParams.get('hotelName'));
+        my_hotel_list(searchValue);
         hotel_code();
+        
     },[])
     //사업자가 검색버튼 누를 때 리스트 재조회
     useEffect(() => {
         my_hotel_list(searchValue);
     },[searchCont, setSearchCont]);
-
     //호텔리스트 조회 상태에 따라 dispatch or 예외처리
     useEffect(() => {
         if(hotelList){
@@ -100,7 +100,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
                     <div className="col-md-4">
                     <img
                         className="bd-placeholder-img"
-                        src={testImg}
+                        src={item.image[0]}
                     >
                     </img>
                     </div>

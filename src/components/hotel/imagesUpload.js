@@ -24,7 +24,6 @@ const ImagesUpload = (props) => {
     let imgIdx = 0;
     const {imageFile, imageUrl} = props.form;
     const { HotelInfoActions } = props;
-
     /* 2022.08.28 (한예지) : 이미지 등록 */
     const handleAddImages = (e) => {
         const imageList = e.target.files;

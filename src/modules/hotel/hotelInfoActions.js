@@ -15,9 +15,14 @@ const HOTEL_INFO = "HOTEL_INFO" //호텔 상세 정보조회 요청
 const HOTEL_INFO_SUCCESS = "HOTEL_INFO_SUCCESS" //호텔 상세 정보조회 요청 성공시
 const HOTEL_INFO_FALL = "HOTEL_INFO_FALL" //호텔 상세 정보조회 요청 실패시 
 
+const HOTEL_IMFO_RESET = "HOTEL_IMFO_RESET";
+
 export const hotel_register = createAction(HOTEL_REGISTER, (data) => data); //호텔등록
 export const hotel_edit = createAction(HOTEL_EDIT, (data) => data); //호텔수정
 export const hotel_info = createAction(HOTEL_INFO, (data) => data); //호텔상세 정보 조회
+
+export const hotel_info_reset = createAction(HOTEL_IMFO_RESET);
+
 const initialState = {
     register: null, //호텔등록 상태
     edit : null, //호텔 수정 상태
@@ -58,6 +63,14 @@ const hotelInfoActions = handleActions(
             ...state,
             info : action.payload,
         }),
+
+        [HOTEL_IMFO_RESET] : (state, action) => ({ 
+            ...state,
+            register : action.payload,
+            edit : action.payload,
+            info :  action.payload
+
+        }),
         
     },
     initialState
@@ -69,17 +82,18 @@ export function* hotelInfoActionsSaga(){
     yield takeLatest(HOTEL_REGISTER,hotelRegisterSaga);
     yield takeLatest(HOTEL_EDIT,hotelEditSaga);
     yield takeLatest(HOTEL_INFO,hotelInfoSaga);
+    yield takeLatest(HOTEL_IMFO_RESET, hotelInfoResetSaga)
 }
-
+function* hotelInfoResetSaga(){
+    return initialState;
+}
 //호텔 등록
 function* hotelRegisterSaga(action){
     try {
         const register = yield call(api.hotel_register, action.payload);
-      
-       // FormData의 value 확인
-        /*for (let value of action.payload.values()) {
-            console.log(value);
-        }*/
+        // for (let value of action.payload.values()) {
+        //     console.log(value);
+        // }
         yield put({
             type : HOTEL_REGISTER_SUCCESS,
             payload : register.data
@@ -101,10 +115,10 @@ function* hotelEditSaga(action){
 
     try {
         const edit = yield call(api.hotel_edit, action.payload);
-        // FormData의 value 확인
-        /*for (let value of action.payload.values()) {
+        //FormData의 value 확인
+        for (let value of action.payload.values()) {
             console.log(value);
-        }*/
+        }
         yield put({
             type : HOTEL_EDIT_SUCCESS,
             payload : edit.data

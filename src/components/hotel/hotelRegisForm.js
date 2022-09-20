@@ -265,7 +265,7 @@ const HotelRegisForm = (props) => {
                 </Col>
             </Row>
             <Row className="inputBox">
-                <Form.Label htmlFor="hotelPeakSeason">성수기</Form.Label>
+                <Form.Label htmlFor="hotelPeakSeason">성수기 (시작일, 종료일 모두 입력해주세요.)</Form.Label>
                 <Col>
                     {peak_season_list.map((item, index) => (
                         <InputGroup className="mb-3" key={index}>

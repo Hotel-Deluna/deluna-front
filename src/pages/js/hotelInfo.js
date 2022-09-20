@@ -8,7 +8,7 @@ import HotelRegisForm from "../../components/hotel/hotelRegisForm";
 import HotelService from "../../components/hotel/hotelService";
 import ImagesUpload from "../../components/hotel/imagesUpload";
 //axios관리 redux
-import {hotel_register, hotel_edit, hotel_info} from "../../modules/hotel/hotelInfoActions";
+import {hotel_register, hotel_edit, hotel_info , hotel_info_reset} from "../../modules/hotel/hotelInfoActions";
 
 //redux 조회 및 연결
 import { useSelector,connect, useDispatch } from 'react-redux';
@@ -18,57 +18,56 @@ import * as hotelInfoReducer from '../../modules/hotel/hotelInfoReducer';
 import moment from "moment";
 
 
-const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelService, hotelImage, edit,register, info}) => {
+const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelService, hotelImage, edit,register, info
+,hotel_info_reset}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     /* 부모컴포넌트 -> 자식컴포넌트 */
     //최대 이미지 등록 갯수 ( 호텔 : 10, 객실 : 5) ImagesUpload 컴포넌트에 전달
-    const [maxImagesNum, setMaxImagesNum] = useState(5);
+    const [maxImagesNum, setMaxImagesNum] = useState(10);
     const [btnDisabled,setBtnDisabled] = useState(true);
     const onClick = () => {
         const frm = new FormData();
         const peak_season = []
-        for(var i = 0; i<inputValue.peak_season_list.length; i++){
-            if(inputValue.peak_season_list[i].peak_season_start && inputValue.peak_season_list[i].peak_season_end){
-                
-                peak_season.push({
-                    peak_season_start : moment(inputValue.peak_season_list[i].peak_season_start).format("YYYY/MM/DD"),
-                    peak_season_end : moment(inputValue.peak_season_list[i].peak_season_end).format("YYYY/MM/DD")
-                })
-            }
-        }
+        
         /* 필수 데이터 */
         frm.append("address",inputValue.address);
         frm.append("eng_name",inputValue.eng_name);
         frm.append("location",inputValue.location);
         frm.append("name",inputValue.ko_name);
-        frm.append("phone_num",inputValue.phone_num);
+        frm.append("phone_num",inputValue.phone_num.replace(/-/g, ""));
         frm.append("region_1depth_name",inputValue.region_1depth_name);
         frm.append("region_2depth_name",inputValue.region_2depth_name);
         frm.append("info",inputValue.info);
         frm.append("rule",inputValue.rule);
         frm.append("star",inputValue.star);
-        
-
+        frm.append("tags",hotelService.tags)
 
         //성수기 값이 있을 경우에만
-        if(peak_season.length > 0){
-            //frm.append("peak_season_list",peak_season_list)
+        /*if(peak_season.length > 0){
             frm.append("peak_season_list[0].peak_season_start",peak_season[0].peak_season_start)
             frm.append("peak_season_list[0].peak_season_end",peak_season[0].peak_season_end)
+        }*/
+        for(var i = 0; i<inputValue.peak_season_list.length; i++){
+            if(inputValue.peak_season_list[i].peak_season_start && inputValue.peak_season_list[i].peak_season_end){
+                /*peak_season.push({
+                    peak_season_start : moment(inputValue.peak_season_list[i].peak_season_start).format("YYYY/MM/DD"),
+                    peak_season_end : moment(inputValue.peak_season_list[i].peak_season_end).format("YYYY/MM/DD")
+                })*/
+                frm.append("peak_season_list["+[i]+"].peak_season_start",moment(inputValue.peak_season_list[i].peak_season_start).format("YYYY/MM/DD"))
+                frm.append("peak_season_list["+[i]+"].peak_season_end",moment(inputValue.peak_season_list[i].peak_season_end).format("YYYY/MM/DD"))
+            }
         }
-        //태그 값이 있을 경우에만
-        if(hotelService.tags.length > 0){
-            frm.append("tags",hotelService.tags)
-        }
-
         //이미지가 있을 경우
         if(hotelImage.imageFile.length > 0){
             for(var i=0; i<hotelImage.imageFile.length; i++){
                 frm.append("image",hotelImage.imageFile[i])
             }
-            
+        }else{
+            frm.append("image",[])
         }
+
         if(searchParams.get('type') === 'modfiy') { //수정버튼 누를경우 수정요청 API 호출
+            frm.append("hotel_num",info.data.hotel_num)
             hotel_edit(frm);
         }else { //등록버튼 누를경우 등록요청 API 호출
             hotel_register(frm)
@@ -104,6 +103,10 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
             }
             
         }
+        return () => {
+            hotel_info_reset();
+            dispatch(hotelInfoReducer.reset());
+        };
     }, []);
 
     //호텔 정보 API 호출 response 처리
@@ -132,7 +135,7 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
     }, [hotel_edit,edit]);
 
     //호텔 등록 요청 response 처리
-    useEffect(() => { 
+    useEffect(() => {
         if(register) {
             if(register.result === 'OK'){ //등록 성공
                 alert("호텔 등록이 완료되었습니다.")
@@ -162,7 +165,7 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
                                     { searchParams.get('type') === 'modfiy' ? '수정' : '등록' }
                                 </Button>
                                 {/* 2022.08.28 (한예지) : 취소 누를 시 main 이동 */}
-                                <Link to = "/">
+                                <Link to = "/auth/hotel/main">
                                     <Button variant="secondary" size="sm">
                                         취소
                                     </Button>
@@ -188,6 +191,7 @@ export default connect(
         hotel_register,
         hotel_edit,
         hotel_info,
+        hotel_info_reset
 
     }
 )(HotelInfo)
