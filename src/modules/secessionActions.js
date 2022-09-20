@@ -64,7 +64,7 @@ export function* secessionActionsSaga(){
     yield takeLatest(CLIENT_SECESSION, clientSecessionSaga);
     yield takeLatest(OWNER_SECESSION, ownerSecessionSaga);
     yield takeLatest(CLIENT_SECESSION_CONFIRM, clientSecessionSaga);
-    yield takeLatest(OWNER_SECESSION_CONFIRM, clientSecessionSaga);
+    yield takeLatest(OWNER_SECESSION_CONFIRM, ownerSecessionSaga);
 }
 //고객 회원탈퇴 요청
 function* clientSecessionSaga(action){

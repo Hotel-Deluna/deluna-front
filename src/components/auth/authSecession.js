@@ -13,7 +13,7 @@ const AuthSecession = ({type,modalOpen, closeSecessionModal,
 
     const handleClose = () => {
         setShow(false);
-        closeSecessionModal(false); //esayRoomManage.js(부모컴포넌트)한테 모달 fasle 전달
+        closeSecessionModal(false);
     }
 
     const handleChange = (e) => {

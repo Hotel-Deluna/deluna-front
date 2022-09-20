@@ -91,12 +91,12 @@ const Header = () => {
                             <Nav.Link onClick={showReservationModal}>
                                 예약내역
                             </Nav.Link>
-                            {/* <Nav.Link href="#buisnessmanLogin" onClick={() => GetClick("buisnessman")}>
+                            <Nav.Link href="#buisnessmanLogin" onClick={() => GetClick("buisnessman")}>
                                 사업자 로그인
                             </Nav.Link>
                             <Nav.Link href="#userLogin" onClick={() => GetClick("user")}>
                                 고객 로그인
-                            </Nav.Link> */}
+                            </Nav.Link>
                             <Nav.Link href="/auth/login">
                                 로그인
                             </Nav.Link>
