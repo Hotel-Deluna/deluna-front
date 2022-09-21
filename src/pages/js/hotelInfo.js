@@ -40,7 +40,6 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
         frm.append("info",inputValue.info);
         frm.append("rule",inputValue.rule);
         frm.append("star",inputValue.star);
-        frm.append("tags",hotelService.tags)
 
         //성수기 값이 있을 경우에만
         /*if(peak_season.length > 0){
@@ -57,13 +56,16 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
                 frm.append("peak_season_list["+[i]+"].peak_season_end",moment(inputValue.peak_season_list[i].peak_season_end).format("YYYY/MM/DD"))
             }
         }
+
         //이미지가 있을 경우
         if(hotelImage.imageFile.length > 0){
             for(var i=0; i<hotelImage.imageFile.length; i++){
                 frm.append("image",hotelImage.imageFile[i])
             }
-        }else{
-            frm.append("image",[])
+        }
+
+        if(hotelService.tags.length > 0){
+            frm.append("tags",hotelService.tags);
         }
 
         if(searchParams.get('type') === 'modfiy') { //수정버튼 누를경우 수정요청 API 호출
@@ -102,13 +104,14 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
                 navigate("/auth/hotel/main");
             }
             
+            
         }
         return () => {
             hotel_info_reset();
             dispatch(hotelInfoReducer.reset());
         };
+        
     }, []);
-
     //호텔 정보 API 호출 response 처리
     useEffect(() => {
         if(info) {

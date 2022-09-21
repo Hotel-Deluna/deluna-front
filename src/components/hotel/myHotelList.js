@@ -7,7 +7,7 @@ import HotelDelete from "./hotelDelete";
 import { connect } from "react-redux";
 const MyhotelList = (props) => { 
     const hotelList = props.form.list;
-
+    
     const [modalOpen, setModalOpen] = useState(false);
     const [hotelNum, setHotelNum] = useState('');
     const [hotelName, setHotelName] = useState('');
@@ -47,7 +47,7 @@ const MyhotelList = (props) => {
                                 <td>{item.name}</td>
                                 <td>{item.address}</td>
                                 <td>{item.phone_num ? item.phone_num.replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") : ''}</td>
-                                <td><img src={item.image[0]}></img></td>
+                                <td><img src={item.image ? item.image[0] : ''}></img></td>
                                 <td>
                                     <Link to = {"/auth/hotel/info?type=modfiy"+"&hotel_num="+item.hotel_num}>
                                         <Button variant="outline-dark">수정</Button>

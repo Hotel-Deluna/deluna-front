@@ -32,10 +32,18 @@ const HotelRegisForm = (props) => {
         const {name, value} = e.target;
         if(name === 'ko_name'){
             const regex = /^[가-힣|ㄱ-ㅎ\s]+$/
-            if(regex.test(value)) HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'}); 
+            if(regex.test(value)){
+                HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'});
+            }else if(!value){
+                HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'});
+            }
         }else if(name === 'eng_name'){
             const regex = /^[a-z|A-Z\s]+$/;
-            if(regex.test(value)) HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'}); 
+            if(regex.test(value)){
+                HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'}); 
+            }else if(!value){
+                HotelInfoActions.changeInput({name:name,value:value,form : 'REGISTER'});
+            } 
         }else if(name === 'phone_num'){
             const regex = /^[0-9\b -]{0,12}$/;
             if(regex.test(value)){

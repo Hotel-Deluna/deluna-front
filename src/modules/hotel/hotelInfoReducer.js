@@ -73,7 +73,7 @@ export default handleActions({
     [INSERT_INPUT] : (state, action) => {
         const { data } = action.payload;
         const peak_season_list = []
-        if(data.peak_season_list.length > 0){
+        if(data.peak_season_list){
             for(var i =0; i<data.peak_season_list.length; i++){
                     peak_season_list.push({
                         id : i,
@@ -88,6 +88,7 @@ export default handleActions({
                 peak_season_end : ''
             }) 
         }
+        if(!data.tags) data.tags=[];
         return state.setIn(['REGISTER', 'form', 'ko_name'], data.name)
                     .setIn(['REGISTER', 'form', 'eng_name'], data.eng_name)
                     .setIn(['REGISTER', 'form', 'star'], data.star)
@@ -105,12 +106,15 @@ export default handleActions({
         const { data } = action.payload;
         let imageFiles = [];
         if(data.length > 0){
-            for(var i=0; i<data.length; i++){
-                convertURLtoFile(data[i]).then(result => imageFiles.push(result));
-            }
+            data.forEach(function (element){
+                convertURLtoFile(element+"?timestamp=2").then(result => imageFiles.push(result))
+            })
+            /*for(var i=0; i<data.length; i++){
+                console.log(data[i])
+                convertURLtoFile(data[i]+"?timestamp=2").then(result => console.log(result))
+                //convertURLtoFile(data[i]+"?timestamp=2").then(result => imageFiles.push(result));
+            }*/
         }
-        
-        
         return state.setIn(['HOTEL_IMAGE', 'form', 'imageFile'], imageFiles)
     },
     [RESET] : () => {
@@ -120,10 +124,11 @@ export default handleActions({
 
 //서버에서 받은 이미지 URL을 File로 변환
 export const convertURLtoFile = async (url) => {
+    
     const response = await fetch(url);
     const data = await response.blob();
-    const ext = url.split(".").pop(); // url 구조에 맞게 수정할 것
-    const filename = url.split("/").pop(); // url 구조에 맞게 수정할 것
+    const ext = url.split(".").pop().split("?").shift(); // url 구조에 맞게 수정할 것
+    const filename = url.split("/").pop().split("?").shift(); // url 구조에 맞게 수정할 것
     const metadata = { type: `image/${ext}` };
     return new File([data], filename, metadata);
 };

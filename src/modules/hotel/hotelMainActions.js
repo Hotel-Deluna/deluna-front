@@ -128,7 +128,6 @@ function* hotelDeleteSaga(action){
                 type : HOTEL_DELETE_SUCCESS,
                 payload : hotelDelete.data
             });
-            console.log(hotelDelete)
         }catch(e){
             yield put({
                 type : HOTEL_DELETE_FALL,
