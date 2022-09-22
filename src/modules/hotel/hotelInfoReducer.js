@@ -89,6 +89,7 @@ export default handleActions({
             }) 
         }
         if(!data.tags) data.tags=[];
+        if(!data.image) data.image=[];
         return state.setIn(['REGISTER', 'form', 'ko_name'], data.name)
                     .setIn(['REGISTER', 'form', 'eng_name'], data.eng_name)
                     .setIn(['REGISTER', 'form', 'star'], data.star)
@@ -102,19 +103,19 @@ export default handleActions({
                     
     },
     //파일 변환하는 액션
-    [CONVER_FILE] : (state, action) => {
+    [CONVER_FILE] : async (state, action) => {
         const { data } = action.payload;
         let imageFiles = [];
         if(data.length > 0){
-            data.forEach(function (element){
-                convertURLtoFile(element+"?timestamp=2").then(result => imageFiles.push(result))
-            })
+            for(let url of data){
+                await convertURLtoFile(url+"?timestamp=2").then(result => imageFiles.push(result))
+            }
             /*for(var i=0; i<data.length; i++){
-                console.log(data[i])
-                convertURLtoFile(data[i]+"?timestamp=2").then(result => console.log(result))
+                convertURLtoFile(data[i]+"?timestamp=2").then(result => imageFiles.push(result))
                 //convertURLtoFile(data[i]+"?timestamp=2").then(result => imageFiles.push(result));
             }*/
         }
+        console.log(imageFiles)
         return state.setIn(['HOTEL_IMAGE', 'form', 'imageFile'], imageFiles)
     },
     [RESET] : () => {
@@ -122,13 +123,38 @@ export default handleActions({
     }
 }, initialState)
 
-//서버에서 받은 이미지 URL을 File로 변환
-export const convertURLtoFile = async (url) => {
-    
+const convertURLtoFile = async (url) => {
     const response = await fetch(url);
     const data = await response.blob();
     const ext = url.split(".").pop().split("?").shift(); // url 구조에 맞게 수정할 것
     const filename = url.split("/").pop().split("?").shift(); // url 구조에 맞게 수정할 것
     const metadata = { type: `image/${ext}` };
     return new File([data], filename, metadata);
-};
+}
+
+
+/*
+[CONVER_FILE] : async(state, action) => {
+        const { data } = action.payload;
+        let imageFiles = [];
+        if(data.length > 0){
+            for(var i=0; i<data.length; i++){
+                convertURLtoFile(data[i]+"?timestamp=2").then(result => imageFiles.push(result))
+                //convertURLtoFile(data[i]+"?timestamp=2").then(result => imageFiles.push(result));
+            }
+        }
+        //console.log(imageFiles)
+        return state.setIn(['HOTEL_IMAGE', 'form', 'imageFile'], imageFiles)
+    },
+*/
+//서버에서 받은 이미지 URL을 File로 변환
+/*const convertURLtoFile = async (url) => {
+    console.log(url)
+    const response = await fetch(url);
+    console.log(response)
+    const data = await response.blob();
+    const ext = url.split(".").pop().split("?").shift(); // url 구조에 맞게 수정할 것
+    const filename = url.split("/").pop().split("?").shift(); // url 구조에 맞게 수정할 것
+    const metadata = { type: `image/${ext}` };
+    return new File([data], filename, metadata);
+};*/

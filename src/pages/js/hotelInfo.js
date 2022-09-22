@@ -76,6 +76,15 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
         };
     }
     
+    // 이미지 URL -> FILE 변환
+    const convertURLtoFile = async (url) => {
+        const response = await fetch(url);
+        const data = await response.blob();
+        const ext = url.split(".").pop().split("?").shift(); // url 구조에 맞게 수정할 것
+        const filename = url.split("/").pop().split("?").shift(); // url 구조에 맞게 수정할 것
+        const metadata = { type: `image/${ext}` };
+        return new File([data], filename, metadata);
+    }
     //store에 Data전달을 위해
     const dispatch = useDispatch();
 
@@ -118,7 +127,15 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
             if(info.result === 'OK'){ //성공할 경우 Data dispatch & 수정버튼 활성화
                 setBtnDisabled(false)
                 dispatch(hotelInfoReducer.insertInput({ data : info.data}));
-                dispatch(hotelInfoReducer.converFile({ data : info.data.image}));
+                async function converFile() {
+                    let imageFiles = [];
+                    for(let url of info.data.image){
+                        await convertURLtoFile(url+"?timestamp=2").then(result => imageFiles.push(result))
+                    }
+                    dispatch(hotelInfoReducer.chnageImages({name:"imageFile",value: imageFiles,form : 'HOTEL_IMAGE'}))
+                }
+                converFile();
+                //dispatch(hotelInfoReducer.converFile({ data : info.data.image}));
             }else{ //실패할 경우 error 노출하고 main 페이지 이동
                 alert("호텔 정보 조회가 실패하였습니다.");
                 navigate("/auth/hotel/main");

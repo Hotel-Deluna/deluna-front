@@ -2,7 +2,7 @@ import React, { useState,useCallback,useEffect } from "react";
 
 /* 2022.08.28 (한예지) : UI개발을 위한 react-bootstrap에 필요한 기능 import */
 import {Form, Col, Row, Card, Button } from 'react-bootstrap';
-
+import { useSearchParams } from 'react-router-dom'
 /* 2022.08.28 (한예지) : 호텔등록&수정 UI를 위한 scss파일 */
 import "./css/hotelInfo.scss";
 
@@ -20,6 +20,7 @@ import * as hotelInfoActions from '../../modules/hotel/hotelInfoReducer';
 
 //자식 컴포넌트
 const ImagesUpload = (props) => {
+    const [searchParams, setSearchParams] = useSearchParams();
     //props : 부모 컴포넌트에서 전달받은 최대 이미지 등록 갯수 ( 호텔 : 10, 객실 : 5)
     let imgIdx = 0;
     const {imageFile, imageUrl} = props.form;
@@ -85,7 +86,11 @@ const ImagesUpload = (props) => {
         const imgFile = swap(imageFile, sourceIndex, targetIndex);
         HotelInfoActions.chnageImages({name:"imageUrl",value: imgUrl,form : 'HOTEL_IMAGE'});
         HotelInfoActions.chnageImages({name:"imageFile",value: imgFile,form : 'HOTEL_IMAGE'});
-    }      
+    }
+
+    /*useEffect(() => {
+        
+    },[])*/
     return (
         <>
             <Row className="inputBox">
