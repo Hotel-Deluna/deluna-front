@@ -2,43 +2,35 @@
 import React, { useState, useEffect } from "react";
 import {Card,Button,Tabs,Tab} from "react-bootstrap";
 import "./css/searchMain.scss"
-import testImg from '../../pages/images/test.png';
 import star from "../hotel/images/star.png";
 import noStar from "../hotel/images/no_star.png";
 
 import {hotel_list,hotel_filter_list} from "../../modules/client/hotelSearchActions";
-import {room_code} from "../../modules/hotel/roomDeleteActions";
+import {hotel_code} from "../../modules/hotel/hotelMainActions";
 import * as hotelSearchReducer from "../../modules/client/hotelSearchReducer"
-import {BsCheck} from "react-icons/bs"
 import { connect, useDispatch } from 'react-redux';
-const SearchMain = ({hotel_list, hotelList, room_code, roomCode,filterData,hotel_filter_list,hotelFilterList}) => {
+const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hotel_filter_list,hotelFilterList,
+    headerData}) => {
     const [list, setList] = useState([]);
-    const [roomCodeList, setRoomCodeList] = useState([]);
+    const [hotelCodeList, setHotelCodeList] = useState([]);
     const [tags, setTags] = useState([]);
     const [hotelNum, setHotelNum] = useState([])
-    const selInfo={
-        regionOrName : '신라스테이',
-        checkIn:'2022/09/13',
-        checkOut : '2022/09/16',
-        roomNum : 1,
-        guest : 2,
-        search_type : 2,
-        text : '신라'
-    }
     const handleTabs = (key) => {
         dispatch(hotelSearchReducer.filterData({name : 'rank_num',value:key}));
     }
     const dispatch = useDispatch();
 
     useEffect(() => {
-        hotel_list(selInfo);
-        room_code();
-    },[])
+        if(sessionStorage.getItem('headerData') !== null){
+            hotel_list(JSON.parse(sessionStorage.getItem('headerData')));
+            hotel_code();
+        }
+    },[sessionStorage.getItem('headerData')])
 
     useEffect(() => {
         if(hotelList){
             if(hotelList.result === 'OK'){
-                if(hotelNum.length > 0){
+                if(hotelList.data.length > 0){
                     for(var i = 0; i<hotelList.data.length; i++){
                         hotelNum.push(hotelList.data[i].hotel_num)
                     }
@@ -53,12 +45,12 @@ const SearchMain = ({hotel_list, hotelList, room_code, roomCode,filterData,hotel
 
 
     useEffect(() => {
-        if(roomCode){
-            if(roomCode.result === 'OK'){
-                setRoomCodeList(roomCode.data)
+        if(hotelCode){
+            if(hotelCode.result === 'OK'){
+                setHotelCodeList(hotelCode.data)
             }
         }
-    },[room_code,roomCode]);
+    },[hotel_code,hotelCode]);
 
     useEffect(() => {
         if(hotelNum.length > 0){
@@ -94,7 +86,7 @@ const SearchMain = ({hotel_list, hotelList, room_code, roomCode,filterData,hotel
                     <Card id="searchMain" key={index}>
                     <div className="row no-gutters">
                     <div className="col-3">
-                        <Card.Img variant="top" src={testImg} id="hotelImg"/>
+                        <Card.Img variant="top" src={item.image} id="hotelImg"/>
                     </div>
                     <div className="col-9">
                         <Card.Body>
@@ -107,9 +99,8 @@ const SearchMain = ({hotel_list, hotelList, room_code, roomCode,filterData,hotel
                                 <img src={(item.star - 5 >= 0 ? star : noStar)}></img>
                             </Card.Text>
                             <Card.Text>
-                                
-                                {roomCodeList.map((item2, index2) => (
-                                    item.tags.includes(item2.code) ?  (' ☑'+item2.name) : null
+                                {hotelCodeList.map((item2, index2) => (
+                                   item.tags ? item.tags.includes(item2.code) ?  (' ☑'+item2.name) : null : null
                                 ))}
                                 
                             </Card.Text>
@@ -136,16 +127,16 @@ const SearchMain = ({hotel_list, hotelList, room_code, roomCode,filterData,hotel
 }
 
 export default connect(
-    () =>  ({ hotelSearchActions,roomDeleteActions,hotelSearchReducer}) => ({
+    () =>  ({ hotelSearchActions,hotelMainActions,hotelSearchReducer}) => ({
         hotelList: hotelSearchActions.hotelList,
-        roomCode : roomDeleteActions.code,
+        hotelCode : hotelMainActions.code,
         hotelFilterList : hotelSearchActions.filterhotelList,
-
-        filterData : hotelSearchReducer.getIn(['FILTER_DATA','form']),
+        headerData : hotelSearchReducer.getIn(['HEADER_DATA','form']),
+        filterData : hotelSearchReducer.getIn(['FILTER_DATA','form'])
     }),
     {
         hotel_list,
-        room_code,
+        hotel_code,
         hotel_filter_list
 
     }

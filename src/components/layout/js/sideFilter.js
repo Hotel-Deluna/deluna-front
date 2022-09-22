@@ -80,10 +80,10 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
     const handleHotelChecked = (val, isChecked) => {
         if(isChecked){
             setHotelTag([...hotelTag, parseInt(val)]);
-            dispatch(hotelSearchReducer.filterData({name : 'tags',value:[...hotelTag, parseInt(val)]}));
+            dispatch(hotelSearchReducer.filterData({name : 'hotel_tags',value:[...hotelTag, parseInt(val)]}));
         }else if(!isChecked && hotelTag.includes(parseInt(val))){
-            setHotelTag(hotelTags.filter((el) => el !== parseInt(val)));
-            dispatch(hotelSearchReducer.filterData({name : 'tags',value:hotelTag.filter((el) => el !== parseInt(val))}));
+            setHotelTag(hotelTag.filter((el) => el !== parseInt(val)));
+            dispatch(hotelSearchReducer.filterData({name : 'hotel_tags',value:hotelTag.filter((el) => el !== parseInt(val))}));
         }
             
     }
@@ -95,10 +95,10 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
     const handleRoomChecked = (val, isChecked) => {
         if(isChecked){
             setRoomTag([...roomTag, parseInt(val)]);
-            //dispatch(hotelSearchReducer.filterData({name : 'tags',value:[...roomTag, parseInt(val)]}));
+            dispatch(hotelSearchReducer.filterData({name : 'room_tags',value:[...roomTag, parseInt(val)]}));
         }else if(!isChecked && roomTag.includes(parseInt(val))){
             setRoomTag(roomTag.filter((el) => el !== parseInt(val)));
-            //dispatch(hotelSearchReducer.filterData({name : 'tags',value:roomTag.filter((el) => el !== parseInt(val))}));
+            dispatch(hotelSearchReducer.filterData({name : 'room_tags',value:roomTag.filter((el) => el !== parseInt(val))}));
         }
     }
     useEffect(() => {
@@ -113,6 +113,7 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
 
     useEffect(() => {
         if(hotelCode){
+            console.log(1)
             if(hotelCode.result === 'OK'){
                 setHotelTags(hotelCode.data)
             }

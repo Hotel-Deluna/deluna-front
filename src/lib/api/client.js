@@ -23,9 +23,11 @@ import axios from "axios";
 export const hotel_search = (data) =>
 axios.get('http://43.200.222.222:8080/hotel/search/list',{
     params : {
-        people_count : data.guest,
-        reservation_start_date : data.checkIn,
-        reservation_end_date : data.checkOut,
+        page: data.page,
+        page_cnt : data.page_cnt,
+        people_count : data.people_count,
+        //reservation_start_date : data.checkIn,
+        //reservation_end_date : data.checkOut,
         search_type : data.search_type,
         text : data.text
     }

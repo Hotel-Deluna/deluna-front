@@ -1,9 +1,11 @@
 import { createAction, handleActions } from "redux-actions";
-import {Map} from "immutable"
+import {Map, setIn} from "immutable"
 
-const FILTER_DATA = "FILTER_DATA" //사이드필터 데이터값
-
+const FILTER_DATA = "FILTER_DATA"; //사이드필터 데이터값
+const HEADER_DATA = "HEADER_DATA"; //헤더필더 데이터값
 export const filterData = createAction(FILTER_DATA);
+export const headerData = createAction(HEADER_DATA);
+
 const initialState = Map({
     HOTEL_FILTER : ({
         form : {
@@ -13,12 +15,25 @@ const initialState = Map({
     FILTER_DATA : ({
         form : {
             hotel_num : [],
-            location : [],
-            maximum_price : 100000,
+            maximum_price : 1000000,
             minimum_price : 0,
             rank_num : 1,
             star : null,
-            tags :[]
+            hotel_tags :[],
+            room_tags : [],
+            page : 1,
+            page_cnt : 10
+        }
+    }),
+    HEADER_DATA : ({
+        form : {
+            page : 1,
+            page_cnt : 10,
+            people_count : 0,
+            reservation_end_date : '',
+            reservation_start_date : '',
+            search_type : '',
+            text : ''
         }
     })
     
@@ -48,9 +63,23 @@ export default handleActions({
             return state.setIn(['FILTER_DATA', 'form', name], value)
         }else if(name === 'star'){
             return state.setIn(['FILTER_DATA', 'form', name], value)
-        }else if(name === 'tags'){
+        }else if(name === 'hotel_tags'){
+            return state.setIn(['FILTER_DATA', 'form', name], value)
+        }else if(name === 'room_tags'){
             return state.setIn(['FILTER_DATA', 'form', name], value)
         }
+    },
+
+    [HEADER_DATA] : (state, action) => {
+        const {data} = action.payload;
+        sessionStorage.setItem('headerData', JSON.stringify(data));
+        return state.setIn(['HEADER_DATA', 'form', 'page'], data.page)
+                .setIn(['HEADER_DATA', 'form', 'people_count'], data.people_count)
+                .setIn(['HEADER_DATA', 'form', 'page_cnt'], 10)
+                .setIn(['HEADER_DATA', 'form', 'reservation_start_date'], data.reservation_start_date)
+                .setIn(['HEADER_DATA', 'form', 'reservation_end_date'], data.reservation_end_date)
+                .setIn(['HEADER_DATA', 'form', 'search_type'], data.search_type)
+                .setIn(['HEADER_DATA', 'form', 'text'], data.text)
     }
 }, initialState)
 

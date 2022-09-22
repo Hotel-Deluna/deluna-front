@@ -12,7 +12,8 @@ const HOTEL_FILTER_LIST_FALL = "HOTEL_FILTER_LIST_FALL"; //사이드필터 검�
 
 const SEARCH_BAR_LIST = "SEARCH_BAR_LIST";
 const SEARCH_BAR_LIST_SUCCESS = "SEARCH_BAR_LIST_SUCCESS";
-const SEARCH_BAR_LIST_FALL = "SEARCH_BAR_LIST_FALL"
+const SEARCH_BAR_LIST_FALL = "SEARCH_BAR_LIST_FALL";
+
 export const hotel_list = createAction(HOTEL_LIST, (data) => data);
 export const hotel_filter_list = createAction(HOTEL_FILTER_LIST, (data) => data);
 export const search_bar = createAction(SEARCH_BAR_LIST, (data) => data)
@@ -63,6 +64,7 @@ export function* hotelSearchActionsSaga(){
 function* hotelListSaga(action){
     try {
         const hotel_list = yield call(api.hotel_search, action.payload);
+        console.log(action)
         yield put({
             type : HOTEL_LIST_SUCCESS,
             payload : hotel_list.data
@@ -81,6 +83,7 @@ function* hotelListSaga(action){
 function* hotelFilterListSaga(action){
     try {
         const hotel_filter_list = yield call(api.hotel_filter_search, action.payload);
+        
         yield put({
             type : HOTEL_FILTER_LIST_SUCCESS,
             payload : hotel_filter_list.data

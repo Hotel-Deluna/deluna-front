@@ -2,6 +2,10 @@ import { combineReducers } from "redux";
 import { all } from 'redux-saga/effects';
 import auth, {authSaga} from './auth';
 import loading from "./loading";
+
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage/session";
+
 //호텔 등록&수정 input,이미지,체크박스 상태관리하는 redux
 import hotelInfoReducer from "./hotel/hotelInfoReducer";
 //호텔 등록&수정 axios 통신하는 redux
@@ -20,6 +24,12 @@ import secessionActions, {secessionActionsSaga} from "./secessionActions";
 import hotelSearchActions,{hotelSearchActionsSaga} from "./client/hotelSearchActions";
 import hotelSearchReducer from "./client/hotelSearchReducer";
 import reservationListActions,{reservationListActionsSaga} from "./client/reservationListActions";
+
+const persistConfig = {
+    key: "headerFilter",
+    storage,
+    whitelist: ['loading']
+};
 const rootReducer = combineReducers({
     auth,
     loading,
@@ -33,6 +43,7 @@ const rootReducer = combineReducers({
     hotelSearchActions,
     hotelSearchReducer,
     reservationListActions
+
 })
 export function* rootSaga(){
     yield all([authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),
@@ -40,4 +51,4 @@ export function* rootSaga(){
         reservationListActionsSaga()
     ]);
 }
-export default rootReducer;
+export default persistReducer(persistConfig, rootReducer);
