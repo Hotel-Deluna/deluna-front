@@ -14,7 +14,7 @@ import {
   } from "react-grid-dnd";
 
   /* redux 영역 */
-import { connect } from "react-redux";
+import { connect,useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as hotelInfoActions from '../../modules/hotel/hotelInfoReducer';
 
@@ -25,6 +25,7 @@ const ImagesUpload = (props) => {
     let imgIdx = 0;
     const {imageFile, imageUrl} = props.form;
     const { HotelInfoActions } = props;
+    const [conver, setConver] = useState(true)
     /* 2022.08.28 (한예지) : 이미지 등록 */
     const handleAddImages = (e) => {
         const imageList = e.target.files;
@@ -88,9 +89,37 @@ const ImagesUpload = (props) => {
         HotelInfoActions.chnageImages({name:"imageFile",value: imgFile,form : 'HOTEL_IMAGE'});
     }
 
-    /*useEffect(() => {
-        
-    },[])*/
+    // 이미지 URL -> FILE 변환
+    const convertURLtoFile = async (url) => {
+        const response = await fetch(url);
+        const data = await response.blob();
+        const ext = url.split(".").pop().split("?").shift(); // url 구조에 맞게 수정할 것
+        const filename = url.split("/").pop().split("?").shift(); // url 구조에 맞게 수정할 것
+        const metadata = { type: `image/${ext}` };
+        return new File([data], filename, metadata);
+    }
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+
+        if(conver === true){
+            async function converFile() {
+                let imageFiles = [];
+                for(let url of imageUrl){
+                    await convertURLtoFile(url+"?timestamp=2").then(result => imageFiles.push(result))
+                }
+                dispatch(HotelInfoActions.chnageImages({name:"imageFile",value: imageFiles,form : 'HOTEL_IMAGE'}))
+            }
+            converFile();
+            
+        }
+        return () => {
+            setConver(false)
+        }
+
+           
+    },[imageUrl])
     return (
         <>
             <Row className="inputBox">
