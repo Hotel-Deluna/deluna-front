@@ -62,6 +62,7 @@ const Header = () => {
           })
           .then(function (response) {
                 localStorage.setItem('accessToken',response.data)
+                localStorage.setItem('role',1);
                 axios.defaults.headers.common[
                     "Authorization"
                 ] = `Bearer ${response.data}`;

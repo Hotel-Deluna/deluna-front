@@ -1,0 +1,21 @@
+#findContainer{
+    width: 80%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+#buttonGroup {
+    text-align: center;
+    margin-bottom: 30px;
+}
+#buttonGroup > .btn, #buttonGroup > a > .btn{
+    font-size: 1rem;
+}
+
+#emailText {
+    width: 100%;
+    text-align: center;
+    display: block;
+    font-size: 1.3rem;
+}
