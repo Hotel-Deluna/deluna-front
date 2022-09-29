@@ -3,9 +3,10 @@ import {Map, setIn} from "immutable"
 
 const FILTER_DATA = "FILTER_DATA"; //사이드필터 데이터값
 const HEADER_DATA = "HEADER_DATA"; //헤더필더 데이터값
+const KAKAO_MAP = "KAKAO_MAP";
 export const filterData = createAction(FILTER_DATA);
 export const headerData = createAction(HEADER_DATA);
-
+export const kakaoMap = createAction(KAKAO_MAP);
 const initialState = Map({
     HOTEL_FILTER : ({
         form : {
@@ -34,6 +35,11 @@ const initialState = Map({
             reservation_start_date : '',
             search_type : '',
             text : ''
+        }
+    }),
+    KAKAO_MAP : ({
+        form : {
+            click : false
         }
     })
     
@@ -80,6 +86,10 @@ export default handleActions({
                 .setIn(['HEADER_DATA', 'form', 'reservation_end_date'], data.reservation_end_date)
                 .setIn(['HEADER_DATA', 'form', 'search_type'], data.search_type)
                 .setIn(['HEADER_DATA', 'form', 'text'], data.text)
+    },
+    [KAKAO_MAP] : (state, action) => {
+        const {click} = action.payload;
+        return state.setIn(['KAKAO_MAP','form','click'], click)
     }
 }, initialState)
 

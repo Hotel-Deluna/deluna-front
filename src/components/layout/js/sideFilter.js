@@ -4,7 +4,6 @@ import "../css/sideFilter.scss";
 import {Map, MapMarker} from "react-kakao-maps-sdk";
 
 import {Button, Form} from 'react-bootstrap';
-import {AiFillStar,AiOutlineStar} from 'react-icons/ai';
 import star_1_nor from "../imges/star_1_nor.png";
 import star_2_nor from "../imges/star_2_nor.png";
 import star_3_nor from "../imges/star_3_nor.png";
@@ -17,7 +16,6 @@ import star_3_foc from "../imges/star_3_foc.png";
 import star_4_foc from "../imges/star_4_foc.png";
 import star_5_foc from "../imges/star_5_foc.png";
 
-import Sevice from "../../../components/hotel/hotelService";
 /* redux 영역 */
 import { connect,useDispatch } from "react-redux";
 import {hotel_code} from "../../../modules/hotel/hotelMainActions";
@@ -101,6 +99,10 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
             dispatch(hotelSearchReducer.filterData({name : 'room_tags',value:roomTag.filter((el) => el !== parseInt(val))}));
         }
     }
+
+    const kakaoSearchClick = () => {
+        dispatch(hotelSearchReducer.kakaoMap({click : true}));
+    }
     useEffect(() => {
         if (!map) return
         const ps = new kakao.maps.services.Places()
@@ -113,7 +115,6 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
 
     useEffect(() => {
         if(hotelCode){
-            console.log(1)
             if(hotelCode.result === 'OK'){
                 setHotelTags(hotelCode.data)
             }
@@ -143,7 +144,10 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
                     level={3}
                     onCreate={setMap}
                     >
-                        <Button variant="secondary" id="kakaoSearch">지도로 이동</Button>
+                        <Button variant="secondary" id="kakaoSearch"
+                            onClick={() => kakaoSearchClick()}
+                        >
+                        지도로 보기</Button>
                     </Map>
                 </div>
 

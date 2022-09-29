@@ -82,6 +82,7 @@ const HotelRegisForm = (props) => {
             // 정상적으로 검색이 완료됐으면 
             if (status === kakao.maps.services.Status.OK) {
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                console.log(coords)
                 HotelInfoActions.changeInput({name:"location",value:[coords.La,coords.Ma],form : 'REGISTER'});
                 HotelInfoActions.changeInput({name:"region_1depth_name",value:result[0].road_address.region_1depth_name,form : 'REGISTER'});
                 HotelInfoActions.changeInput({name:"region_2depth_name",value:result[0].road_address.region_2depth_name,form : 'REGISTER'});

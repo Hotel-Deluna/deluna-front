@@ -64,7 +64,6 @@ export function* hotelSearchActionsSaga(){
 function* hotelListSaga(action){
     try {
         const hotel_list = yield call(api.hotel_search, action.payload);
-        console.log(action)
         yield put({
             type : HOTEL_LIST_SUCCESS,
             payload : hotel_list.data
