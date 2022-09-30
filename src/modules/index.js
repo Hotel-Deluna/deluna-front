@@ -20,6 +20,11 @@ import secessionActions, {secessionActionsSaga} from "./secessionActions";
 import hotelSearchActions,{hotelSearchActionsSaga} from "./client/hotelSearchActions";
 import hotelSearchReducer from "./client/hotelSearchReducer";
 import reservationListActions,{reservationListActionsSaga} from "./client/reservationListActions";
+//사업자 
+import roomMainActions, {roomMainActionsSaga} from "./hotel/roomMainActions";
+import hotelReservationActions, {hotelReservationActionsSaga} from "./hotel/hotelReservationActions";
+import roomMainReducer from "./hotel/roomMainReducer";
+import mainActions, {mainActionsSaga} from "./mainActions";
 const rootReducer = combineReducers({
     auth,
     loading,
@@ -32,12 +37,17 @@ const rootReducer = combineReducers({
     secessionActions,
     hotelSearchActions,
     hotelSearchReducer,
-    reservationListActions
+    reservationListActions,
+    roomMainReducer,
+    roomMainActions,
+    hotelReservationActions,
+    mainActions
 })
 export function* rootSaga(){
     yield all([authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),
         roomBatchDeleteActionsSaga(),secessionActionsSaga(),hotelSearchActionsSaga(),
-        reservationListActionsSaga()
+        reservationListActionsSaga(), roomMainActionsSaga(),hotelReservationActionsSaga(),
+        mainActionsSaga()
     ]);
 }
 export default rootReducer;

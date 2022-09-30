@@ -108,3 +108,12 @@ axios.delete('http://43.200.222.222:8080/hotel/delete', {
         "reason": data.reason
     }
 });
+
+//호텔예약정보 요청 API
+export const hotel_reservation = (data) =>
+axios.post('http://43.200.222.222:8080/hotel/reservation-list',data,{
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization' : localStorage.getItem('accessToken'),
+    }
+});

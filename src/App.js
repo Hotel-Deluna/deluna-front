@@ -13,6 +13,8 @@ import ClientReservation from './pages/js/clientReservation';
 import FindId from './pages/js/findId';
 import FindPassword from './pages/js/findPassword';
 import ChangePassword from "./pages/js/changePassword";
+import HotelRoomDetailListPage from './pages/js/hotelRoomDetailListPage';
+import HotelReservationPage from './pages/js/hotelReservationPage';
 function App() {
   return (
     <div className="App">
@@ -25,6 +27,8 @@ function App() {
           <Route path="/auth/login" element={<LoginPage />}></Route>
           <Route path="/auth/hotel/main" element={<HotelMain />}></Route>
           <Route path="/auth/hotel/roomList" element={<HotelRoomList />}></Route>
+          <Route path="/auth/hotel/roomDetailList" element={<HotelRoomDetailListPage />}></Route>
+          <Route path="/auth/hotel/reservationList" element={<HotelReservationPage />}></Route>
           <Route path="/search" element={<HotelSearch/>}></Route>
           <Route path="/reservationList" element={<ClientReservation/>}></Route>
           <Route path='/auth/findId' element={<FindId/>}></Route>
