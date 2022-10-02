@@ -127,7 +127,7 @@ function HeaderFilter({search_bar,searchList,headerData}) {
                                 
                                 <InputGroup className="mb-3">
                                     <Form.Control aria-label="FirstDate" type="date"
-                                        defaultValue={startDate}
+                                        value={startDate}
                                         onChange={handleStartDate}
                                         onClick={() => {
                                             setRoomPers(false)
@@ -137,7 +137,7 @@ function HeaderFilter({search_bar,searchList,headerData}) {
                                 </InputGroup>
                                 <InputGroup className="mb-3">
                                     <Form.Control aria-label="LastDate" type="date"
-                                    defaultValue={endDate}
+                                    value={endDate}
                                     onChange={handleEndDate}
                                         onClick={() => {
                                             setRoomPers(false)

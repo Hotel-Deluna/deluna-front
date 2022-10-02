@@ -99,18 +99,6 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
             return bounds;
     }, [list]);
 
-    const makerClick = (marker) => {
-        const customOverlay = new kakao.maps.CustomOverlay({
-            content: '<span>test</span>',
-            map: mapRef.current,
-            position: marker       
-        })
-        
-        customOverlay.extend(kakao.maps.event.addListener(marker, 'click', function() {
-            customOverlay.setMap(mapRef.current);
-        }));
-    }
-
     useEffect(() => {
         if(kakaoMap){
             const overlayInfos = list?.map(info => {
@@ -132,9 +120,10 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                     map: mapRef.current,
                     position: new kakao.maps.LatLng(el.lat, el.lng),
                 });
+                
                 let content = 
-                    '<div style="max-width:200px;" onclick="alert(1)">'+
-                        '<div class="card" id="searchMain" style="margin-top:0px;">'+
+                    '<div style="max-width:200px;">'+
+                        '<div class="card" id="searchMain" style="margin-top:250px;">'+
                             '<div class="row no-gutters">'+
                                 '<div class="col-12">'+
                                     `<img class="card-img-top" src=${el.image ? el.image : noImage} id="hotelImg">`+
@@ -166,22 +155,31 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                 let position = new kakao.maps.LatLng(el.lat, el.lng);
 
                 let customOverlay = new kakao.maps.CustomOverlay({
-                position: position,
-                content: content,
+                    position: position,
+                    content: content
                 });
+                
 
                 kakao.maps.event.addListener(marker, 'mouseover', function () {
                     customOverlay.setMap(mapRef.current);
                 });
 
                 kakao.maps.event.addListener(marker, 'mouseout', function () {
-                    setTimeout(function () {
+                    customOverlay.setMap();
+                });
+
+                kakao.maps.event.addListener(marker, 'click', function(mouseEvent) {
+                    if(!isOpen) {
+                        alert("호텔 상세페이지 이동")
+                        setIsOpen(true)
                         customOverlay.setMap();
-                    });
+
+                    }
                 });
             });
         }
       }, [list]);
+      
     return (
         <>
         <div id="searchTabs">
@@ -232,12 +230,7 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                             lng:item.location[0]
                         }} // 마커를 표시할 위치
                         clickable={true}
-                        title={item.name}
-                        // onClick={() => 
-                        //     setIsOpen(true)
-                        // }
-                        //map.panTo(marker.getPosition()
-                        //onClick={(marker) => makerClick(marker.getPosition())}
+                        onClick={() => console.log(1)}
                     >
                     {/* {isOpen && (
                     <div style={{ 
@@ -317,7 +310,7 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                             </Card.Text>
                             <Card.Text id="roomSelection">
                                 예약가능 {item.minimum_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} ~
-                                <Button variant="outline-dark">객실 선택</Button>
+                                <Button variant="outline-dark" onClick={() => console.log('리스트 :::: 호텔 상세페이지 이동')}>객실 선택</Button>
                             </Card.Text>
                         </Card.Body>
                     </div>
