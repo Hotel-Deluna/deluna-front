@@ -74,19 +74,34 @@
         width: 100%;
         overflow-x:auto;
     }
-    // .searchBox form{
-    //     display: block;
-    // }
-    // .searchBox .mb-3{
-    //     width: 100%;
-    //     display: flex;
-    //     margin-top: 0px;
-    //     margin-left: 0px;
-    // }
-    // .searchBox .input-group button{
-    //     width: 100%;
-    //     margin-right: 0px;
-    // } 
+    .searchBox form{
+        display: block;
+    }
+    .searchBox .mb-3{
+        margin-top: 0px;
+        margin-left: 0px;
+    }
+    .searchBox .input-group button{
+        margin-right: 0px;
+        font-size: 0.8rem;
+    } 
+    #searchTextBox{
+        margin-top: -210px;
+    }
+    #roomPersBox{
+        margin-top: -60px;
+        margin-left: 0%;
+    }
+    #star > img{
+        width: 11px;
+        margin-right: 2px;
+    }
+    #searchContainer .row .col-3{
+        width: 27%;
+    }
+    #searchContainer .row .col-9{
+        width: 73%;
+    }
     // .searchBox{
     //     height: 100%;
     // } 

@@ -1,29 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState, useRef } from "react";
 import {Container, Button} from 'react-bootstrap';
 import "../css/hotelMain.scss";
 import MyhotelList from "../../components/hotel/myHotelList"
 import { Link } from 'react-router-dom'
 
-import {my_hotel_list} from "../../modules/hotel/hotelMainActions";
-import * as hotelMainReducer from '../../modules/hotel/hotelMainReducer';
-import { connect, useDispatch } from 'react-redux';
 
-const HotelMain = ({my_hotel_list,hotelList,hotelDelete}) => {
-     //store에 Data전달을 위해
-     const dispatch = useDispatch();
-    useEffect(() => {
-        my_hotel_list("");
-    },[hotelDelete])
-    useEffect(() => {
-        if(hotelList){
-            if(hotelList.result === 'OK'){
-                dispatch(hotelMainReducer.selectHotelList({ data : hotelList.data}));
-            }else{
-                alert("호텔 리스트 조회가 실패하였습니다. 잠시 후 다시 이용해주세요.");
-            }
-        }
-    },[my_hotel_list,hotelList])
-    
+
+const HotelMain = () => {
     return (
         <>
                 <Container>
@@ -39,13 +22,4 @@ const HotelMain = ({my_hotel_list,hotelList,hotelDelete}) => {
     );
 };
 
-export default connect(
-    () =>  ({ hotelMainActions}) => ({
-        hotelList: hotelMainActions.hotelList, //나(사업자)의 호텔리스트 조회 상태값
-        hotelDelete : hotelMainActions.hotelDelete
-    }),
-    {
-        my_hotel_list, //나(사업자)의 호텔리스트 조회 액션
-
-    }
-)(HotelMain)
+export default HotelMain;

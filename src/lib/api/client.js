@@ -26,8 +26,9 @@ axios.get('http://43.200.222.222:8080/hotel/search/list',{
         page: data.page,
         page_cnt : data.page_cnt,
         people_count : data.people_count,
-        //reservation_start_date : data.checkIn,
-        //reservation_end_date : data.checkOut,
+        room_count : data.room_count,
+        reservation_start_date : data.reservation_start_date,
+        reservation_end_date : data.reservation_end_date,
         search_type : data.search_type,
         text : data.text
     }

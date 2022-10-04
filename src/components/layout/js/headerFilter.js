@@ -11,18 +11,20 @@ import * as hotelSearchReducer from "../../../modules/client/hotelSearchReducer"
 import { connect,useDispatch } from "react-redux";
 import { useLocation, useNavigate } from 'react-router-dom';
 import moment from "moment";
+import { type } from "@testing-library/user-event/dist/type";
 
 function HeaderFilter({search_bar,searchList,headerData}) {
+    
     const [search, setSearch] = useState(false);
     const [infoList, setInfoList] = useState([]);
-    
-    const [searchClickType, setSearchClickType] = useState(headerData.search_type);
-    const [searchClickValue, setSearchClickValue] = useState(headerData.text);
+    const [searchClickType, setSearchClickType] = useState('');
+    const [searchClickValue, setSearchClickValue] = useState('');
     const [roomPers, setRoomPers] = useState(false);
-    const [roomCount, setRoomCount] = useState(0);
-    const [persCount, setPersCount] = useState(headerData.people_count);
-    const [startDate, setStarDate] = useState(headerData.reservation_start_date);
-    const [endDate, setEndDate] = useState(headerData.reservation_end_date);
+    const [roomCount, setRoomCount] = useState(1);
+    const [persCount, setPersCount] = useState(1);
+    const now = new Date();
+    const [startDate, setStarDate] = useState(moment(now).format("YYYY-MM-DD"));
+    const [endDate, setEndDate] = useState(moment(new Date(now.setDate(now.getDate() + 1))).format("YYYY-MM-DD"));
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -74,7 +76,8 @@ function HeaderFilter({search_bar,searchList,headerData}) {
             data : {
                 page : 1,
                 people_count : persCount,
-                page_cnt : 10,
+                room_count : roomCount,
+                page_cnt : 5,
                 reservation_start_date : moment(startDate).format("YYYY/MM/DD"),
                 reservation_end_date : moment(endDate).format("YYYY/MM/DD"),
                 search_type : searchClickType,
@@ -95,7 +98,7 @@ function HeaderFilter({search_bar,searchList,headerData}) {
             }
         }
     },[search_bar,searchList]);
-
+    
     useEffect(() => {
         if(sessionStorage.getItem('headerData') !== null){
             dispatch(hotelSearchReducer.headerData({
@@ -106,6 +109,7 @@ function HeaderFilter({search_bar,searchList,headerData}) {
             setStarDate(JSON.parse(sessionStorage.getItem('headerData')).reservation_start_date);
             setEndDate(JSON.parse(sessionStorage.getItem('headerData')).reservation_end_date);
             setPersCount(JSON.parse(sessionStorage.getItem('headerData')).people_count);
+            setRoomCount(JSON.parse(sessionStorage.getItem('headerData')).room_count);
             setStarDate(moment(JSON.parse(sessionStorage.getItem('headerData')).reservation_start_date).format("YYYY-MM-DD"));
             setEndDate(moment(JSON.parse(sessionStorage.getItem('headerData')).reservation_end_date).format("YYYY-MM-DD"));
         }

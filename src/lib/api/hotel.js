@@ -28,9 +28,9 @@ axios.post('http://43.200.222.222:8080/hotel/info',{
 export const my_hotel_list = (data) =>
 axios.post('http://43.200.222.222:8080/hotel/owner-hotel-list',
     {
-        text : data,
-        page: 1,
-        page_cnt: 10,
+        text : data.text,
+        page: data.page,
+        page_cnt: 5,
     },
     {
     headers: {
@@ -38,6 +38,7 @@ axios.post('http://43.200.222.222:8080/hotel/owner-hotel-list',
         'Authorization' : localStorage.getItem('accessToken'),
     }
 });
+
 
 //호텔 부가시설/서비스 태그 조회 API
 export const hotel_code = () =>

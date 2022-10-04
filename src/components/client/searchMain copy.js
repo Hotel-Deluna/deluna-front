@@ -15,9 +15,7 @@ import {hotel_code} from "../../modules/hotel/hotelMainActions";
 import * as hotelSearchReducer from "../../modules/client/hotelSearchReducer"
 import { connect, useDispatch } from 'react-redux';
 //카카오맵 지도
-import {Map, MapMarker,CustomOverlayMap} from "react-kakao-maps-sdk";
-
-import {AiOutlineCloseCircle}  from 'react-icons/ai'
+import {Map, MapMarker} from "react-kakao-maps-sdk";
 //현재 접속한게 모바일인지 웹인지
 import { isMobile } from 'react-device-detect';
 
@@ -50,6 +48,7 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
     const [ref, inView] = useInView();
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [test, setTest] = useState(0);
     // useEffect(() => {
     //     // return () => {
     //     //     dispatch(hotelSearchReducer.reset());
@@ -92,12 +91,9 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
             if(filterData.page === 1){
                 setPage(1);
                 setList([]);
-                
             }
-            
             hotel_filter_list(filterData)
         }
-        
 
     },[filterData,kakaoMap]);
 
@@ -106,7 +102,7 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
             if(hotelFilterList.result === 'OK'){
                 if(hotelFilterList.data.length > 0){
                     setPage((page) => page+1);
-                    
+                    setTest((test) => test+1);
                     hotelFilterList.data.map((array) => list.push(array));
                     setList(list);
                     setLoading(true)
@@ -134,7 +130,7 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
             const map = mapRef.current;
             if (map) map.setBounds(bounds)
         }
-    },[page])
+    },[test])
     
     //좌표 array를 가지고 마커가 모두 보이게 재설정 하는 부분
     const bounds = useMemo(() => {
@@ -144,19 +140,10 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
             });
             return bounds;
             
-    }, [page]);
+    }, [test]);
 
-    const [customOverlayPoint,setCustomOverlayPoint] = useState();
-    const [pointIndex, setPointIndex] = useState();
-    const customPoint = (marker,index) => {
-        setCustomOverlayPoint({
-            lat : marker.Ma,
-            lng : marker.La
-        });
-        setIsOpen(true);
-        setPointIndex(index)
-    }
-    /*useEffect(() => {
+    useEffect(() => {
+
         if(kakaoMap && list.length > 0){
             
             const overlayInfos = list?.map(info => {
@@ -177,11 +164,11 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                     map: mapRef.current,
                     position: new kakao.maps.LatLng(el.lat, el.lng),
                 });
+                
                 let content = 
                     '<div style="max-width:200px;">'+
                         '<div class="card" id="searchMain" style="margin-top:250px;">'+
                             '<div class="row no-gutters">'+
-                                '<button class="close" onclick="closeOverlay()" title="닫기"></button>'+
                                 '<div class="col-12">'+
                                     `<img class="card-img-top" src=${el.image ? el.image : noImage} id="hotelImg">`+
                                 '</div>'+
@@ -215,9 +202,6 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                     position: position,
                     content: content
                 });
-                function closeOverlay() {
-                    customOverlay.setMap(null);     
-                }
                 //모바일 경우
                 if(isMobile){
                     // const rootElement = document.createElement("div");
@@ -230,25 +214,24 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                     // });
                 //WEB일 경우
                 }else{
-                    // kakao.maps.event.addListener(marker, 'mouseover', function () {
-                    //     customOverlay.setMap(mapRef.current);
-                    // });
+                    kakao.maps.event.addListener(marker, 'mouseover', function () {
+                        customOverlay.setMap(mapRef.current);
+                    });
     
-                    // kakao.maps.event.addListener(marker, 'mouseout', function () {
-                    //     customOverlay.setMap();
-                    // });
+                    kakao.maps.event.addListener(marker, 'mouseout', function () {
+                        customOverlay.setMap();
+                    });
                 }
                 kakao.maps.event.addListener(marker, 'click', function(mouseEvent) {
                     if(!isOpen) {
-                        customOverlay.setMap(mapRef.current);
-                        // console.log(overlayInfos[index].hotel_num)
-                        // alert(overlayInfos[index].name+"("+overlayInfos[index].hotel_num+")"+" 호텔 상세페이지 이동")
-                        // setIsOpen(true)
+                        console.log(overlayInfos[index].hotel_num)
+                        alert(overlayInfos[index].name+"("+overlayInfos[index].hotel_num+")"+" 호텔 상세페이지 이동")
+                        setIsOpen(true)
                     }
                 });
             });
         }
-      }, [page]);*/
+      }, [test]);
       
     return (
         <>
@@ -299,15 +282,18 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                             lat:item.location[1],
                             lng:item.location[0]
                         }} // 마커를 표시할 위치
-                        style={{border: '1px solid red'}}
-                        onClick={(marker) => customPoint(marker.getPosition(),index)}
+                        clickable={true}
+                        onClick={() => console.log(1)}
                     >
-                    {(isOpen && index == pointIndex) &&(
-                    <div style={{ maxWidth: "200px", minHeight: "300px"}}>
+                    {/* {isOpen && (
+                    <div style={{ 
+                        maxWidth: "200px",
+
+                    
+                    }}>
                         <Card id="searchMain" key={index}
                         style={{
-                            marginTop:'0px',
-                            border:'none'
+                            marginTop:'0px'
                         }}
                         >
                         <div className="row no-gutters">
@@ -332,13 +318,13 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                                 </Card.Text>
                                 <Card.Text>
                                     {hotelCodeList.map((item2, index2) => (
-                                        item.tags ? item.tags.includes(item2.code)  ?  (' ☑'+item2.name) : null : null
+                                        item.tags ? item.tags.includes(item2.code) ?  (' ☑'+item2.name) : null : null
                                     ))}
                                     
                                 </Card.Text>
                                 <Card.Text id="roomSelection">
                                     예약가능 {item.minimum_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} ~
-                                    <Button variant="outline-dark" onClick={() => alert(item.name+"("+item.hotel_num+") 이동")}>객실 선택</Button>
+                                    <Button variant="outline-dark">객실 선택</Button>
                                 </Card.Text>
                             </Card.Body>
                         </div>
@@ -346,7 +332,7 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                         </div>
                         </Card>
                     </div>
-                    )}
+                    )} */}
                     </MapMarker>
                 ))}
                 </Map>

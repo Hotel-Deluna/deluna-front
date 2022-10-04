@@ -1,16 +1,25 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState,useRef} from "react";
 import {Table, Button} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import * as hotelMainReducer from "../../modules/hotel/hotelMainReducer";
 import HotelDelete from "./hotelDelete";
 /* redux 영역 */
-import { connect } from "react-redux";
-const MyhotelList = (props) => { 
-    const hotelList = props.form.list;
-    
+import { connect,useDispatch } from "react-redux";
+import {my_hotel_list} from "../../modules/hotel/hotelMainActions";
+
+//페이징 라이브 러리
+import { useInView } from 'react-intersection-observer';
+
+const MyhotelList = ({my_hotel_list,hotelList}) => { 
     const [modalOpen, setModalOpen] = useState(false);
     const [hotelNum, setHotelNum] = useState('');
     const [hotelName, setHotelName] = useState('');
+    
+
+    const [ref, inView] = useInView();
+    const [hotelLists, setHotelLists] = useState([]);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(true);
+
     const onSetModalOpen = (open, hotel_num, hotel_name) => {
         setHotelNum(hotel_num);
         setModalOpen(open);
@@ -21,7 +30,39 @@ const MyhotelList = (props) => {
     const getData = (modalOpen) => {
         setModalOpen(modalOpen);
     }
+    
+    //store에 Data전달을 위해
+    const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (!inView) {
+          return;
+        }else{
+            if(loading){
+                console.log(page)
+                my_hotel_list({
+                    text : '',
+                    page : page
+                });
+            }
+        }
+      }, [inView]);
+    
+    useEffect(() => {
+        if(hotelList){
+            if(hotelList.result === 'OK'){
+                if(hotelList.data.length > 0){
+                    setPage((page) => page+1)
+                    hotelList.data.map((array) => hotelLists.push(array))
+                    setHotelLists(hotelLists)
+                }else{
+                    setLoading(false)
+                }
+            }else{
+                alert("호텔 리스트 조회가 실패하였습니다. 잠시 후 다시 이용해주세요.");
+            }
+        }
+    },[my_hotel_list,hotelList]);
     return (
         <>
             <div className="containerTitle">나의 호텔 리스트</div>
@@ -40,9 +81,9 @@ const MyhotelList = (props) => {
                         </tr>
                     </thead>
                     {
-                        hotelList.length > 0 ?
+                        hotelLists.length > 0 ?
                         <tbody>
-                        {hotelList.map((item, index) => (
+                        {hotelLists.map((item, index) => (
                             <tr className="table-light" key={index}>
                                 <td>{item.name}</td>
                                 <td>{item.address}</td>
@@ -63,7 +104,9 @@ const MyhotelList = (props) => {
                             </tr>
                             
                         ))}
+                        
                         </tbody>
+                        
                         :
                         <tbody>
                             <tr className="table-light">
@@ -73,6 +116,7 @@ const MyhotelList = (props) => {
                     
                     
                     }
+                    
                 </Table>
                 <div>
                 {
@@ -80,11 +124,16 @@ const MyhotelList = (props) => {
                     <HotelDelete hotel_name={hotelName} hotel_num={hotelNum} modalOpen={modalOpen} getData={getData}/>
                 )}
                 </div>
+                <div ref={ref}/>
         </>
     )
 };
 export default connect(
-    (state) => ({
-        form: state.hotelMainReducer.getIn(['MY_HOTEL_LIST', 'form'])
+    () =>  ({ hotelMainActions}) => ({
+        hotelList: hotelMainActions.hotelList, //나(사업자)의 호텔리스트 조회 상태값
     }),
+    {
+        my_hotel_list, //나(사업자)의 호텔리스트 조회 액션
+
+    }
 )(MyhotelList);

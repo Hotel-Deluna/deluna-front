@@ -10,21 +10,35 @@ import star from "./images/star.png";
 import noStar from "./images/no_star.png"
 import { useSearchParams } from 'react-router-dom';
 
-const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, code}) => {
+//무한 스크롤 페이징 라이브러리
+import { useInView } from 'react-intersection-observer';
+const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const hotelListValue = form.list;
+    const [hotelListValue, setHotelListValue] = useState([]);
     const codeList = code.code;
     const [searchValue, setSearchValue] = useState(searchParams.get('hotelName'));
-    const [searchCont, setSearchCont] = useState(0);
+    const [reSearchValue, setReSearchValue] = useState('');
+
     const [modalOpen, setModalOpen] = useState(false);
     const [hotelNum, setHotelNum] = useState('');
+
+    //페이징 처리
+    const [ref, inView] = useInView();
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(true);
     
    // const [tagsName, setTagsName] = useState([]);
     const searchValueChange = (e) =>{
-        setSearchValue(e.target.value);
+        setReSearchValue(e.target.value);
     }
     const search = () => {
-        setSearchCont(searchCont+1);
+        setHotelListValue([])
+        setPage(1)
+        my_hotel_list({
+            text : reSearchValue,
+            page : page
+        });
+        hotel_code();
     }
 
     const onSetModalOpen = (open, index, index2) => {
@@ -41,19 +55,40 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
     
     //진입 시 모든 리스트가 보여줘야 함
     useEffect(() => {
-        my_hotel_list(searchValue);
+        my_hotel_list({
+            text : searchValue === null ? '' : searchValue,
+            page : page
+        });
         hotel_code();
         
     },[])
-    //사업자가 검색버튼 누를 때 리스트 재조회
+
     useEffect(() => {
-        my_hotel_list(searchValue);
-    },[searchCont, setSearchCont]);
+        if (!inView) {
+          return;
+        }else{
+            if(loading){
+                console.log(page)
+                my_hotel_list({
+                    text : searchValue,
+                    page : page
+                });
+            }
+        }
+      }, [inView]);
+
     //호텔리스트 조회 상태에 따라 dispatch or 예외처리
     useEffect(() => {
         if(hotelList){
             if(hotelList.result === 'OK'){
-                dispatch(hotelMainReducer.selectHotelList({ data : hotelList.data}));
+                //dispatch(hotelMainReducer.selectHotelList({ data : hotelList.data}));
+                if(hotelList.data.length > 0){
+                    setPage((page) => page+1)
+                    hotelList.data.map((array) => hotelListValue.push(array))
+                    setHotelListValue(hotelListValue)
+                }else{
+                    setLoading(false)
+                }
             }else{
                 alert("호텔 리스트 조회가 실패하였습니다. 잠시 후 다시 이용해주세요.");
             }
@@ -64,16 +99,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
     useEffect(() => {
         if(hotelCode){
             if(hotelCode.result === 'OK'){
-                // for(var i=0; i<hotelCode.data.length; i++){
-                //     for(var j=0; j<hotelList.data.length; j++){
-                //         if (hotelList.data[j].tags.includes(hotelCode.data[i].code)) tagsName.push(hotelCode.data[i].name);
-
-                //     }
-                // }
                 dispatch(hotelMainReducer.selectHotelCode({ data : hotelCode.data}));
-                /*{codeList.map((item2, index2) => (
-                    item.tags.includes(item2.code) ? (item2.name+',') : null
-                ))}*/
             }
         }
     },[hotel_code,hotelCode])
@@ -142,6 +168,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode,form, co
                             <Button id="roomAdd" variant="outline-primary" onClick={()=>alert("객실 추가 & 등록 연동")}>
                                     {item.room_list.length > 0 ? '객실추가' : '객실등록'}
                             </Button>{' '}
+                            <div ref={ref}/>
                             {
                             item.room_list.length > 0 ?
                                 <div className="d-flex flex-column">
@@ -224,7 +251,6 @@ export default connect(
     () =>  ({ hotelMainActions, hotelMainReducer}) => ({
         hotelList: hotelMainActions.hotelList, //나(사업자)의 호텔리스트 조회 상태값
         hotelCode : hotelMainActions.code,
-        form: hotelMainReducer.getIn(['MY_HOTEL_LIST', 'form']),
         code : hotelMainReducer.getIn(['HOTEL_CODE', 'form'])
     }),
     {

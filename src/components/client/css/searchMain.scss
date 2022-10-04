@@ -26,3 +26,24 @@
 #searchTabs{
     margin-top:20px;
 }
+.card-img-top {
+    border-bottom-right-radius: var(--bs-card-inner-border-radius);
+    border-bottom-left-radius: var(--bs-card-inner-border-radius);
+}
+
+#searchContainer .col-9{
+    margin-bottom: 30px;
+}
+@media screen and (max-width: 770px){
+    #searchTabs .mb-3{
+        font-size: 0.6rem;
+    }
+
+    // #searchMain{
+    //     max-height: 100px;
+    // }
+    #hotelImg{
+        width: 70px;
+        min-height: 140px;
+    }
+}

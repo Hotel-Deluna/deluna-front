@@ -82,7 +82,6 @@ function* hotelListSaga(action){
 function* hotelFilterListSaga(action){
     try {
         const hotel_filter_list = yield call(api.hotel_filter_search, action.payload);
-        
         yield put({
             type : HOTEL_FILTER_LIST_SUCCESS,
             payload : hotel_filter_list.data

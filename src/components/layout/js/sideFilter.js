@@ -53,7 +53,7 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
             setStar(val);
             dispatch(hotelSearchReducer.filterData({name : 'star',value:val}));
         }
-        
+        dispatch(hotelSearchReducer.filterData({name : 'page',value:1}));
     }
 
     const handlePrice = (min, max) => {
@@ -64,6 +64,7 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
     const clickPrice = () => {
         dispatch(hotelSearchReducer.filterData({name : 'minimum_price',value:min}));
         dispatch(hotelSearchReducer.filterData({name : 'maximum_price',value:max}));
+        dispatch(hotelSearchReducer.filterData({name : 'page',value:1}));
     }
 
     const [isChecked, setIsChecked] = useState(false) // 2022.08.29 (한예지) : 체크박스 체크 여부
@@ -83,6 +84,7 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
             setHotelTag(hotelTag.filter((el) => el !== parseInt(val)));
             dispatch(hotelSearchReducer.filterData({name : 'hotel_tags',value:hotelTag.filter((el) => el !== parseInt(val))}));
         }
+        dispatch(hotelSearchReducer.filterData({name : 'page',value:1}));
             
     }
     /*2022.08.29 (한예지) : 체크박스 선택시 핸들링*/
@@ -98,6 +100,7 @@ function SideFilter({hotel_code, hotelCode,room_code,roomCode}) {
             setRoomTag(roomTag.filter((el) => el !== parseInt(val)));
             dispatch(hotelSearchReducer.filterData({name : 'room_tags',value:roomTag.filter((el) => el !== parseInt(val))}));
         }
+        dispatch(hotelSearchReducer.filterData({name : 'page',value:1}));
     }
 
     const kakaoSearchClick = () => {

@@ -100,3 +100,17 @@
     position: relative;
   }
   
+@media screen and (max-width: 770px){
+  .slider__left-value,
+  .slider__right-value {
+    font-size: 0.6rem;
+  }
+
+  .slider__left-value {
+    left: -2px;
+  }
+    
+  .slider__right-value {
+    right: -20px;
+  }
+}
