@@ -62,7 +62,11 @@ const Header = () => {
           })
           .then(function (response) {
                 localStorage.setItem('accessToken',response.data)
-                localStorage.setItem('role',1);
+                localStorage.setItem('role',2);
+
+                // localStorage.setItem('jwtToken','eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0cGRsNTgzMkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9NRU1CRVIiLCJleHAiOjE2NjQ4ODA2OTJ9.W9Ltym_kNblL2Fqb3S2XNCeodJyNvGM5cKgBWegNlXVb75Lpp1w9a-31DhvcBJA2YFyYV2vSthVv4u8x7KEXlA')
+                // localStorage.setItem('email','tpdl5832@naver.com');
+                // localStorage.setItem('role',1);
                 axios.defaults.headers.common[
                     "Authorization"
                 ] = `Bearer ${response.data}`;

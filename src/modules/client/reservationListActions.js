@@ -65,6 +65,7 @@ export function* reservationListActionsSaga(){
 function* reservationListSaga(action){
     try {
         const reservation_list = yield call(api.reservation_list, action.payload);
+        console.log(reservation_list)
         yield put({
             type : RESERVTION_LIST_SUCCESS,
             payload : reservation_list.data

@@ -35,11 +35,16 @@ const MyhotelList = ({my_hotel_list,hotelList}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        my_hotel_list({
+            text : '',
+            page : page
+        });
+    },[])
+    useEffect(() => {
         if (!inView) {
           return;
         }else{
-            if(loading){
-                console.log(page)
+            if(loading && page > 1){
                 my_hotel_list({
                     text : '',
                     page : page

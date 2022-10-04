@@ -16,7 +16,7 @@ export const owner_secession = (data) =>
 axios.delete('http://43.200.222.222:8080/owner/withdraw', {
     headers: {
         'Content-Type': 'application/json',
-        'Authorization' : '1234',
+        'Authorization' : localStorage.getItem('accessToken')
     },
     data: {
         data

@@ -8,8 +8,7 @@ import RoomBatchDelete from "./roomBatchDelete";
 import "./css/hotelRoomList.scss"
 import star from "./images/star.png";
 import noStar from "./images/no_star.png"
-import { useSearchParams } from 'react-router-dom';
-
+import { useSearchParams,Link } from 'react-router-dom';
 //무한 스크롤 페이징 라이브러리
 import { useInView } from 'react-intersection-observer';
 const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) => {
@@ -27,6 +26,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     
+    const [searchClick, setSearchClick] = useState(false)
    // const [tagsName, setTagsName] = useState([]);
     const searchValueChange = (e) =>{
         setReSearchValue(e.target.value);
@@ -34,9 +34,11 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
     const search = () => {
         setHotelListValue([])
         setPage(1)
+        setSearchClick(true)
+        setLoading(true)
         my_hotel_list({
             text : reSearchValue,
-            page : page
+            page : 1
         });
         hotel_code();
     }
@@ -67,10 +69,9 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
         if (!inView) {
           return;
         }else{
-            if(loading){
-                console.log(page)
+            if(loading && page > 1){
                 my_hotel_list({
-                    text : searchValue,
+                    text : searchClick ? reSearchValue :searchValue ,
                     page : page
                 });
             }
@@ -83,6 +84,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
             if(hotelList.result === 'OK'){
                 //dispatch(hotelMainReducer.selectHotelList({ data : hotelList.data}));
                 if(hotelList.data.length > 0){
+                    
                     setPage((page) => page+1)
                     hotelList.data.map((array) => hotelListValue.push(array))
                     setHotelListValue(hotelListValue)
@@ -172,10 +174,10 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
                             {
                             item.room_list.length > 0 ?
                                 <div className="d-flex flex-column">
-                                    <Button variant="outline-dark" id="roomList">
+                                    <Button variant="outline-dark" id={"roomList"+index}>
                                         객실 조회 
                                     </Button>
-                                    <UncontrolledCollapse toggler="#roomList" className="m-0 p-0">
+                                    <UncontrolledCollapse toggler={"#roomList"+index}className="m-0 p-0">
                                         <Card>
                                             <CardBody>
                                                 <Table bordered id="esayRoomManageList">
@@ -228,8 +230,10 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
                                                     <RoomBatchDelete room_num={hotelNum} modalOpen={modalOpen} getData={getData}/>
                                                 )}
                                                 </div>
+                                                <Link to = {"/auth/hotel/roomDetailList?hotelNum="+item.hotel_num}>
+                                                    <Button id="moreRoom" variant="outline-secondary">객실 더보기</Button>
+                                                </Link>
                                                 
-                                                <Button id="moreRoom" variant="outline-secondary" onClick={() => alert('객실상세 페이지 이동')}>객실 더보기</Button>
                                                 
                                             </CardBody> 
                                         </Card>

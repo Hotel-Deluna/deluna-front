@@ -43,8 +43,8 @@ const AuthSecession = ({type,modalOpen, closeSecessionModal,
     },[]);
 
     useEffect(() => {
-        if(ownerState){
-            if(ownerState.result === 'OK'){
+        if(clientState){
+            if(clientState.result === 'OK'){
                 alert("회원탈퇴가 완료되었습니다.");
                 setShow(false);
                 closeSecessionModal(false);

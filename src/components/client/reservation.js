@@ -6,6 +6,7 @@ import { connect, useDispatch } from 'react-redux';
 import {reservation_list} from "../../modules/client/reservationListActions";
 import ReservationCancelReason from "./reservationCancelReason";
 
+import moment from "moment";
 const ReservationList = ({reservation_list, reservationList}) => {
     const [reservation, setReservation] = useState([]);
     const [tabs, setTabs] = useState("1");
@@ -30,20 +31,28 @@ const ReservationList = ({reservation_list, reservationList}) => {
     }
      //예약 취소보기 모달 관려 끝
 
+     const now = new Date();
+
     useEffect(() => {
-        if(member === 'member'){
+        if(localStorage.getItem('role') === '1'){
             reservation_list({
-                reservation_status : tabs,
-                user_num: "000001"
+                ed_date: moment(new Date(now.setDate(now.getDate() + 1))).format("YYYY-MM-DD"),
+                page: 1,
+                page_cnt: 10,
+                reservation_status: tabs,
+                st_date: moment(now).format("YYYY-MM-DD")
+
             })
         }
     },[tabs]);
 
     useEffect(() => {
+        console.log(reservationList)
         if(reservationList){
             if(reservationList.result === 'OK'){
-                if(member === 'member') setReservation(reservationList.data);
-                else setReservation([reservationList.data])
+                
+                //if(member === 'member') setReservation(reservationList.data);
+                //else setReservation([reservationList.data])
             }else{
                 alert("예약내역을 조회할 수 없습니다. 잠시 후 다시 이용해주세요.");
             }

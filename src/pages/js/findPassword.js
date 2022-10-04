@@ -46,7 +46,7 @@ const FindPassword = () => {
           
     }
 
-    //아이디 찾기
+    //비밀번호 찾기
     const findPassword = () => {
         
         axios.post('http://43.200.222.222:8080/member/findPwd',{
