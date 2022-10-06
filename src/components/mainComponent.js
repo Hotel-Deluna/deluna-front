@@ -1,12 +1,13 @@
 import React from "react";
 import HeaderFilter from "./layout/js/headerFilter";
-import { Container, Row, Col, Figure, Button, Image } from "react-bootstrap";
+import { Container, Row, Col, Figure, Button } from "react-bootstrap";
 import { VscTriangleLeft, VscTriangleRight, VscTriangleUp, VscTriangleDown } from "react-icons/vsc";
-const MainComponent = ({city_list, onClick, maxPage, pageNum, btnClick}) => {
+const MainComponent = ({city_list, onClick, imgIdx, maxImgIdx,btnClick}) => {
     const subTitleDiv = {
         width : '100%',
         backgroundColor : '#162547',
         color : '#ECD169',
+        textAlign : 'center',
         marginBottom : '0'
     };
     const halfLine = {
@@ -53,37 +54,55 @@ const MainComponent = ({city_list, onClick, maxPage, pageNum, btnClick}) => {
             </Row>
             <Row className="mb-3">
                 {/* 리스트 부분 */}
-                {(pageNum > 1)
-                ? 
-                    <Col sm={1} style={angleBtn}>
-                        <div className="d-grid">
-                        <Button variant="light" name='minus' onClick={btnClick} style={btnSize}><VscTriangleLeft /></Button>
-                        </div>
-                    </Col>
-                :
-                    <Col sm={1} />
+                {
+                    city_list !== undefined && (
+                        <>
+                        {imgIdx !== 0 
+                        ? 
+                            <Col sm={1} style={angleBtn}>
+                                <div className="d-block d-sm-none d-grid">
+                                    <Button variant="light" name='minus' onClick={btnClick} style={btnSize}><VscTriangleUp /></Button>
+                                </div>
+                                <div className="d-none d-sm-block d-grid">
+                                    <Button variant="light" name='minus' onClick={btnClick} style={btnSize}><VscTriangleLeft /></Button>
+                                </div>
+                            </Col>
+                        :
+                            <Col sm={1} />
+                        }
+                        {city_list.map((item, index) => (
+                             index < (imgIdx+5) && (
+                                imgIdx <= index && (
+                                    <Col sm={2} key={index} style={{padding : '0.3rem'}}>
+                                        <Figure style={{ width: '100%' }} onClick={(e) => onClick(index)}>
+                                            <Figure.Image roundedCircle variant="top" src={item.image} alt={index} />
+                                            <Figure.Caption style={{textAlign : 'center'}}>
+                                                <b style={{color: '#000'}}>{item.tourist_spot_name}</b>
+                                                <br />
+                                                숙소 {item.hotel_count} 개
+                                            </Figure.Caption>
+                                        </Figure>
+                                    </Col>
+                                )
+                             )
+                        ))}
+                        {(imgIdx+5) <=  maxImgIdx
+                        ?
+                            <Col sm={1} style={angleBtn}>
+                                <div className="d-block d-sm-none d-grid">
+                                    <Button variant="light" name='plus' onClick={btnClick} style={btnSize}><VscTriangleDown /></Button>
+                                </div>
+                                <div className="d-none d-sm-block d-grid">
+                                    <Button variant="light" name='plus' onClick={btnClick} style={btnSize}><VscTriangleRight /></Button>
+                                </div>
+                            </Col>
+                        :
+                            <Col sm={1} />
+                        
+                        }
+                        </>
+                    )
                 }
-                {city_list.map((item, index) => (
-                    <Col sm={2} key={index}>
-                        <Figure style={{ width: '100%' }} onClick={(e) => onClick(index)}>
-                            <Figure.Image variant="top" src={item.image} alt={index} />
-                            <Figure.Caption style={{textAlign : 'left'}}>
-                                <b style={{color: '#000'}}>{item.tourist_spot_name}</b>
-                                <br />
-                                숙소 {item.hotel_count} 개
-                            </Figure.Caption>
-                        </Figure>
-                    </Col>
-                ))}
-                {pageNum < maxPage 
-                ?
-                    <Col sm={1} style={angleBtn}>
-                        <Button variant="light" name='plus' onClick={btnClick} style={btnSize}><VscTriangleRight /></Button>
-                    </Col>
-                :
-                    <Col sm={1} />
-                }
-                
             </Row>
         </Container>
     </>

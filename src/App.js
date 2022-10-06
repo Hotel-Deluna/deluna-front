@@ -15,6 +15,7 @@ import FindPassword from './pages/js/findPassword';
 import ChangePassword from "./pages/js/changePassword";
 import HotelRoomDetailListPage from './pages/js/hotelRoomDetailListPage';
 import HotelReservationPage from './pages/js/hotelReservationPage';
+import HotelDetailInfoPage from './pages/js/hotelDetailInfoPage';
 function App() {
   return (
     <div className="App">
@@ -31,6 +32,7 @@ function App() {
           <Route path="/auth/hotel/reservationList" element={<HotelReservationPage />}></Route>
           <Route path="/search" element={<HotelSearch/>}></Route>
           <Route path="/reservationList" element={<ClientReservation/>}></Route>
+          <Route path="/info" element={<HotelDetailInfoPage/>}></Route>
           <Route path='/auth/findId' element={<FindId/>}></Route>
           <Route path='/auth/findPassword' element={<FindPassword/>}></Route>
           <Route path='/auth/changePassword' element={<ChangePassword/>}></Route>

@@ -5,6 +5,8 @@ import {my_hotel_list} from "../../modules/hotel/hotelMainActions";
 import { reservation_list } from "../../modules/hotel/hotelReservationActions";
 import { connect } from 'react-redux';
 import moment from "moment";
+import { useSearchParams } from 'react-router-dom';
+
 const HotelReservationList = ({my_hotel_list, hotelList, reservation_list, reservationList}) => {
     
     const [hotel_list, setHotel_list] = useState([]);
@@ -17,26 +19,53 @@ const HotelReservationList = ({my_hotel_list, hotelList, reservation_list, reser
     const [hotelIdx, setHotelIdx] = useState(0);
     const [inputidx, setInputIdx] = useState(0); // 0 - 고객명, 1- 예약자명, 2-고객 핸드폰번호, 3- 예약일자 
     const [searchValue, setSearchValue] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [hotelNum, setHotelNum] = useState(searchParams.get('hotelNum'));
+
     useEffect(() => {
-        my_hotel_list('');
+        my_hotel_list({text : '',page : '1'});
+        //console.log(hotelNum);
+        if(hotelNum !== null){
+            reservation_list({
+                hotel_num : hotelNum,
+                page : 1,
+                rank_num : 1,
+                page_cnt : 10,
+                customer_name : '',
+                customer_phone_num : '',
+                reservation_date : '',
+                reservation_num : ''
+            });
+        }
     },[]);
 
     //호텔 리스트 조회
     useEffect(() => {
         if(hotelList){
             if(hotelList.result === 'OK'){
+                //console.log(hotelList.data);
                 setHotel_list(hotelList.data);
-                reservation_list({
-                    hotel_num : hotelList.data[0].hotel_num,
-                    page : 1,
-                    rank_num : 1,
-                    page_cnt : 10,
-                    customer_name : '',
-                    customer_phone_num : '',
-                    reservation_date : '',
-                    reservation_num : ''
-                });
+                if(hotelNum === null){
+                    if(hotelList.data.length !== 0){
+                        reservation_list({
+                            hotel_num : hotelList.data[0].hotel_num,
+                            page : 1,
+                            rank_num : 1,
+                            page_cnt : 10,
+                            customer_name : '',
+                            customer_phone_num : '',
+                            reservation_date : '',
+                            reservation_num : ''
+                        });
+                        setHotelIdx(0);
+                    }
+                }else{
+                    const selectIdx = hotelList.data.findIndex(item => item.hotel_num == hotelNum);
+                    //console.log(selectIdx);
+                    setHotelIdx(selectIdx);
+                }
             }else{
+                console.log(hotelList);
                 alert("호텔 리스트 조회가 실패하였습니다. 잠시 후 다시 이용해주세요.");
             }
         }
@@ -187,7 +216,7 @@ const HotelReservationList = ({my_hotel_list, hotelList, reservation_list, reser
 
     return(
         <HotelReservationListTable hotel_list={hotel_list} onClick={onClick} onChangeSelect={onChangeSelect} inputidx={inputidx} rank_num={rank_num} list={list} 
-            maxPage={maxPage} searchValue={searchValue} onChange={onChange} pageNum={pageNum}
+            maxPage={maxPage} searchValue={searchValue} onChange={onChange} pageNum={pageNum} hotelIdx={hotelIdx} 
         />
     );
 }

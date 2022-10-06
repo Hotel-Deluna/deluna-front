@@ -20,15 +20,24 @@ axios.patch('http://43.200.222.222:8080/room/edit',data,{
 
 //객실 상세 정보 조회 API
 export const room_info = (data) =>
-axios.post('http://43.200.222.222:8080/room/info',{
-    room_num : data
+axios.post('http://43.200.222.222:8080/hotel/room/info',data,{
+    headers: {
+        'Content-Type': 'application/json'
+    }
 });
 
 export const room_info_list = (data) =>
-axios.post('http://43.200.222.222:8080/room/info/list',{
-    room_num : data.room_num,
-    page: data.page,
-    page_cnt: 10,
+axios.post('http://43.200.222.222:8080/hotel/room/info/list',data,{
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
+export const room_name_check = (data) =>
+axios.post('http://43.200.222.222:8080/hotel/room/check-duplicate-name',data,{
+    headers: {
+        'Content-Type': 'application/json'
+    }
 });
 
 //객실 태그 조회 API

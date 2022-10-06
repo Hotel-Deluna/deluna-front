@@ -7,7 +7,7 @@ const [CITYLIST, CITYLIST_SUCCESS, CITYLIST_FAILURE] = createRequestActionTypes(
     'main/CITYLIST'
   );
   
-export const selectCityList = createAction(CITYLIST, (data) => data);
+export const selectCityList = createAction(CITYLIST);
 const initialState = {
     cityList : null,
 }

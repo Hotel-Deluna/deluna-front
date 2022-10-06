@@ -1,104 +1,51 @@
 import { createAction, handleActions } from "redux-actions";
 import { takeLatest } from 'redux-saga/effects';
-import createRequestSaga, {createRequestActionTypes} from "../lib/createRequestSaga";
-
+import createRequestSaga, {createRequestActionTypes} from "../../lib/createRequestSaga";
+import * as api from "../../lib/api/room";
 
 const [ROOMREGISTER, ROOMREGISTER_SUCCESS, ROOMREGISTER_FAILURE] = createRequestActionTypes(
     'hotel/ROOMREGISTER'
   );
-  const [ROOMEDIT, ROOMEDIT_SUCCESS, ROOMEDIT_FAILURE] = createRequestActionTypes(
+const [ROOMEDIT, ROOMEDIT_SUCCESS, ROOMEDIT_FAILURE] = createRequestActionTypes(
     'hotel/ROOMEDIT'
   );
-  const [ROOMINFO, ROOMINFO_SUCCESS, ROOMINFO_FAILURE] = createRequestActionTypes(
+const [ROOMINFO, ROOMINFO_SUCCESS, ROOMINFO_FAILURE] = createRequestActionTypes(
     'hotel/ROOMINFO'
   );
-  const ROOMINFO_RESET = "ROOMINFO_RESET";
+const ROOMINFO_RESET = "ROOMINFO_RESET";
+const [ROOMNAMECHECK, ROOMNAMECHECK_SUCCESS, ROOMNAMECHECK_FAILURE] = createRequestActionTypes(
+    'hotel/ROOMNAMECHECK'
+  );
 
 export const room_register = createAction(ROOMREGISTER, (data) => data); //객실등록
 export const room_edit = createAction(ROOMEDIT, (data) => data); //객실수정
 export const room_info = createAction(ROOMINFO, (data) => data); //객실 상세 정보 조회
+export const room_info_reset = createAction(ROOMINFO_RESET);
+export const name_check = createAction(ROOMNAMECHECK, (data) => data); //객실 상세 정보 조회
 
 const initialState = {
     register: null, //객실등록 상태
     edit : null, //객실 수정 상태
     info : null, //객실 상세정보 상태
+    nameCheck : null //객실명 체크
 };
 
-export function* hotelInfoActionsSaga(){
-    yield takeLatest(ROOMREGISTER,roomRegisterSaga);
-    yield takeLatest(ROOMEDIT,roomEditSaga);
-    yield takeLatest(ROOMINFO,roomInfoSaga);
-    yield takeLatest(ROOMINFO_RESET, roomInfoResetSaga)
-}
+const roomRegisterSaga = createRequestSaga(ROOMREGISTER, api.room_register);
+const roomEditSaga = createRequestSaga(ROOMEDIT, api.room_edit);
+const roomInfoSaga = createRequestSaga(ROOMINFO, api.room_info);
+const nameCheckSaga = createRequestSaga(ROOMNAMECHECK, api.room_name_check);
 
 function* roomInfoResetSaga(){
     return initialState;
 }
 
-//객실 등록
-function* roomRegisterSaga(action){
-    try {
-        const register = yield call(api.room_register, action.payload);
-        yield put({
-            type : ROOMREGISTER_SUCCESS,
-            payload : register.data
-        });
-    }catch(e){
-        yield put({
-            type : ROOMREGISTER_FAILURE,
-            payload : {
-                result : 'serverError',
-                message : e
-            },
-            error: true,
-        })
-    }
+export function* roomInfoActionsSaga(){
+    yield takeLatest(ROOMREGISTER,roomRegisterSaga);
+    yield takeLatest(ROOMEDIT,roomEditSaga);
+    yield takeLatest(ROOMINFO,roomInfoSaga);
+    yield takeLatest(ROOMINFO_RESET, roomInfoResetSaga);
+    yield takeLatest(ROOMNAMECHECK, nameCheckSaga);
 }
-
-//객실 수정
-function* roomEditSaga(action){
-    try {
-        const edit = yield call(api.room_edit, action.payload);
-        //FormData의 value 확인
-        // for (let value of action.payload.values()) {
-        //     console.log(value);
-        // }
-        yield put({
-            type : ROOMEDIT_SUCCESS,
-            payload : edit.data
-        });
-    }catch(e){
-        yield put({
-            type : ROOMEDIT_FAILURE,
-            payload : {
-                result : 'serverError',
-                message : e
-            },
-            error: true,
-        })
-    }
-}
-
-//객실 상세정보 조회
-function* roomInfoSaga(action){
-    try {
-        const info = yield call(api.room_info, action.payload);
-        yield put({
-            type : ROOMINFO_SUCCESS,
-            payload : info.data
-        });
-    }catch(e){
-        yield put({
-            type : ROOMINFO_FAILURE,
-            payload : {
-                result : 'serverError',
-                message : e
-            },
-            error: true,
-        })
-    }
-}
-
 
 const roomInfoActions = handleActions(
     {
@@ -139,8 +86,18 @@ const roomInfoActions = handleActions(
             ...state,
             register : action.payload,
             edit : action.payload,
-            info :  action.payload
+            info :  action.payload,
+            nameCheck: action.payload,
 
+        }),
+        [ROOMNAMECHECK_SUCCESS] : (state, action) => ({ 
+            ...state,
+            nameCheck : action.payload,
+        }),
+        //객실조회 실패시
+        [ROOMNAMECHECK_FAILURE] : (state, action) => ({ 
+            ...state,
+            nameCheck : action.payload,
         }),
     },
     initialState

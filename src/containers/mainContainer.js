@@ -6,24 +6,19 @@ import { connect, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import moment from "moment";
 const MainContainer = ({selectCityList, cityList}) => {
-    const [pageNum, setPageNum] = useState(1);
+    const [imgIdx, setImgIdx] = useState(0);
     const [city_list, setCity_list] = useState([]);
-    const [maxPage, setMaxPage] = useState(1);
+    const [maxImgIdx, setMaxImgIdx] = useState(0);
     //도시 가져오기
     useEffect(() => {
-        selectCityList({
-            page : pageNum
-        })
-    },[pageNum]);
+        selectCityList();
+    },[]);
 
     useEffect(() => {
         if(cityList){
             if(cityList.result === 'OK'){
                 setCity_list(cityList.data);
-                if(cityList.total_cnt > 5){
-                    console.log(Math.ceil(cityList.total_cnt/5));
-                    setMaxPage(Math.ceil(cityList.total_cnt/5));
-                }
+                setMaxImgIdx(cityList.total_cnt);
             }else{
                 alert("도시가 조회가 안됩니다.");
             }
@@ -56,12 +51,12 @@ const MainContainer = ({selectCityList, cityList}) => {
 
     const btnClick = (e) => {
         let {name} = e.currentTarget;
-        if(name === 'plus') setPageNum((pageNum+1));
-        if(name === 'minus') setPageNum((pageNum-1));
+        if(name === 'plus') setImgIdx((imgIdx+1));
+        if(name === 'minus') setImgIdx((imgIdx-1));
     }
 
     return(
-        <MainComponent city_list={city_list} onClick={onClick} maxPage={maxPage} pageNum={pageNum} btnClick={btnClick} />
+        <MainComponent city_list={city_list} onClick={onClick} btnClick={btnClick} imgIdx={imgIdx} maxImgIdx={maxImgIdx} />
     );
 }
 

@@ -15,7 +15,7 @@ export const room_list = createAction(ROOMLIST, (data) => data); //객실리스�
 export const room_code = createAction(ROOMCODE); //공통 코드( 호텔 부가서비스/시설) 조회
 
 const initialState = {
-    room_list : null, //객실리스트 상태
+    roomList : null, //객실리스트 상태
     code : null, //공통코드(호텔 부가서비스/시설) 상태
 }
 
@@ -24,12 +24,12 @@ const roomMainActions = handleActions(
         //나의 객실리스트 조회 성공시
         [ROOMLIST_SUCCESS] : (state, action) => ({ 
             ...state,
-            room_list : action.payload,
+            roomList : action.payload,
         }),
         //나의 객실리스트 실패 시 
         [ROOMLIST_FAILURE] : (state, action) => ({ 
             ...state,
-            room_list : action.payload,
+            roomList : action.payload,
         }),
 
         //공통 코드( 객실 부가서비스/시설) 조회 성공시

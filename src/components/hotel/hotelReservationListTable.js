@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Table, Button, Form } from "react-bootstrap";
 import { BsSearch } from "react-icons/bs";
-const HotelReservationListTable = ({hotel_list, onChangeSelect, onClick, inputidx, rank_num, list, maxPage, searchValue, onChange, pageNum}) => {
+const HotelReservationListTable = ({hotel_list, onChangeSelect, onClick, inputidx, rank_num, list, maxPage, searchValue, onChange, pageNum, hotelIdx}) => {
     const menuBtns = {
         maxHeight : '2rem',
         minWidth: '4.6rem'
@@ -46,9 +46,9 @@ const HotelReservationListTable = ({hotel_list, onChangeSelect, onClick, inputid
             <Row className="justify-content-md-center mb-3">
                 <Col sm={4} />
                 <Col sm={3}>
-                    <Form.Select aria-label="hotel_list" onChange={onChangeSelect} name="hotel">
+                    <Form.Select aria-label="hotel_list" onChange={onChangeSelect} name="hotel" value={hotelIdx}>
                         {hotel_list.map((item, index) => (
-                            <option value={index} key={index}>{item.name}</option>
+                            <option value={index} key={'name'+index}>{item.name}</option>
                         ))}
                     </Form.Select>
                 </Col>
@@ -100,7 +100,7 @@ const HotelReservationListTable = ({hotel_list, onChangeSelect, onClick, inputid
                                 </tr>
                                 :
                                 list.map((item, index) => (
-                                    <tr sm={2} key={index}>
+                                    <tr sm={2} key={'list'+index}>
                                         <td>{item.reservation_num}</td>
                                         <td>{item.hotel_name}</td>
                                         <td>{item.room_name}</td>

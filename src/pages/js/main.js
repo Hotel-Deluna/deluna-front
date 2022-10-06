@@ -1,7 +1,4 @@
-import logo from '../../logo.svg';
-import '../../App.css';
-
-//import HeaderFilter from '../../components/layout/js/headerFilter';
+import React from 'react';
 import MainContainer from '../../containers/mainContainer';
 function main() {
     return (
