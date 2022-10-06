@@ -23,7 +23,6 @@ const FindPassword = () => {
 
     const changePassword = () => {
         let pwCheck = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
-        console.log()
         if(!pwCheck.test(rePassword)){
             alert('비밀번호는 숫자, 영 대&소문자, 특수문자 포함 8자리 이상 15자리 이하입니다.')
         }else{
@@ -31,14 +30,24 @@ const FindPassword = () => {
                 alert('변경 비밀번호가 일치하지 않습니다.')
             }else{
                 if(localStorage.getItem('role') !== null){
-                    alert('비밀번호 변경 api')
+                    axios.patch('http://43.200.222.222:8080/member/memberUpdatePwd',{
+                        password : password,
+                        update_password :rePassword,
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'accessToken' : localStorage.getItem('accesstoken'),
+                        }
+                    }).then((res) => {
+                        console.log(res)
+                    });
                 }else{
+                    console.log(2)
                     alert('비밀번호 재설정 api')
                 }
             }
         }
-        console.log(rePassword)
-        console.log(rePasswordCheck)
     }
     return (
         <>

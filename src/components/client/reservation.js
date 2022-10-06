@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from "react";
 import {Tabs,Tab,Table,Button} from "react-bootstrap";
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 
-import {reservation_list} from "../../modules/client/reservationListActions";
+import {reservation_list,reservation_reset} from "../../modules/client/reservationListActions";
 import ReservationCancelReason from "./reservationCancelReason";
 
 import moment from "moment";
-const ReservationList = ({reservation_list, reservationList}) => {
+
+const ReservationList = ({reservation_list, reservationList,reservation_reset}) => {
     const [reservation, setReservation] = useState([]);
     const [tabs, setTabs] = useState("1");
 
@@ -16,8 +17,6 @@ const ReservationList = ({reservation_list, reservationList}) => {
     const [reservationNum, setReservationNum] = useState('');
     const [reservationName, setReservationName]= useState('');
 
-    //테스트코드
-    const [member, setMember] = useState('nonMember');
 
     const onSetModalOpen = (open, index) => {
         setReservationNum(reservation[index].reservation_num)
@@ -34,6 +33,7 @@ const ReservationList = ({reservation_list, reservationList}) => {
      const now = new Date();
 
     useEffect(() => {
+        //고객일 경우
         if(localStorage.getItem('role') === '1'){
             reservation_list({
                 ed_date: moment(new Date(now.setDate(now.getDate() + 1))).format("YYYY-MM-DD"),
@@ -43,6 +43,8 @@ const ReservationList = ({reservation_list, reservationList}) => {
                 st_date: moment(now).format("YYYY-MM-DD")
 
             })
+        }else{
+            console.log('aaaa')
         }
     },[tabs]);
 
@@ -61,7 +63,7 @@ const ReservationList = ({reservation_list, reservationList}) => {
     return (
         <>
         {
-            member === 'member'?
+            localStorage.getItem('role') === '1'?
             <div id="searchTabs">
                 <Tabs
                 defaultActiveKey="1"
@@ -148,7 +150,8 @@ export default connect(
 
     }),
     {
-        reservation_list
+        reservation_list,
+        reservation_reset
 
     }
 )(ReservationList);

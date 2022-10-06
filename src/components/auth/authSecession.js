@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button,Container, Row, Col, Form } from "react-bootstrap";
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import {client_secession,owner_secession,client_confirm,owner_confirm} from "../../modules/secessionActions"
 const AuthSecession = ({type,modalOpen, closeSecessionModal,
     client_secession,clientState, client_confirm,owner_confirm,
@@ -10,6 +12,7 @@ const AuthSecession = ({type,modalOpen, closeSecessionModal,
     //type - 0: 고객, 1: 사업자
     const [show, setShow] = useState(modalOpen);
     const [reason, setReason] = useState('');
+    let navigate = useNavigate();
 
     const handleClose = () => {
         setShow(false);
@@ -24,8 +27,7 @@ const AuthSecession = ({type,modalOpen, closeSecessionModal,
         let data = {}
         if(type === 0){
             data = {
-                "reason": "사용안함111",
-                "user_num": "000001"
+                "reason" : reason
             }
             client_secession(data);
         }else if(type === 1){
@@ -48,6 +50,8 @@ const AuthSecession = ({type,modalOpen, closeSecessionModal,
                 alert("회원탈퇴가 완료되었습니다.");
                 setShow(false);
                 closeSecessionModal(false);
+                localStorageDelete();
+                navigate("/");
             }else{
                 alert("회원탈퇴가 실패하였습니다. 관리자에게 문의해주세요.");
             }
@@ -60,11 +64,20 @@ const AuthSecession = ({type,modalOpen, closeSecessionModal,
                 alert("회원탈퇴가 완료되었습니다.");
                 setShow(false);
                 closeSecessionModal(false);
+                localStorageDelete();
+                navigate("/");
             }else{
                 alert("회원탈퇴가 실패하였습니다. 관리자에게 문의해주세요.");
             }
         }
     },[owner_secession,ownerState])
+
+    const localStorageDelete = () => {
+        localStorage.removeItem('role');
+        localStorage.removeItem('email');
+        localStorage.removeItem('accesstoken');
+        localStorage.removeItem('refreshtoken')
+    }
     return (
         <>
             <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter"

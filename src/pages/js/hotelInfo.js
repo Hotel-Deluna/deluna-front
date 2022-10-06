@@ -1,7 +1,6 @@
 
 import React, {useState, useEffect, setEffect} from "react";
 import {Container, Row, Col, Button } from 'react-bootstrap';
-import axios from 'axios';
 import { Link, useSearchParams,useNavigate } from 'react-router-dom'
 
 import HotelRegisForm from "../../components/hotel/hotelRegisForm";

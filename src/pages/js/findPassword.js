@@ -4,6 +4,7 @@ import "../css/authFind.scss";
 import { Link } from 'react-router-dom';
 import Timer from "../../components/auth/timer";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom'
 const FindPassword = () => {
     //입력한 이메일
     const [email, setEmail] = useState();
@@ -23,6 +24,8 @@ const FindPassword = () => {
     const [certification, setCertification] = useState(false);
 
     const [findIdClick, setFindIdClick] = useState(false);
+
+    let navigate = useNavigate();
     const handleChange = (e) => {
         const {name, value} = e.target;
         if(name === 'name'){
@@ -55,9 +58,10 @@ const FindPassword = () => {
             phone_num: phone.replace(/\-/g,'')
           }).then((res) => {
               if(res.data.result === "OK"){ //성공
+                console.log(res.data)
                 setFindIdClick(true)
-                console.log(res)
-                
+                alert('해당 이메일로 전송되었습니다.');
+                //navigate("/auth/login")
               }else{// 실패
                   alert('일치하는 회원정보가 존재하지 않습니다.');
               }

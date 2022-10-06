@@ -3,9 +3,9 @@ import { Modal, Button,Container, Row, Col,Form } from "react-bootstrap";
 
 import { connect, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
-import {nonmember_reservation_list} from "../../modules/client/reservationListActions";
+import {nonmember_reservation_list, reservation_reset} from "../../modules/client/reservationListActions";
 //객실번호 필요(일괄삭제)
-const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation_list,reservationList}) => {
+const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation_list,nonReservation,reservation_reset}) => {
     const [show, setShow] = useState(modalOpen);
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
@@ -35,20 +35,21 @@ const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation
     let navigate = useNavigate();
 
     useEffect(() => {
-        if(reservationList){
-            if(reservationList.result === 'OK'){
+        if(nonReservation){
+            if(nonReservation.result === 'OK'){
                 navigate("/reservationList");
                 
             }else{
                 alert("일치하는 예약정보가 없습니다.");
             }
+            reservation_reset();
 
         }
         return () => {
             setShow(false);
             closeReservation(false);   
         };
-    },[nonmember_reservation_list,reservationList]);
+    },[nonmember_reservation_list,nonReservation]);
     return (
         <>
             <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter"
@@ -95,11 +96,12 @@ const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation
 };
 export default connect(
     () =>  ({ reservationListActions}) => ({
-        reservationList : reservationListActions.reservationList,
+        nonReservation : reservationListActions.nonReservation,
 
     }),
     {
-        nonmember_reservation_list
+        nonmember_reservation_list,
+        reservation_reset
 
     }
 )(NonMemberReservation);
