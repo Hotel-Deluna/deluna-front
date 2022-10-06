@@ -19,7 +19,7 @@ const ImageModal = (props) => {
     return(
         <Modal size="lg"  show={props.roomModalOpen} onHide={closeOnClick} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
-                <Modal.Title>{props.type === 0 ? '호텔이미지' : '객실이미지'}</Modal.Title>
+                <Modal.Title>{props.imgType === 0 ? '호텔이미지' : '객실이미지'}</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{padding : 0}}>
                 <Carousel interval={null} data-interval="false" wrap={false} activeIndex={modalIndex} onSelect={handleSelect} style={{color : ''}}>
