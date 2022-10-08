@@ -34,11 +34,12 @@ const initialState = Map({
             weekday_price: "",
             weekend_price: "",
             room_detail_list : [{
-                name : '',
-                room_closed_start : '',
-                room_closed_end : '',
+                name : "",
+                room_closed_start : "",
+                room_closed_end : "",
                 room_detail_status : 0
             }],
+            originalName : ""
         })
     }),
     //객실 태그
@@ -65,28 +66,29 @@ export default handleActions({
     },
     [INSERT_INPUT] : (state, action) => {
         const { data } = action.payload;
-        const room_detail_list = []
-        if(data.room_detail_info){
-            for(var i =0; i<data.room_detail_info.length; i++){
-                room_detail_list.push({
-                        id : i,
-                        name : data.room_detail_info.name,
-                        room_detail_status : data.room_detail_info.room_detail_status,
-                        room_closed_start :data.room_detail_info.room_detail_status === 0 ? '' : moment(data.room_detail_info[i].room_closed_start).format("YYYY-MM-DD"),
-                        room_closed_end : data.room_detail_info.room_detail_status === 0 ? '' : moment(data.room_detail_info[i].room_closed_end).format("YYYY-MM-DD")
-                    })
-            }
-        }else{
-            room_detail_list.push({
-                id : 0,
-                name : '',
-                room_num : '',
-                room_detail_status : '',
-                delete_date : '',
-                room_closed_start : '',
-                room_closed_end : ''
-            }) 
-        }
+        // const room_detail_list = []
+        // if(data.room_detail_info){
+        //     for(var i =0; i<data.room_detail_info.length; i++){
+        //         const status = parseInt(data.room_detail_info[i].room_detail_status);
+        //         room_detail_list.push({
+        //                 id : i,
+        //                 name : data.room_detail_info[i].name,
+        //                 room_detail_status : data.room_detail_info[i].room_detail_status,
+        //                 room_closed_start :status === 0 ? "": moment(data.room_detail_info[i].room_closed_start).format("YYYY-MM-DD"),
+        //                 room_closed_end : status === 0 ? "" : moment(data.room_detail_info[i].room_closed_end).format("YYYY-MM-DD")
+        //             })
+        //     }
+        // }else{
+        //     room_detail_list.push({
+        //         id : 0,
+        //         name : '',
+        //         room_num : '',
+        //         room_detail_status : '',
+        //         delete_date : '',
+        //         room_closed_start : '',
+        //         room_closed_end : ''
+        //     }) 
+        // }
         if(!data.tags) data.tags=[];
         
         return state.setIn(['REGISTER', 'form', 'check_in_time'], data.check_in_time)
@@ -98,11 +100,12 @@ export default handleActions({
                     .setIn(['REGISTER', 'form', 'maximum_people'], data.maximum_people)
                     .setIn(['REGISTER', 'form', 'minimum_people'], data.minimum_people)
                     .setIn(['REGISTER', 'form', 'name'], data.name)
+                    .setIn(['REGISTER', 'form', 'originalName'], data.name)
                     .setIn(['REGISTER', 'form', 'p_weekday_price'], data.p_weekday_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","))
                     .setIn(['REGISTER', 'form', 'p_weekend_price'], data.p_weekend_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","))
                     .setIn(['REGISTER', 'form', 'weekday_price'], data.weekday_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","))
                     .setIn(['REGISTER', 'form', 'weekend_price'], data.weekend_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","))
-                    .setIn(['REGISTER', 'form', 'room_detail_list'], room_detail_list)
+                    .setIn(['REGISTER', 'form', 'room_detail_list'], data.room_detail_info)
                     .setIn(['ROOM_SERVICE', 'form', 'tags'], data.tags)
                     
     },

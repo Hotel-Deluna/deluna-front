@@ -2,19 +2,19 @@ import axios from "axios";
 
 //객실등록 api
 export const room_register = (data) =>
-axios.post('http://43.200.222.222:8080/room/register',data,{
+axios.post('http://43.200.222.222:8080/hotel/room/register',data,{
     headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization' : '1234',
+        'Authorization' : localStorage.getItem('accessToken')
     }
 });
 
 //객실 수정 API
 export const room_edit = (data) =>
-axios.patch('http://43.200.222.222:8080/room/edit',data,{
+axios.patch('http://43.200.222.222:8080/hotel/room/edit',data,{
     headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization' : '1234',
+        'Authorization' : localStorage.getItem('accessToken')
     }
 });
 
@@ -33,7 +33,7 @@ axios.post('http://43.200.222.222:8080/hotel/room/info/list',data,{
     }
 });
 
-export const room_name_check = (data) =>
+export const name_check = (data) =>
 axios.post('http://43.200.222.222:8080/hotel/room/check-duplicate-name',data,{
     headers: {
         'Content-Type': 'application/json'

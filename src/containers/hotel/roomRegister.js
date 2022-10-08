@@ -9,7 +9,7 @@ const RoomRegister = (props) => {
     //첫 진입 시
     useEffect(() => {
         if(props.type === 0){
-            RoomInfoActions.changeInput({name:'hotel_num',value: props.hotel_num, form : 'REGISTER'});
+            RoomInfoActions.changeInput({name:'hotel_num',value: parseInt(props.hotel_num), form : 'REGISTER'});
         }
     }, []);
 
@@ -20,11 +20,10 @@ const RoomRegister = (props) => {
         if(name === 'name'){
             RoomInfoActions.changeInput({name:name,value: value, form : 'REGISTER'});
             if(value !== ''){
-                console.log('aa');
-                props.name_check({
-                    hotel_num : props.hotel_num,
-                    name : value
-                });
+                console.log(props.hotel_num, value);
+                props.name_check({hotel_num : props.hotel_num, name : value});
+            }else{
+                props.setIsNameCheck(true);
             }
         }else if(name.split('_')[0] === 'status'){
             const inputItemsCopy = JSON.parse(JSON.stringify( props.form.toJS().room_detail_list));
@@ -57,9 +56,10 @@ const RoomRegister = (props) => {
 
     
 
-    const handleCheck = (checked) => {
+    const handleCheck = (e) => {
+        //console.log(e.target.checked);
         props.setFocusName('holiday_price_status');
-        if(checked) {
+        if(e.target.checked) {
             RoomInfoActions.changeInput({name:'holiday_price_status',value: 1, form : 'REGISTER'});
         }else{
             RoomInfoActions.changeInput({name:'holiday_price_status',value: 0, form : 'REGISTER'});

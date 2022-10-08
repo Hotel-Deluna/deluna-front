@@ -43,7 +43,13 @@ const RoomForm = (props) => {
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>객실 명 <span className="essential">*필수입력</span></Form.Label>
                 <Form.Control size="lg" name={'name'} value={props.form.name} type="text" placeholder="ex> 스탠다드룸" onChange={props.handleChange} />
-                <Form.Text className={'text-muted'}>{props.form.name === '' ? '객실명을 입력해주세요.' : (props.nameIsCheck ? <span style={{color: 'red'}}>중복된 이름입니다. 다시 입력해주세요.</span> : '사용가능한 이름입니다.')}</Form.Text>
+                {props.type === 0 
+                ? 
+                    <Form.Text className={'text-muted'}>{props.form.name === '' ? '객실명을 입력해주세요.' : (props.nameIsCheck ? <span style={{color: 'red'}}>중복된 이름입니다. 다시 입력해주세요.</span> : '사용가능한 이름입니다.')}</Form.Text>
+                :
+                    (props.form.originalName !== props.form.name && (<Form.Text className={'text-muted'}>{props.form.name === '' ? '객실명을 입력해주세요.' : (props.nameIsCheck ? <span style={{color: 'red'}}>중복된 이름입니다. 다시 입력해주세요.</span> : '사용가능한 이름입니다.')}</Form.Text>))
+                }
+                
             </Form.Group>
             </Col>
             <Col sm={1} />
@@ -140,7 +146,7 @@ const RoomForm = (props) => {
             <Form.Check id="priceCheck" name={'holiday_price_status'} onChange={props.handleCheck} checked={props.form.holiday_price_status === 0 ? false : true} label="공휴일은 성수기 주말과 동일한 가격으로 적용(미체크시 공휴일은 비성수기 주말과 동일한 가격으로 적용됩니다.)"/>
             </Col>
         </Row>
-        {props.type === '0' &&(
+        {props.type === 0 &&(
             <>
             <Row className="align-items-center">
                 <Col sm={3}>

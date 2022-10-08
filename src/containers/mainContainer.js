@@ -64,7 +64,6 @@ export default connect(
     () =>  ({ mainActions, hotelSearchReducer}) => ({
         cityList : mainActions.cityList,
         headerData : hotelSearchReducer.getIn(['HEADER_DATA','form']),
-
     }),
     {
         selectCityList

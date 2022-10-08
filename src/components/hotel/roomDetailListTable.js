@@ -13,6 +13,9 @@ const RoomDetailListTable =  (props) => {
     }
     return (
         <Container fluid="xxl" style={{marginTop : '2rem'}}>
+            <Row style={{marginBottom : '4rem'}}>
+                <Col sm="12"><h4>{props.hotelName+' 객실관리'}</h4></Col>
+            </Row>
             <Row className="justify-content-md-center">
                 <Col sm={12}>
                     <Table responsive="sm" style={{textAlign : 'center'}}>
@@ -104,12 +107,10 @@ const RoomDetailListTable =  (props) => {
                                         {item.roomStatusCheck && (
                                             <>
                                             <Table className="table-bordered mb-3" responsive="sm" style={{margin:0}}>
-                                                <thead>
                                                     <tr>
                                                         <th>호실 명</th>
                                                         <th colSpan={11}>호실 상태</th>
                                                     </tr>
-                                                </thead>
                                                 <tbody>
                                                 {item.room_detail_info.map((items, indexs) => (<>
                                                     <tr key={'room_detail_info'+indexs}>
@@ -162,7 +163,7 @@ const RoomDetailListTable =  (props) => {
                     </Table>
                 </Col>
             </Row>
-            {props.roomModalOpen && (<RoomCommon setRoomModalOpen={props.setRoomModalOpen} roomModalOpen={props.roomModalOpen} type={props.type} hotel_num={props.room_arr[0].hotel_num} room_num={props.room_num} />)}
+            {props.roomModalOpen && (<RoomCommon setRoomModalOpen={props.setRoomModalOpen} roomModalOpen={props.roomModalOpen} type={props.type} hotel_num={props.hotel_num} room_num={props.room_num} setChangeInfo={props.setChangeInfo} />)}
         </Container>  
     );
 }

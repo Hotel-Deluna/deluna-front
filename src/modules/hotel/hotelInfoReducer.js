@@ -9,7 +9,8 @@ const CHANGE_IMAGE = "CHANGE_IMAGE" // 호텔이미지 변경
 
 const INSERT_INPUT = "INSERT_INPUT"; //조회 성공후 초기값 dispatch
 const CONVER_FILE = "CONVER_FILE" //서버 URL -> 파일 변환 (멀티파트를 위해)
-
+//객실이미지 form 등록 action
+const INSERT_ROOMIMG = "INSERT_ROOMIMG";
 const RESET = "RESET";
 export const changeInput = createAction(CHANGE_INPUT); //{ form, name, value }
 export const changeCheckbox = createAction(CHANGE_CHECKBOX);
@@ -17,7 +18,8 @@ export const chnageImages = createAction(CHANGE_IMAGE);
 export const insertInput = createAction(INSERT_INPUT);
 export const converFile = createAction(CONVER_FILE);
 export const reset = createAction(RESET);
-
+//객실이미지 form 등록
+export const insertRoomImg = createAction(INSERT_ROOMIMG);
 
 const initialState = Map({
     //호텔등록&수정 INPUT 
@@ -120,6 +122,11 @@ export default handleActions({
     },
     [RESET] : () => {
         return initialState;
+    },
+    [INSERT_ROOMIMG] : (state, action) => {
+        const { data } = action.payload;
+        
+        return state.setIn(['HOTEL_IMAGE', 'form', 'imageUrl'], data.image);
     }
 }, initialState)
 

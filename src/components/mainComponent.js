@@ -86,7 +86,7 @@ const MainComponent = ({city_list, onClick, imgIdx, maxImgIdx,btnClick}) => {
                                 )
                              )
                         ))}
-                        {(imgIdx+5) <=  maxImgIdx
+                        {(imgIdx+5) <  maxImgIdx
                         ?
                             <Col sm={1} style={angleBtn}>
                                 <div className="d-block d-sm-none d-grid">

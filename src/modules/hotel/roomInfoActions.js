@@ -33,7 +33,7 @@ const initialState = {
 const roomRegisterSaga = createRequestSaga(ROOMREGISTER, api.room_register);
 const roomEditSaga = createRequestSaga(ROOMEDIT, api.room_edit);
 const roomInfoSaga = createRequestSaga(ROOMINFO, api.room_info);
-const nameCheckSaga = createRequestSaga(ROOMNAMECHECK, api.room_name_check);
+const nameCheckSaga = createRequestSaga(ROOMNAMECHECK, api.name_check);
 
 function* roomInfoResetSaga(){
     return initialState;
@@ -57,7 +57,7 @@ const roomInfoActions = handleActions(
         //객실등록 실패시
         [ROOMREGISTER_FAILURE] : (state, action) => ({ 
             ...state,
-            edit : action.payload,
+            register : action.payload,
         }),
 
         //객실수정 성공시

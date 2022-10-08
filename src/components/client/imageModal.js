@@ -45,11 +45,11 @@ const ImageModal = (props) => {
                     props.imgList.length === 1 
                     ? 
                     <Col xs='auto' key={index}>
-                        <Image style={{height : '5.5rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
+                        <Image style={{height : '6rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
                     </Col>
                     :
                     <Col xs key={index}>
-                        <Image style={{height : '5.5rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
+                        <Image style={{height : '6rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
                     </Col>
                 ))}
                 </Row>

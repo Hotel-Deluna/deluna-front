@@ -8,19 +8,21 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 
 const RoomDetailList = ({room_list, roomList, room_code, code}) => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [searchValue, setSearchValue] = useState(searchParams.get('hotelNum'));
+    const [searchValue, setSearchValue] = useState([searchParams.get('hotelNum'), searchParams.get('hotelName')]);
     const [room_arr, setRoom_arr] = useState([]);
     const [code_arr, setCode_arr] = useState([]);
     const [roomModalOpen, setRoomModalOpen] = useState(false);
     const [type, setType] = useState(0);
     const [room_num, setRoom_num] = useState(0);
-    
+    const [changeInfo, setChangeInfo] = useState(false);
+
     const showRoomModal = (e) => {
         const {name} = e.currentTarget;
         if(name === 'register'){
             setType(0);
         }else if(name.split('_')[0] === 'modify'){
             const idx = name.split('_')[1];
+            console.log('aa', room_arr[idx].room_num);
             setRoom_num(room_arr[idx].room_num);
             setType(1);
         }
@@ -30,14 +32,14 @@ const RoomDetailList = ({room_list, roomList, room_code, code}) => {
 
     //진입 시 모든 리스트가 보여줘야 함
     useEffect(() => {
-        //console.log('searchValue', searchValue);
-        room_list({hotel_num : searchValue, page : 1, page_cnt : 10});
+        console.log('searchValue', searchValue);
+        room_list({hotel_num : searchValue[0], page : 1, page_cnt : 10});
     },[])
     useEffect(() => {
         if(roomList){
             //console.log(roomList);
             if(roomList.result === 'OK'){
-                console.log('roomList.data',roomList.data);
+                //console.log('roomList.data',roomList.data);
                 room_code();
                 const room_copy = JSON.parse(JSON.stringify(roomList.data));
                 for(var i=0; i<room_copy.length; i++){
@@ -54,14 +56,14 @@ const RoomDetailList = ({room_list, roomList, room_code, code}) => {
                     let detail_copy = JSON.parse(JSON.stringify(roomList.data[i].room_detail_info));
                     let cnt = 0;
                     for(var j=0; j< detail_copy.length; j++){
-                        if(parseInt(detail_copy[j].status) === 1){//테스트용
-                        //if(!detail_copy[j].available_yn){    
+                            //console.log('detail_copy[j]', detail_copy[j]);
                             cnt = 1;
-                            let start_date = roomList.data[i].room_detail_info[j].room_closed_start.toString();
-                            let end_date = roomList.data[i].room_detail_info[j].room_closed_end.toString();//.replace(/\T.*/,'')
-                            detail_copy[j].room_closed_start = start_date.replace(/\T.*/,'');
-                            detail_copy[j].room_closed_end = end_date.replace(/\T.*/,'');
-                        }
+                            if(roomList.data[i].room_detail_info[j].room_closed_start !==null && roomList.data[i].room_detail_info[j].room_closed_end !== null){
+                                let start_date = roomList.data[i].room_detail_info[j].room_closed_start.toString();
+                                let end_date = roomList.data[i].room_detail_info[j].room_closed_end.toString();//.replace(/\T.*/,'')
+                                detail_copy[j].room_closed_start = start_date.replace(/\T.*/,'');
+                                detail_copy[j].room_closed_end = end_date.replace(/\T.*/,'');
+                            }
                     }
                     if(cnt === 1){
                         room_copy[i].room_detail_info = detail_copy;
@@ -86,6 +88,15 @@ const RoomDetailList = ({room_list, roomList, room_code, code}) => {
         }
     },[room_code, code]);
 
+    useEffect(() => {
+        if(changeInfo){
+            room_list({hotel_num : searchValue[0], page : 1, page_cnt : 10});
+        }
+        return () => {
+            setChangeInfo(false);
+        }
+    },[changeInfo]);
+
     const handleClick = (e) => {
         const {name} = e.currentTarget;
         //console.log(name);
@@ -101,7 +112,7 @@ const RoomDetailList = ({room_list, roomList, room_code, code}) => {
         }
     }
     return(
-        <RoomDetailListTable room_arr={room_arr} code_arr={code_arr} handleClick={handleClick} setRoomModalOpen={setRoomModalOpen} showRoomModal={showRoomModal} roomModalOpen={roomModalOpen} type={type} room_num={room_num} />
+        <RoomDetailListTable room_arr={room_arr} code_arr={code_arr} hotel_num={searchValue[0]} handleClick={handleClick} setRoomModalOpen={setRoomModalOpen} showRoomModal={showRoomModal} roomModalOpen={roomModalOpen} type={type} room_num={room_num} setChangeInfo={setChangeInfo} hotelName={searchValue[1]} />
     );
 }
 

@@ -91,6 +91,7 @@ const ImagesUpload = (props) => {
 
     // 이미지 URL -> FILE 변환
     const convertURLtoFile = async (url) => {
+        console.log('bb');
         const response = await fetch(url);
         const data = await response.blob();
         const ext = url.split(".").pop().split("?").shift(); // url 구조에 맞게 수정할 것
@@ -103,15 +104,24 @@ const ImagesUpload = (props) => {
 
     useEffect(() => {
         if(conver === true){
-            async function converFile() {
-                let imageFiles = [];
-                for(let url of imageUrl){
-                    await convertURLtoFile(url+"?timestamp=2").then(result => imageFiles.push(result))
+            let imgIsCheck = false;//false - 서버에서 가져온 이미지가 없음 true - 서버에서 가져온 이미지가 있음(이미지url 파일변환 function 호출)
+            for(let url of imageUrl){
+                if(url.indexOf('https://cointalk-drawing-bucket.s3.ap-northeast-2.amazonaws.com') !== -1){
+                    imgIsCheck = true;
+                    console.log('aa');
+                    break;
                 }
-                dispatch(HotelInfoActions.chnageImages({name:"imageFile",value: imageFiles,form : 'HOTEL_IMAGE'}))
             }
-            converFile();
-            
+            if(imgIsCheck){
+                async function converFile() {
+                    let imageFiles = [];
+                    for(let url of imageUrl){
+                        await convertURLtoFile(url+"?timestamp=2").then(result => imageFiles.push(result))
+                    }
+                    dispatch(HotelInfoActions.chnageImages({name:"imageFile",value: imageFiles,form : 'HOTEL_IMAGE'}))
+                }
+                converFile();
+            }
         }
         return () => {
             setConver(false)
