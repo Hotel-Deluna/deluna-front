@@ -116,9 +116,9 @@ function* hotelEditSaga(action){
     try {
         const edit = yield call(api.hotel_edit, action.payload);
         //FormData의 value 확인
-        for (let value of action.payload.values()) {
-            console.log(value);
-        }
+        // for (let value of action.payload.values()) {
+        //     console.log(value);
+        // }
         yield put({
             type : HOTEL_EDIT_SUCCESS,
             payload : edit.data

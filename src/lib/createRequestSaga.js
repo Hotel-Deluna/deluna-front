@@ -21,7 +21,10 @@ export default function createRequestSaga(type, request) {
       const response = yield call(request, action.payload);
       const header = response.headers;
       //console.log("response", response);
-      //console.log("header", header);
+      console.log("header", header);
+      localStorage.setItem('Authorization',header.authorization)
+      localStorage.setItem('role',response.data.role)
+      localStorage.setItem('email',response.data.email)
       yield put({
         type: SUCCESS,
         payload: response.data

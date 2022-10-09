@@ -27,8 +27,8 @@ const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation
 
     const reservationSelect = () => {
         nonmember_reservation_list({
-            name : name,
-            phone_num : phone,
+            reservation_name : name,
+            reservation_phone : phone,
             reservation_num : reservationNum
         })
     }
@@ -37,7 +37,11 @@ const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation
     useEffect(() => {
         if(nonReservation){
             if(nonReservation.result === 'OK'){
-                navigate("/reservationList");
+                navigate("/reservationList", {
+                    state: {
+                      list: nonReservation.list,
+                    },
+                  });
                 
             }else{
                 alert("일치하는 예약정보가 없습니다.");

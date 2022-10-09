@@ -38,7 +38,7 @@ const FindPassword = () => {
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            'accessToken' : localStorage.getItem('accesstoken'),
+                            'Authorization' : localStorage.getItem('Authorization'),
                         }
                     }).then((res) => {
                         console.log(res)

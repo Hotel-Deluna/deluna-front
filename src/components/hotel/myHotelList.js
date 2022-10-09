@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom';
 import HotelDelete from "./hotelDelete";
 /* redux 영역 */
 import { connect,useDispatch } from "react-redux";
-import {my_hotel_list} from "../../modules/hotel/hotelMainActions";
+import {my_hotel_list, reset} from "../../modules/hotel/hotelMainActions";
 
 //페이징 라이브 러리
 import { useInView } from 'react-intersection-observer';
+import { useNavigate } from 'react-router-dom';
 
-const MyhotelList = ({my_hotel_list,hotelList}) => { 
+const MyhotelList = ({my_hotel_list,hotelList,reset}) => { 
     const [modalOpen, setModalOpen] = useState(false);
     const [hotelNum, setHotelNum] = useState('');
     const [hotelName, setHotelName] = useState('');
@@ -19,6 +20,9 @@ const MyhotelList = ({my_hotel_list,hotelList}) => {
     const [hotelLists, setHotelLists] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
+
+    const [rendering, setRendering] = useState(false)
+    let navigate = useNavigate();
 
     const onSetModalOpen = (open, hotel_num, hotel_name) => {
         setHotelNum(hotel_num);
@@ -35,11 +39,17 @@ const MyhotelList = ({my_hotel_list,hotelList}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        setRendering(true)
         my_hotel_list({
             text : '',
             page : page
         });
-    },[])
+    },[]);
+
+    const roomSelete = (name) => {
+        reset();
+        navigate("/auth/hotel/roomList?hotelName="+name)
+    }
     useEffect(() => {
         if (!inView) {
           return;
@@ -54,7 +64,7 @@ const MyhotelList = ({my_hotel_list,hotelList}) => {
       }, [inView]);
     
     useEffect(() => {
-        if(hotelList){
+        if(hotelList && rendering){
             if(hotelList.result === 'OK'){
                 if(hotelList.data.length > 0){
                     setPage((page) => page+1)
@@ -100,9 +110,7 @@ const MyhotelList = ({my_hotel_list,hotelList}) => {
                                     </Link>
                                 </td>
                                 <td id="btnGroup">
-                                    <Link to = {"/auth/hotel/roomList?hotelName="+item.name}>
-                                        <Button variant="outline-dark">조회/변경</Button>
-                                    </Link>
+                                    <Button variant="outline-dark" onClick={() => roomSelete(item.name)}>조회/변경</Button>
                                 </td>
                                 <td id="btnGroup"><Button variant="outline-dark">보기</Button></td>
                                 <td id="btnGroup"><Button variant="danger" onClick={() => onSetModalOpen(true,item.hotel_num,item.name)}>삭제</Button></td>
@@ -129,7 +137,7 @@ const MyhotelList = ({my_hotel_list,hotelList}) => {
                     <HotelDelete hotel_name={hotelName} hotel_num={hotelNum} modalOpen={modalOpen} getData={getData}/>
                 )}
                 </div>
-                <div ref={ref}/>
+                <div ref={ref} />
         </>
     )
 };
@@ -139,6 +147,7 @@ export default connect(
     }),
     {
         my_hotel_list, //나(사업자)의 호텔리스트 조회 액션
+        reset
 
     }
 )(MyhotelList);

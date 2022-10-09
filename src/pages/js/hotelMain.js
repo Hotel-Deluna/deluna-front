@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 
 
 const HotelMain = () => {
+    
     return (
         <>
                 <Container>

@@ -106,6 +106,7 @@ function HeaderFilter({search_bar,searchList,headerData}) {
 
     useEffect(() => {
         if(location.pathname === '/'){
+
             dispatch(hotelSearchReducer.reset());
             sessionStorage.removeItem('headerData');
         }
@@ -225,10 +226,10 @@ function HeaderFilter({search_bar,searchList,headerData}) {
                             <AiOutlineClose onClick={()=>setRoomPers(false)}/>
                         </Card.Text>
                         <Card.Text>
-                            <MdOutlineBedroomParent/> 객실 수 : <AiOutlinePlusCircle onClick={()=>roomAction('plus')}/> {roomCount} <AiOutlineMinusCircle onClick={()=>roomAction('minus')}/>
+                            <MdOutlineBedroomParent/> 객실 수 :  <AiOutlineMinusCircle onClick={()=>roomAction('minus')}/> {roomCount} <AiOutlinePlusCircle onClick={()=>roomAction('plus')}/>
                         </Card.Text>
                         <Card.Text>
-                            <MdOutlinePersonOutline /> 투숙객 수 : <AiOutlinePlusCircle onClick={()=>persAction('plus')}/> {persCount} <AiOutlineMinusCircle onClick={()=>persAction('minus')}/>
+                            <MdOutlinePersonOutline /> 투숙객 수 :  <AiOutlineMinusCircle onClick={()=>persAction('minus')}/> {persCount} <AiOutlinePlusCircle onClick={()=>persAction('plus')}/>
                         </Card.Text>
                     </Card.Body>
                 </Card>

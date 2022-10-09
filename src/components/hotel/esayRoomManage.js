@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {Row, Col,Button, Table, InputGroup,Form} from 'react-bootstrap';
 import { UncontrolledCollapse, Card, CardBody } from 'reactstrap';
 import * as hotelMainReducer from "../../modules/hotel/hotelMainReducer";
-import {my_hotel_list, hotel_code} from "../../modules/hotel/hotelMainActions";
+import {my_hotel_list, hotel_code,reset} from "../../modules/hotel/hotelMainActions";
 import { connect, useDispatch } from 'react-redux';
 import RoomBatchDelete from "./roomBatchDelete";
 import "./css/hotelRoomList.scss"
@@ -11,7 +11,7 @@ import noStar from "./images/no_star.png"
 import { useSearchParams,Link } from 'react-router-dom';
 //무한 스크롤 페이징 라이브러리
 import { useInView } from 'react-intersection-observer';
-const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) => {
+const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,reset}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [hotelListValue, setHotelListValue] = useState([]);
     const codeList = code.code;
@@ -26,8 +26,8 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     
-    const [searchClick, setSearchClick] = useState(false)
-   // const [tagsName, setTagsName] = useState([]);
+    const [searchClick, setSearchClick] = useState(false);
+    const [rendering, setRendering] = useState(false)
     const searchValueChange = (e) =>{
         setReSearchValue(e.target.value);
     }
@@ -56,6 +56,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
     
     //진입 시 모든 리스트가 보여줘야 함
     useEffect(() => {
+        setRendering(true);
         my_hotel_list({
             text : searchValue === null ? '' : searchValue,
             page : page
@@ -78,7 +79,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
 
     //호텔리스트 조회 상태에 따라 dispatch or 예외처리
     useEffect(() => {
-        if(hotelList){
+        if(hotelList && rendering){
             if(hotelList.result === 'OK'){
                 if(hotelList.data.length > 0){
                     setPage((page) => page+1)
@@ -91,6 +92,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
                 alert("호텔 리스트 조회가 실패하였습니다. 잠시 후 다시 이용해주세요.");
             }
         }
+        
     },[my_hotel_list,hotelList])
 
     //호텔 부가서비스/시설 공통코드 조회 상태에 따라 dispatch or 예외처리
@@ -101,7 +103,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
             }
         }
     },[hotel_code,hotelCode])
-    ///item.tags.includes(item2.code)
+
     return (
         <>
             <Row className="containerTitle">
@@ -255,7 +257,8 @@ export default connect(
     }),
     {
         my_hotel_list, //나(사업자)의 호텔리스트 조회 액션
-        hotel_code
+        hotel_code,
+        reset
 
     }
 )(EsayRoomManage);
