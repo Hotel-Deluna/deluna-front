@@ -33,10 +33,11 @@ const FindPassword = () => {
                     axios.patch('http://43.200.222.222:8080/member/memberUpdatePwd',{
                         password : password,
                         update_password :rePassword,
+                        role : localStorage.getItem('role')
                     },
                     {
                         headers: {
-                            'Content-Type': 'multipart/form-data',
+                            'Content-Type': 'application/json',
                             'accessToken' : localStorage.getItem('accesstoken'),
                         }
                     }).then((res) => {
@@ -102,8 +103,8 @@ const FindPassword = () => {
                 <div id="buttonGroup">
                     <Button variant="outline-primary"
                     disabled={
-                        localStorage.getItem('role') === null ? (!rePassword || !rePasswordCheck ? true : false)
-                        :  (!password || !rePassword || !rePasswordCheck ? true : false)
+                        localStorage.getItem('role') === null ? (!rePassword || !rePasswordCheck || rePasswordCheck !== rePassword ? true : false)
+                        :  (!password || !rePassword || !rePasswordCheck || rePasswordCheck !== rePassword ? true : false)
                     }
                     onClick={() => changePassword()}
                     >

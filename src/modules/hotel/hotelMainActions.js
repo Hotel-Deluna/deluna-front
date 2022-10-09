@@ -1,5 +1,5 @@
 import { createAction, handleActions } from "redux-actions";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, take, takeLatest } from "redux-saga/effects";
 import * as api from "../../lib/api/hotel";
 
 //redux 조회 및 요청

@@ -72,18 +72,23 @@ function HeaderFilter({search_bar,searchList,headerData}) {
     }
 
     const handleSearch = () => {
-        dispatch(hotelSearchReducer.headerData({
-            data : {
-                page : 1,
-                people_count : persCount,
-                room_count : roomCount,
-                page_cnt : 5,
-                reservation_start_date : moment(startDate).format("YYYY/MM/DD"),
-                reservation_end_date : moment(endDate).format("YYYY/MM/DD"),
-                search_type : searchClickType,
-                text : searchClickValue
-            }
-        }));
+        if(search){
+            alert("검색어를 선택해주세요.");
+        }else{
+            dispatch(hotelSearchReducer.headerData({
+                data : {
+                    page : 1,
+                    people_count : persCount,
+                    room_count : roomCount,
+                    page_cnt : 5,
+                    reservation_start_date : moment(startDate).format("YYYY/MM/DD"),
+                    reservation_end_date : moment(endDate).format("YYYY/MM/DD"),
+                    search_type : searchClickType,
+                    text : searchClickValue
+                }
+            }));
+        }
+        
         //메인일 경우 상세페이지 이동
         if(location.pathname === '/'){
             navigate("/search")
@@ -98,6 +103,13 @@ function HeaderFilter({search_bar,searchList,headerData}) {
             }
         }
     },[search_bar,searchList]);
+
+    useEffect(() => {
+        if(location.pathname === '/'){
+            dispatch(hotelSearchReducer.reset());
+            sessionStorage.removeItem('headerData');
+        }
+    },[]);
     
     useEffect(() => {
         if(sessionStorage.getItem('headerData') !== null){

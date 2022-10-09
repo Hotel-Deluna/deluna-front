@@ -56,7 +56,7 @@ const Header = () => {
     const createToken = () => {
         axios.get("http://43.200.222.222:8080/common/create/token", {
             params: {
-                user_num : 6,
+                user_num : 1,
                 user_role : 2
             }
           })

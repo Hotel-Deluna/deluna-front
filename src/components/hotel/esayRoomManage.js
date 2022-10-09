@@ -40,7 +40,6 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
             text : reSearchValue,
             page : 1
         });
-        hotel_code();
     }
 
     const onSetModalOpen = (open, index, index2) => {
@@ -62,7 +61,6 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
             page : page
         });
         hotel_code();
-        
     },[])
 
     useEffect(() => {
@@ -71,7 +69,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
         }else{
             if(loading && page > 1){
                 my_hotel_list({
-                    text : searchClick ? reSearchValue :searchValue ,
+                    text : searchClick ? reSearchValue : searchValue ,
                     page : page
                 });
             }
@@ -82,9 +80,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
     useEffect(() => {
         if(hotelList){
             if(hotelList.result === 'OK'){
-                //dispatch(hotelMainReducer.selectHotelList({ data : hotelList.data}));
                 if(hotelList.data.length > 0){
-                    
                     setPage((page) => page+1)
                     hotelList.data.map((array) => hotelListValue.push(array))
                     setHotelListValue(hotelListValue)
@@ -128,7 +124,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code}) 
                     <div className="col-md-4">
                     <img
                         className="bd-placeholder-img"
-                        src={item.image[0]}
+                        src={item.image ? item.image[0] : null}
                     >
                     </img>
                     </div>

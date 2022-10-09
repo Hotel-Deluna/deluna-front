@@ -72,7 +72,7 @@ const MyhotelList = ({my_hotel_list,hotelList}) => {
         <>
             <div className="containerTitle">나의 호텔 리스트</div>
                 <Table bordered>
-                    <thead className="table-blue">
+                    <thead className="table-blue" id="myHotelListTable">
                         <tr>
                             <th>호텔명</th>
                             <th>호텔주소</th>
@@ -94,18 +94,18 @@ const MyhotelList = ({my_hotel_list,hotelList}) => {
                                 <td>{item.address}</td>
                                 <td>{item.phone_num ? item.phone_num.replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") : ''}</td>
                                 <td><img src={item.image ? item.image[0] : ''}></img></td>
-                                <td>
+                                <td id="btnGroup">
                                     <Link to = {"/auth/hotel/info?type=modfiy"+"&hotel_num="+item.hotel_num}>
                                         <Button variant="outline-dark">수정</Button>
                                     </Link>
                                 </td>
-                                <td>
+                                <td id="btnGroup">
                                     <Link to = {"/auth/hotel/roomList?hotelName="+item.name}>
                                         <Button variant="outline-dark">조회/변경</Button>
                                     </Link>
                                 </td>
-                                <td><Button variant="outline-dark">보기</Button></td>
-                                <td><Button variant="danger" onClick={() => onSetModalOpen(true,item.hotel_num,item.name)}>삭제</Button></td>
+                                <td id="btnGroup"><Button variant="outline-dark">보기</Button></td>
+                                <td id="btnGroup"><Button variant="danger" onClick={() => onSetModalOpen(true,item.hotel_num,item.name)}>삭제</Button></td>
                             </tr>
                             
                         ))}

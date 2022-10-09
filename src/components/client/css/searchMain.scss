@@ -35,6 +35,9 @@
 #searchContainer .col-9{
     margin-bottom: 30px;
 }
+#btnGroup, #myHotelListTable{
+    text-align: center;
+}
 @media screen and (max-width: 770px){
     #searchTabs .mb-3{
         font-size: 0.6rem;
