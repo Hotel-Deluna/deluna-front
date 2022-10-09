@@ -1,10 +1,7 @@
 import React from "react";
 import HeaderFilter from "../layout/js/headerFilter";
 import ImageModal from "./imageModal";
-import { Container, Row, Col, Button, Card, Form, Image, Carousel } from "react-bootstrap";
-import logo from '../layout/imges/city_3.jpg';
-import logo2 from '../layout/imges/city_4.jpg';
-import logo3 from '../layout/imges/city_5.jpg';
+import { Container, Row, Col, Button, Card, Form, Image, Carousel, Spinner } from "react-bootstrap";
 import { CardBody, CardHeader } from "reactstrap";
 import { VscTriangleLeft, VscTriangleRight, VscTriangleUp, VscTriangleDown } from "react-icons/vsc";
 import star from "../hotel/images/star.png";
@@ -12,7 +9,6 @@ import noStar from "../hotel/images/no_star.png";
 import noImage from "../common/noImage.png";
 
 const InfoHotel = (props) => {
-    
     const titleSize = {
         fontSize : '1.2rem'
     }
@@ -41,7 +37,6 @@ const InfoHotel = (props) => {
         marginRight : '0.2rem'
     }
     
-
     return(
         <Container fluid="xxl">
             <Row className="justify-content-md-center mb-3">
@@ -49,7 +44,7 @@ const InfoHotel = (props) => {
                     <HeaderFilter />
                 </Col>
             </Row>
-            {props.hotelInfo.image !== undefined && (
+            {props.hotelInfo.image && (
             props.hotelInfo.image.length > 0 && (
             <>
             <Row className="justify-content-md-center mb-3">
@@ -69,15 +64,16 @@ const InfoHotel = (props) => {
                         </Col>
                         <Col sm={10}>
                             <Row>
-                                { props.hotelInfo.image.map((hotelImgItem, index) => (
+                                {props.hotelInfo.image && ( 
+                                props.hotelInfo.image.map((hotelImgItem, index) => (
                                     index < (props.hotelImgIdx+3) && (
                                         props.hotelImgIdx <= index && (
-                                            <Col key={'hotelImg'+index} sm={props.hotelInfo.image.length === 1 ? 12 : (props.hotelInfo.image.length === 2 ? 6 : 4)} style={{padding : '0.3rem'}}>
+                                            <Col key={'hotelImg'+index} sm={props.hotelInfo.image !==null && (props.hotelInfo.image.length === 1 ? 12 : (props.hotelInfo.image.length === 2 ? 6 : 4))} style={{padding : '0.3rem'}}>
                                                 <Image style={{ width:'100%', height:'15rem' }} src={hotelImgItem} alt={'hotelImg_'+index} onClick={()=>props.handleImgClick('hotel_'+index)} />
                                             </Col>
                                         )
                                     )
-                                ))}
+                                )))}
                             </Row>
                         </Col>
                         <Col sm={1} style={angleBtn}>
@@ -97,8 +93,8 @@ const InfoHotel = (props) => {
             </Row>
             </>)
             )}
+            {props.isHotelLoading && (<>
             <Row className="mb-3">
-               
                 <Col sm={12}>
                     <Card style={{width : '100%'}}>
                         <Card.Header>
@@ -123,7 +119,6 @@ const InfoHotel = (props) => {
                
             </Row>
             <Row className="mb-2">
-               
                 <Col sm={12}>
                     <Card style={{width : '100%'}}>
                         <Card.Header>
@@ -147,7 +142,6 @@ const InfoHotel = (props) => {
                
             </Row>
             <Row className="mb-2">
-               
                 <Col sm={12}>
                 <Card style={{width : '100%'}}>
                         <Card.Header>
@@ -163,7 +157,6 @@ const InfoHotel = (props) => {
                
             </Row>
             <Row>
-               
                 <Col sm={12}>
                     <Card border="light">
                         <CardHeader style={{backgroundColor: '#fff', fontSize:'0.7rem', paddingLeft : '0'}}> 
@@ -171,23 +164,24 @@ const InfoHotel = (props) => {
                         </CardHeader>
                         <CardBody style={{paddingBottom:'0',paddingLeft:'0',paddingRight:'0'}}>
                             { props.room_arr.map((roomItem, roomIndex) => (
-                                <Card className="mb-3" key={'room_list'+roomIndex}>
+                                <Card className={roomIndex !== (props.room_arr.length-1) && ('mb-3')} key={'room_list'+roomIndex}>
                                     <Row  md={2} className="g-0 justify-content-md-center">
                                         <Col md={2}>
-                                            <Carousel interval={null} data-interval="false" wrap={false} style={{width : '100%', height: '100%'}}>
-                                                {roomItem.image === null 
-                                                ? 
-                                                    <Carousel.Item>
-                                                        <img className="d-block d-md-none" src={noImage} alt="no_image" style={{width : '100%',height : '17.5rem'}} />
-                                                        <img className="d-none d-md-block" src={noImage} alt="no_image" style={{width : '100%',height : '12.5rem'}} />
-                                                    </Carousel.Item>
-                                                :
-                                                roomItem.image.map((roomImgItem, roomImgIdx) => (
-                                                        <Carousel.Item key={'room_image'+roomImgIdx}>
-                                                            <img className="d-block d-md-none" src={roomImgItem} alt={'room_image'+ roomImgIdx} style={{width : '100%',height : '17.5rem'}} onClick={()=>props.handleImgClick('room_'+roomImgIdx+'_'+roomIndex)} />
-                                                            <img className="d-none d-md-block" src={roomImgItem} alt={'room_image'+ roomImgIdx} style={{width : '100%',height : '12.5rem'}} onClick={()=>props.handleImgClick('room_'+roomImgIdx+'_'+roomIndex)} />
+                                            <Carousel interval={null} data-interval="false" wrap={false} style={{width : '100%', height: '100%'}} indicators={ roomItem.image === null ? false : true} >
+                                                { 
+                                                    roomItem.image === null 
+                                                    ? 
+                                                        <Carousel.Item>
+                                                            <img className="d-block d-md-none" src={noImage} alt="no_image" style={{width : '100%',height : '17.5rem'}} />
+                                                            <img className="d-none d-md-block" src={noImage} alt="no_image" style={{width : '100%',height : '12.5rem'}} />
                                                         </Carousel.Item>
-                                                    ))
+                                                    :
+                                                    roomItem.image.map((roomImgItem, roomImgIdx) => (
+                                                            <Carousel.Item key={'room_image'+roomImgIdx}>
+                                                                <img className="d-block d-md-none" src={roomImgItem} alt={'room_image'+ roomImgIdx} style={{width : '100%',height : '17.5rem'}} onClick={()=>props.handleImgClick('room_'+roomImgIdx+'_'+roomIndex)} />
+                                                                <img className="d-none d-md-block" src={roomImgItem} alt={'room_image'+ roomImgIdx} style={{width : '100%',height : '12.5rem'}} onClick={()=>props.handleImgClick('room_'+roomImgIdx+'_'+roomIndex)} />
+                                                            </Carousel.Item>
+                                                        ))
                                                 }
                                             </Carousel>
                                         </Col>
@@ -201,7 +195,7 @@ const InfoHotel = (props) => {
                                                 <Row className="mb-2">
                                                     <Col md={6}>
                                                         <Card.Text style={roomInfoSize}>
-                                                            침대 갯수 : {roomItem.single_bed_count > 0 && (roomItem.double_bed_count === 0 ? <span>싱글베드:{roomItem.single_bed_count}+개</span>  : <span>싱글베드:{roomItem.single_bed_count}개, </span> ) }
+                                                            침대 : {roomItem.single_bed_count > 0 && (roomItem.double_bed_count === 0 ? <span>싱글베드:{roomItem.single_bed_count}+개</span>  : <span>싱글베드:{roomItem.single_bed_count}개, </span> ) }
                                                                 {roomItem.double_bed_count > 0 && (<span>더블베드:{roomItem.double_bed_count}개</span>)}
                                                         </Card.Text>
                                                     </Col>
@@ -232,7 +226,7 @@ const InfoHotel = (props) => {
                                                             <span style={{fontSize : '0.9rem'}}>1박 / {roomItem.price} 원</span>
                                                         </Col>
                                                         <Col md={3}>
-                                                            <Form.Select size="sm">
+                                                            <Form.Select size="sm" disabled={roomItem.reservable_room_count === 0 && (true)} name={'choiceCnt_'+roomIndex} onChange={props.handleSelect}>
                                                                 <option value={0}>객실 수 선택</option>
                                                                 {1 <= roomItem.reservable_room_count && (<option value={1}>1</option>)}
                                                                 {2 <= roomItem.reservable_room_count && (<option value={2}>2</option>)}
@@ -243,16 +237,16 @@ const InfoHotel = (props) => {
                                                         </Col>
                                                         <Col md={6}>
                                                             <span style={roomInfoSize}>예약 인원 수 : &nbsp;</span>
-                                                            <Button variant="outline-dark">-</Button>
-                                                            &nbsp;<span style={roomInfoSize}>1</span>&nbsp;
-                                                            <Button variant="outline-dark">+</Button>
+                                                            <Button variant="outline-dark" onClick={props.handleClick} name={'people_minus_'+roomIndex} disabled={roomItem.reservable_room_count === 0 && (true)}>-</Button>
+                                                            &nbsp;<span style={{fontSize:'0.8rem', width:'1.2rem', display:'inline-block', textAlign:'center'}}>{props.roomInfo.roomList[roomIndex]?.people}</span>&nbsp;
+                                                            <Button variant="outline-dark" onClick={props.handleClick} name={'people_plus_'+roomIndex} disabled={roomItem.reservable_room_count === 0 && (true)}>+</Button>
                                                         </Col>
                                                     </Row>
                                                 )}
                                             </Card.Body>
                                         </Col>
                                         <Col md={2}>
-                                            <Button variant={roomItem.reservable_room_count === 0 ? "outline-danger" : "outline-light"} disabled={roomItem.reservable_room_count === 0 && (true)} style={{width: '100%', height : '100%', border: '0.01rem solid rgba(0, 0, 0, 0.175)',borderLeft: '0.1rem solid rgba(0, 0, 0, 0.175)'}}>
+                                            <Button name={'makeReservationOne_'+roomIndex} onClick={props.handleClick} variant={props.roomInfo.roomList[roomIndex]?.room_cnt === 0 ? "outline-light" : "outline-dark"} disabled={props.roomInfo.roomList[roomIndex]?.room_cnt === 0 && (true)} style={{width: '100%', height : '100%', border: '0.01rem solid)',borderLeft: '0.1rem solid'}}>
                                                 <span style={{color:'#adb5bd', fontSize:'1rem'}}>{roomItem.reservable_room_count === 0 ? '예약불가' : '예약하기'}</span>
                                             </Button>
                                         </Col>
@@ -263,22 +257,57 @@ const InfoHotel = (props) => {
                     </Card>
                 </Col>
                
+               
             </Row>
-            {props.room_arr.length > 1 && (
+            </>)}
+            {props.room_arr.length > 1 && !props.isRoomLoading &&(
+                <Row className="mb-3"><Col sm={5} /><Col sm={2} style={{textAlign : 'center'}}><Spinner animation="border" /></Col><Col sm={5} /></Row>
+            )}
+            {props.room_arr.length > 1  && (
                 <Row className="mb-3">
                     <Col sm={12}>
                         <div className="d-grid">
-                        <Button variant="light" style={{fontSize:'1rem'}}>모두 예약</Button>
+                        <Button name={'makeReservationAll_'} onClick={props.handleClick} variant="light" style={{fontSize:'1rem'}} disabled={props.allReservationCheck ? false : true}>모두 예약</Button>
                         </div>
                     </Col>
                 </Row>
             )}
-            <Row className="mb-3"><Col sm={12} /></Row>
+            {props.room_arr.length > 1  && (
+                props.room_arr.length !== props.hotelInfo.room_list.length ?
+                <Row className="mb-3">
+                    <Col sm={12}>
+                        <div className="d-grid">
+                        <Button variant="light" style={{fontSize:'1rem'}} disabled>객실 더보기 <VscTriangleDown /></Button>
+                        </div>
+                    </Col>
+                </Row>
+                :
+                <Row className="mb-3">
+                    <Col sm={4} />
+                    <Col sm={4} style={{textAlign : 'center'}}>
+                        <Button variant="outline-dark" style={{fontSize:'1rem'}} onClick={()=> (document.documentElement.scrollTop = 0)}>맨 위로 <VscTriangleUp /></Button>
+                    </Col>
+                    <Col sm={4} />
+                </Row>
+            )}
+            {/* {props.room_arr.length > 1 && (
+                <Row className="mb-3">
+                    <Col sm={12}>
+                        <div className="d-grid">
+                        <Button variant="light" style={{fontSize:'1rem'}}>맨 위로 <VscTriangleUp /></Button>
+                        </div>
+                    </Col>
+                </Row>
+            )} */}
+            
+            <Row className="mb-3"><Col xs><div ref={props.views}></div></Col></Row>
             <Row className="mb-3"><Col sm={12} /></Row>
             <Row><Col sm={12} /></Row>
+            
             {props.roomModalOpen && (
                 <ImageModal imgType={props.imgType} setRoomModalOpen={props.setRoomModalOpen} roomModalOpen={props.roomModalOpen} idx={props.modalIdx} imgList={props.imgType === 0 ? props.hotelInfo.image : props.room_arr[props.roomArrIdx].image} />
             )}
+            
         </Container>
     );
 }

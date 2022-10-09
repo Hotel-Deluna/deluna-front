@@ -40,6 +40,7 @@ const MainContainer = ({selectCityList, cityList}) => {
                 page : 1,
                 people_count : 1,
                 page_cnt : 10,
+                room_count : 1,
                 reservation_start_date : moment(today).format("YYYY/MM/DD"),
                 reservation_end_date : moment(tomorrow).format("YYYY/MM/DD"),
                 search_type : 1,

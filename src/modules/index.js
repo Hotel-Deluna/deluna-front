@@ -27,6 +27,8 @@ import roomMainReducer from "./hotel/roomMainReducer";
 import mainActions, {mainActionsSaga} from "./mainActions";
 import roomInfoActions, {roomInfoActionsSaga} from "./hotel/roomInfoActions";
 import roomInfoReducer from "./hotel/roomInfoReducer";
+//고객
+import infoReducer from "./client/infoReducer";
 const rootReducer = combineReducers({
     auth,
     loading,
@@ -45,7 +47,8 @@ const rootReducer = combineReducers({
     hotelReservationActions,
     mainActions,
     roomInfoActions,
-    roomInfoReducer
+    roomInfoReducer,
+    infoReducer
 })
 export function* rootSaga(){
     yield all([authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),

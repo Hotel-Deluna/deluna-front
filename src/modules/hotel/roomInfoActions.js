@@ -87,8 +87,8 @@ const roomInfoActions = handleActions(
             register : action.payload,
             edit : action.payload,
             info :  action.payload,
-            nameCheck: action.payload,
-
+            nameCheck: action.payload
+            
         }),
         [ROOMNAMECHECK_SUCCESS] : (state, action) => ({ 
             ...state,

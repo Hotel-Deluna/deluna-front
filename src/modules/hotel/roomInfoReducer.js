@@ -4,14 +4,12 @@ import moment from "moment";
 // 액션 타입
 const CHANGE_INPUT = "ROOM_CHANGE_INPUT" //input 값 변경
 const CHANGE_CHECKBOX = "ROOM_CHANGE_CHECKBOX" //객실 체크박스 값 변경
-const CHANGE_IMAGE = "ROOM_CHANGE_IMAGE" // 객실이미지 변경
 
 const INSERT_INPUT = "ROOM_INSERT_INPUT"; //조회 성공후 초기값 dispatch
 
 const RESET = "RESET";
 export const changeInput = createAction(CHANGE_INPUT); //{ form, name, value }
 export const changeCheckbox = createAction(CHANGE_CHECKBOX);
-export const chnageImages = createAction(CHANGE_IMAGE);
 export const insertInput = createAction(INSERT_INPUT);
 export const reset = createAction(RESET);
 
@@ -60,35 +58,8 @@ export default handleActions({
         const { form, name, value } = action.payload;
         return state.setIn([form, 'form', name], value);
     },
-    [CHANGE_IMAGE] : (state, action) => {
-        const { form, name, value } = action.payload;
-        return state.setIn([form, 'form', name], value);
-    },
     [INSERT_INPUT] : (state, action) => {
         const { data } = action.payload;
-        // const room_detail_list = []
-        // if(data.room_detail_info){
-        //     for(var i =0; i<data.room_detail_info.length; i++){
-        //         const status = parseInt(data.room_detail_info[i].room_detail_status);
-        //         room_detail_list.push({
-        //                 id : i,
-        //                 name : data.room_detail_info[i].name,
-        //                 room_detail_status : data.room_detail_info[i].room_detail_status,
-        //                 room_closed_start :status === 0 ? "": moment(data.room_detail_info[i].room_closed_start).format("YYYY-MM-DD"),
-        //                 room_closed_end : status === 0 ? "" : moment(data.room_detail_info[i].room_closed_end).format("YYYY-MM-DD")
-        //             })
-        //     }
-        // }else{
-        //     room_detail_list.push({
-        //         id : 0,
-        //         name : '',
-        //         room_num : '',
-        //         room_detail_status : '',
-        //         delete_date : '',
-        //         room_closed_start : '',
-        //         room_closed_end : ''
-        //     }) 
-        // }
         if(!data.tags) data.tags=[];
         
         return state.setIn(['REGISTER', 'form', 'check_in_time'], data.check_in_time)

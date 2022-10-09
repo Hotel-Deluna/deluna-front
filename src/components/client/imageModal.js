@@ -40,19 +40,19 @@ const ImageModal = (props) => {
             </Modal.Body>
             <Modal.Footer style={{backgroundColor : '#212529'}}>
                 <Container>
-                <Row className="justify-content-around">
-                { props.imgList.map((item, index) => (
-                    props.imgList.length === 1 
-                    ? 
-                    <Col xs='auto' key={index}>
-                        <Image style={{height : '6rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
-                    </Col>
-                    :
-                    <Col xs key={index}>
-                        <Image style={{height : '6rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
-                    </Col>
-                ))}
-                </Row>
+                    <Row className="justify-content-around">
+                    { props.imgList.map((item, index) => (
+                        props.imgList.length === 1 
+                        ? 
+                        <Col xs='auto' key={index}>
+                            <Image style={{height : '6rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
+                        </Col>
+                        :
+                        <Col xs key={index}>
+                            <Image style={{height : '6rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
+                        </Col>
+                    ))}
+                    </Row>
                 </Container>
             </Modal.Footer>
         </Modal>
