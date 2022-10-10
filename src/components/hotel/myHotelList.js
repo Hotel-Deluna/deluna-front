@@ -35,6 +35,19 @@ const MyhotelList = ({my_hotel_list,hotelList,reset}) => {
         setModalOpen(modalOpen);
     }
     
+    const deleteCode = (code) => {
+        if(code === 'OK'){
+            setHotelLists([])
+            setPage(1)
+            setLoading(true)
+            
+            my_hotel_list({
+                text : '',
+                page : 1
+            });
+        }
+        
+    }
     //store에 Data전달을 위해
     const dispatch = useDispatch();
 
@@ -112,7 +125,11 @@ const MyhotelList = ({my_hotel_list,hotelList,reset}) => {
                                 <td id="btnGroup">
                                     <Button variant="outline-dark" onClick={() => roomSelete(item.name)}>조회/변경</Button>
                                 </td>
-                                <td id="btnGroup"><Button variant="outline-dark">보기</Button></td>
+                                <td id="btnGroup">
+                                    <Link to ={"/auth/hotel/reservationList"}>
+                                        <Button variant="outline-dark">보기</Button>
+                                    </Link>
+                                </td>
                                 <td id="btnGroup"><Button variant="danger" onClick={() => onSetModalOpen(true,item.hotel_num,item.name)}>삭제</Button></td>
                             </tr>
                             
@@ -134,7 +151,7 @@ const MyhotelList = ({my_hotel_list,hotelList,reset}) => {
                 <div>
                 {
                 modalOpen && (
-                    <HotelDelete hotel_name={hotelName} hotel_num={hotelNum} modalOpen={modalOpen} getData={getData}/>
+                    <HotelDelete hotel_name={hotelName} hotel_num={hotelNum} modalOpen={modalOpen} getData={getData} deleteCode={deleteCode}/>
                 )}
                 </div>
                 <div ref={ref} />

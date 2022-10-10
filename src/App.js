@@ -17,11 +17,19 @@ import HotelRoomDetailListPage from './pages/js/hotelRoomDetailListPage';
 import HotelReservationPage from './pages/js/hotelReservationPage';
 import HotelDetailInfoPage from './pages/js/hotelDetailInfoPage';
 import ReservationPage from './pages/js/reservationPage';
+
+import PrivateRoute from './lib/privateRoute';
+import PublicRoute from './lib/publicRoute';
+import React from 'react';
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
 				<Header />
+        {/* <Routes>
+            <Route path="/auth/login" restricted
+              element={<PublicRoute element={<LoginPage />}/>}></Route>
+        </Routes> */}
 				<Routes>
 					<Route path="/" element={<Main />}></Route>
           <Route path="/auth/hotel/info/" element={<HotelInfo />}></Route>
@@ -40,7 +48,7 @@ function App() {
           <Route path='/auth/changePassword' element={<ChangePassword/>}></Route>
 				</Routes>
         <Footer />
-			</BrowserRouter>
+        </BrowserRouter>
     </div>
   );
 }

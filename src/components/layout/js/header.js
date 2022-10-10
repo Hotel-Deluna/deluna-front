@@ -71,7 +71,7 @@ const Header = () => {
           .then(function (response) {
             console.log(response)
                 localStorage.setItem('accessToken',response.data)
-                localStorage.setItem('role',1);
+                localStorage.setItem('role',2);
 
                 // localStorage.setItem('jwtToken','eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0cGRsNTgzMkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9NRU1CRVIiLCJleHAiOjE2NjQ4ODA2OTJ9.W9Ltym_kNblL2Fqb3S2XNCeodJyNvGM5cKgBWegNlXVb75Lpp1w9a-31DhvcBJA2YFyYV2vSthVv4u8x7KEXlA')
                 // localStorage.setItem('email','tpdl5832@naver.com');
@@ -104,7 +104,7 @@ const Header = () => {
                                         <Nav.Link href="/reservationList">
                                             예약내역
                                         </Nav.Link>
-                                        <NavDropdown title={localStorage.getItem('email').split('@')[0]+'님'} id="navbarScrollingDropdown">
+                                        <NavDropdown title={localStorage.getItem('email') ? localStorage.getItem('email').split('@')[0]+'님' : null} id="navbarScrollingDropdown">
                                             <NavDropdown.Item onClick={showModal}>내 정보 수정</NavDropdown.Item>
                                             <NavDropdown.Item href="/auth/changePassword">
                                                 비밀번호 변경
@@ -138,7 +138,7 @@ const Header = () => {
                                         <Nav.Link href="/auth/hotel/reservationList">예약관리</Nav.Link>
                                     </Nav>
                                     <Nav>
-                                        <NavDropdown title={localStorage.getItem('email').split('@')[0]+'님'} id="navbarScrollingDropdown">
+                                        <NavDropdown title={localStorage.getItem('email') ? localStorage.getItem('email').split('@')[0]+'님' : null} id="navbarScrollingDropdown">
                                             <NavDropdown.Item onClick={showModal}>내 정보 수정</NavDropdown.Item>
                                             <NavDropdown.Item href="/auth/changePassword">
                                                 비밀번호 변경

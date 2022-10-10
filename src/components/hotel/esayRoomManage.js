@@ -11,6 +11,8 @@ import noStar from "./images/no_star.png"
 import { useSearchParams,Link } from 'react-router-dom';
 //무한 스크롤 페이징 라이브러리
 import { useInView } from 'react-intersection-observer';
+//객실 등록&수정 모달
+import RoomCommon from "../../containers/hotel/roomCommon";
 const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,reset}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [hotelListValue, setHotelListValue] = useState([]);
@@ -43,7 +45,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
     }
 
     const onSetModalOpen = (open, index, index2) => {
-        setHotelNum(hotelListValue[index].room_list[index2].room_num)
+        setRoomNum(hotelListValue[index].room_list[index2].room_num)
         setModalOpen(open)
     }
 
@@ -52,6 +54,23 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
         setModalOpen(modalOpen);
     }
 
+    //객실 추가&등록, 수정 모달 시작
+    const [changeInfo, setChangeInfo] = useState(false); //등록이 되었을시 setChangeInfo(true)
+    const [roomModalOpen, setRoomModalOpen] = useState(false); //모달 오픈 boolean 
+    const [type, setType] = useState(0); //  0-등록
+    const [roomNum, setRoomNum] = useState(''); //객실 번호-> 수정 시 -없어도 됨
+    const roomModal = (type,index) => {
+        //등록
+        if(type === 0){
+            setHotelNum(hotelListValue[index].hotel_num)
+            setRoomModalOpen(true)
+        //수정
+        }else{
+
+        }
+    }
+    //종료
+    
     const dispatch = useDispatch();
     
     //진입 시 모든 리스트가 보여줘야 함
@@ -165,7 +184,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
                                 </small>
                             
                             </p>
-                            <Button id="roomAdd" variant="outline-primary" onClick={()=>alert("객실 추가 & 등록 연동")}>
+                            <Button id="roomAdd" variant="outline-primary" onClick={()=>roomModal(0,index)}>
                                     {item.room_list.length > 0 ? '객실추가' : '객실등록'}
                             </Button>{' '}
                             <div ref={ref}/>
@@ -225,7 +244,12 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
                                                 <div>
                                                 {
                                                 modalOpen && (
-                                                    <RoomBatchDelete room_num={hotelNum} modalOpen={modalOpen} getData={getData}/>
+                                                    <RoomBatchDelete room_num={roomNum} modalOpen={modalOpen} getData={getData}/>
+                                                )}
+                                                {
+                                                roomModalOpen && (
+                                                    <RoomCommon setRoomModalOpen={setRoomModalOpen} roomModalOpen={roomModalOpen} type={type} hotel_num={hotelNum} 
+                                                        room_num={roomNum} setChangeInfo={setChangeInfo} />
                                                 )}
                                                 </div>
                                                 <Link to = {"/auth/hotel/roomDetailList?hotelNum="+item.hotel_num}>

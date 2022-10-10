@@ -5,7 +5,8 @@ import "./css/roomModal.scss";
 import { connect, useDispatch } from 'react-redux';
 import {hotel_delete, hotel_delete_confirm} from "../../modules/hotel/hotelMainActions";
 //객실번호 필요(일괄삭제)
-const HotelDelete = ({hotel_name,hotel_num,modalOpen,getData,deleteState, hotel_delete, hotel_delete_confirm}) => {
+const HotelDelete = ({hotel_name,hotel_num,modalOpen,getData,
+    deleteState, hotel_delete, hotel_delete_confirm, deleteCode}) => {
     const [show, setShow] = useState(modalOpen);
     const [deleteReason, setDeleteReason] = useState('');
     
@@ -32,6 +33,8 @@ const HotelDelete = ({hotel_name,hotel_num,modalOpen,getData,deleteState, hotel_
                 alert("호텔 삭제가 완료되었습니다.");
                 setShow(false);
                 getData(false);
+                deleteCode("OK");
+
             }else{
                 alert("호텔 삭제가 실패하였습니다. 관리자에게 문의해주세요.");
             }
@@ -80,7 +83,7 @@ const HotelDelete = ({hotel_name,hotel_num,modalOpen,getData,deleteState, hotel_
                         onClick={() => handleDelete()}>
                         확인
                     </Button>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="secondary" onClick={() => handleClose()}>
                         취소
                     </Button>
                 </Modal.Footer>

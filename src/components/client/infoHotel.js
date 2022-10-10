@@ -9,7 +9,6 @@ import noStar from "../hotel/images/no_star.png";
 import noImage from "../common/noImage.png";
 
 const InfoHotel = (props) => {
-    console.log(props.room_arr)
     const titleSize = {
         fontSize : '1.2rem'
     }

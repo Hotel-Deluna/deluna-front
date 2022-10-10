@@ -34,6 +34,8 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
     //kakaoMap 중심좌표, 확대레벨 재설정을 위해 (이유 : 호텔이 여러개이기 때문에)
     const mapRef = useRef();
     const [isOpen, setIsOpen] = useState(false)
+    const [rendering, setRendering] = useState(false)
+
     const dispatch = useDispatch();
 
     //페이지 이동
@@ -58,9 +60,11 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
     const roomClick = (index) => {
         navigate("/info?hotelNum="+list[index].hotel_num)
     }
+
     //헤더필터 값이 변할 경우 다시 재조회
     useEffect(() => {
         if(sessionStorage.getItem('headerData') !== null){
+            setRendering(true)
             hotel_list(JSON.parse(sessionStorage.getItem('headerData')));
             hotel_code();
             setPage(1);
@@ -69,7 +73,7 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
     },[hederData])
 
     useEffect(() => {
-        if(hotelList){
+        if(hotelList && rendering){
             if(hotelList.result === 'OK'){
                 dispatch(hotelSearchReducer.filterData({name : 'hotel_num',value:hotelList.hotel_num_list}));
                 dispatch(hotelSearchReducer.filterData({name : 'page',value:page}));
@@ -93,21 +97,16 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
             if(filterData.page === 1){
                 setPage(1);
                 setList([]);
-                
             }
-            
             hotel_filter_list(filterData)
         }
-        
-
     },[filterData,kakaoMap]);
 
     useEffect(() => {
-        if(hotelFilterList){
+        if(hotelFilterList && rendering){
             if(hotelFilterList.result === 'OK'){
                 if(hotelFilterList.data.length > 0){
                     setPage((page) => page+1);
-                    
                     hotelFilterList.data.map((array) => list.push(array));
                     setList(list);
                     setLoading(true)

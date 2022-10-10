@@ -75,8 +75,8 @@ const AuthSecession = ({type,modalOpen, closeSecessionModal,
     const localStorageDelete = () => {
         localStorage.removeItem('role');
         localStorage.removeItem('email');
-        localStorage.removeItem('accesstoken');
-        localStorage.removeItem('refreshtoken')
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken')
     }
     return (
         <>

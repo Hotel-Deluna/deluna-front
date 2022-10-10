@@ -104,7 +104,7 @@ const FindPassword = () => {
                     <Button variant="outline-primary"
                     disabled={
                         localStorage.getItem('role') === null ? (!rePassword || !rePasswordCheck || rePasswordCheck !== rePassword ? true : false)
-                        :  (!password || !rePassword || !rePasswordCheck || rePasswordCheck !== rePassword ? true : false)
+                        :  (!password || !rePassword || !rePasswordCheck || rePasswordCheck !== rePassword || rePassword === password ? true : false)
                     }
                     onClick={() => changePassword()}
                     >
