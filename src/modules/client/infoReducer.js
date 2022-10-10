@@ -57,7 +57,7 @@ export default handleActions(
     {
         [SET_INFO] : (state, action) => {
             const { data } = action.payload;
-            console.log(data.roomList);
+            //console.log(data.roomList);
             let arr = [];
             
             if(data.roomList.length !== 0){
@@ -75,10 +75,8 @@ export default handleActions(
                             room_cnt : 0,
                             roomInfo : data.roomList[i]
                         };
-                        console.log('setData'+i,data.roomList[i],setData);
                         arr.push(setData);
                     }
-                    console.log('arr', arr);
                     //console.log('arr', arr);
                 }
             }

@@ -177,7 +177,6 @@ const DetailInfo = ({}) => {
     function handleImgClick(idx){
         const type = idx.split('_')[0];
         const modalIndex = idx.split('_')[1];
-        //console.log('aa',typeof allInfo.roomList[idx]);
         setImgType(type === 'hotel' ? 0 : 1);
         setModalIdx(parseInt(modalIndex));
         type === 'room' && (setRoomArrIdx(parseInt(idx.split('_')[2])));//객실이미지 선택시 객실 리스트 index값을 받아와야함

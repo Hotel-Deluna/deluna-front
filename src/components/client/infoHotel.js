@@ -273,6 +273,7 @@ const InfoHotel = (props) => {
                 </Row>
             )}
             {props.allInfo.roomList.length > 1  && (
+                props.hotelInfo.room_list && (
                 props.allInfo.roomList.length !== props.hotelInfo.room_list.length ?
                 <Row className="mb-3">
                     <Col xs={12} sm={12}>
@@ -289,14 +290,14 @@ const InfoHotel = (props) => {
                     </Col>
                     <Col sm={4} />
                 </Row>
-            )}
+            ))}
             
             <Row className="mb-3"><Col xs><div ref={props.views}></div></Col></Row>
             <Row className="mb-3"><Col sm={12} /></Row>
             <Row><Col sm={12} /></Row>
             
             {props.roomModalOpen && (
-                <ImageModal imgType={props.imgType} setRoomModalOpen={props.setRoomModalOpen} roomModalOpen={props.roomModalOpen} idx={props.modalIdx} imgList={props.imgType === 0 ? props.hotelInfo.image : props.allInfo.roomList[props.roomArrIdx].image.length > 0 && (props.allInfo.roomList[props.roomArrIdx].image)} />
+                <ImageModal imgType={props.imgType} setRoomModalOpen={props.setRoomModalOpen} roomModalOpen={props.roomModalOpen} idx={props.modalIdx} imgList={props.imgType === 0 ? props.hotelInfo.image : JSON.parse(JSON.stringify(props.allInfo.roomList[props.roomArrIdx].roomInfo.image))} />
             )}
             
         </Container>
