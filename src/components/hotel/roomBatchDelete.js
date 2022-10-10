@@ -113,7 +113,7 @@ const RoomBatchDelete = ({room_num,infoState,batch_delete_info,batchDeleteInfo, 
                             <Col xs={18} md={12}>
                                 태그 : 
                                 {commonRoomTag.map((item, index) => (
-                                        batchDeleteInfo.form.info.tags.includes(item.code) ? (' ☑'+item.name) : null
+                                        batchDeleteInfo.form.info.tags ? batchDeleteInfo.form.info.tags.includes(item.code) ? (' ☑'+item.name) : null : null
                                     ))}
                             </Col>
                         </Row>

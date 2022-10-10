@@ -57,9 +57,10 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
 
             })
         }else{
-            setReservation([state.list])
+            console.log(state)
+            if(state) setReservation(state.list)
         }
-    },[tabs]);
+    },[tabs,state]);
 
     useEffect(() => {
         if(reservationList && localStorage.getItem('role') === '1'){
@@ -112,64 +113,67 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
             
             :null
         }
-            
-            {
-                reservation.length > 0 ?
-                    <Table bordered>
-                            <thead className="table-blue">
-                                <tr>
-                                    <th>예약번호</th>
-                                    <th>예약자명</th>
-                                    <th>호텔명</th>
-                                    <th>객실명</th>
-                                    <th>투숙인원</th>
-                                    <th>예약일</th>
-                                    <th>결제금액</th>
-                                    <th>예약상태</th>
-                                    <th>예약취소</th>
-                                    
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                            {reservation.map((item, index) => (
-                                <tr className="table-light" key={index}>
-                                    <td>{item.reservation_num}</td>
-                                    <td>{item.reservation_name}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.room_detail_name}</td>
-                                    <td>{item.reservation_people}</td>
-                                    <td>{item.st_date.split(' ')[0]} ~ {item.ed_date.split(' ')[0]}</td>
-                                    <td>{item.reservation_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</td>
-                                    {/* 1 : 예약확정, 2:예약취소, 3:이용완료 */}
-                                    <td>
-                                        {
-                                            item.reservation_status === '1' ? '예약확정'
-                                            : item.reservation_status === '2' ? '예약취소' : '이용완료'
-                                        }
-                                    </td>
-                                    <td>
-                                        {item.reservation_status === '1'?
-                                            <Button variant="outline-danger">예약취소</Button>
-                                        :
-                                        item.reservation_status === '2'?
-                                            <Button variant="outline-dark" onClick={() => onSetModalOpen(true,index)}>취소사유</Button> 
-                                        : ''
-                                        }
-                                    </td>
-                                </tr>
-                                
-                            ))}
-                            </tbody>
-                    </Table>
-                : '예약된 정보가 없습니다.'
-            }
-            <div ref={ref}/>
-            <div>
-            {modalOpen && (
-                <ReservationCancelReason reservation_num={reservationNum} reservation_name={reservationName} modalOpen={modalOpen} getData={getData}/>
-            )}
-            </div>
+        <Table bordered style={{marginTop:'10px'}}>
+            <thead className="table-blue">
+                <tr>
+                    <th>예약번호</th>
+                    <th>예약자명</th>
+                    <th>호텔명</th>
+                    <th>객실명</th>
+                    <th>투숙인원</th>
+                    <th>예약일</th>
+                    <th>결제금액</th>
+                    <th>예약상태</th>
+                    <th>예약취소</th>
+                    
+                </tr>
+            </thead>    
+        {
+            reservation.length > 0 ?
+            <tbody>
+            {reservation.map((item, index) => (
+                <tr className="table-light" key={index}>
+                    <td>{item.reservation_num}</td>
+                    <td>{item.reservation_name}</td>
+                    <td>{item.name}</td>
+                    <td>{item.room_detail_name}</td>
+                    <td>{item.reservation_people}</td>
+                    <td>{item.st_date ? item.st_date.split(' ')[0] : null} ~ {item.ed_date ? item.ed_date.split(' ')[0] : null}</td>
+                    <td>{item.reservation_price ? item.reservation_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null}원</td>
+                    {/* 1 : 예약확정, 2:예약취소, 3:이용완료 */}
+                    <td>
+                        {
+                            item.reservation_status === '1' ? '예약확정'
+                            : item.reservation_status === '2' ? '예약취소' : '이용완료'
+                        }
+                    </td>
+                    <td>
+                        {item.reservation_status === '1'?
+                            <Button variant="outline-danger">예약취소</Button>
+                        :
+                        item.reservation_status === '2'?
+                            <Button variant="outline-dark" onClick={() => onSetModalOpen(true,index)}>취소사유</Button> 
+                        : ''
+                        }
+                    </td>
+                </tr>
+                
+            ))}
+            </tbody>
+            :
+            <tbody>
+                <tr className="table-light">
+                    <td colSpan={9}>예약된 정보가 없습니다.</td>
+                </tr>
+            </tbody>
+        }
+        </Table>
+        <div ref={ref}/>
+        <div>
+        {modalOpen && (
+            <ReservationCancelReason reservation_num={reservationNum} reservation_name={reservationName} modalOpen={modalOpen} getData={getData}/>
+        )}
+        </div>
         </>
 
         

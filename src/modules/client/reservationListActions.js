@@ -79,7 +79,6 @@ function* resetSaga(){
 function* reservationListSaga(action){
     try {
         const reservation_list = yield call(api.reservation_list, action.payload);
-        console.log(reservation_list)
         yield put({
             type : RESERVTION_LIST_SUCCESS,
             payload : reservation_list.data
@@ -120,12 +119,10 @@ function* reservationCancelReasonSaga(action){
 function* nonmberReservationListSaga(action){
     try {
         const nonMeber_reservation = yield call(api.nonMeber_reservation_list, action.payload);
-        console.log(action.payload)
         yield put({
             type : NONMEMBER_RESERVTION_LIST_SUCCESS,
             payload : nonMeber_reservation.data
         });
-        console.log(nonMeber_reservation)
     }catch(e){
         yield put({
             type : NONMEMBER_RESERVTION_LIST_FALL,
