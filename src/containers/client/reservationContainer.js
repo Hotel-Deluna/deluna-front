@@ -1,20 +1,19 @@
 import React,{useState, useEffect} from "react";
+import ReservationComponent from "../../components/client/reservationComponent";
 
 const ReservationContainer = (props) => {
     const [list, setList] = useState({});
+    const [roomInfoList, setroomInfoList] = useState({});
     useEffect(() => {
         console.log(props.reservationList);
-        setList(props.reservationList);
+        console.log('roomList', props.reservationList.roomList);
+        console.log('  ', typeof JSON.parse(JSON.stringify(props.reservationList)).roomList[0].roomInfo.image,JSON.parse(JSON.stringify(props.reservationList)).roomList[0].roomInfo.image);
+        setList(JSON.parse(JSON.stringify(props.reservationList)));
+        //roomInfoList()
     },[]);
 
     return(
-        <div>
-            <div>{list.hote_num}</div>
-            <div>{list.hotel_ko_name}</div>
-            <div>{list.hotel_en_name}</div>
-            <div>{list.roomInfo}</div>
-        
-        </div>
+       <ReservationComponent list={list} />
     );
 
 }

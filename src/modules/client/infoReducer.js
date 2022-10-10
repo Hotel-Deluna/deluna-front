@@ -46,32 +46,7 @@ const initialState = Map({
         role : 0, //고객 : 1, 비회원 3
         reservation_start_date : "",
         reservation_end_date : "",
-        roomList : [{
-            people : 1,
-            room_cnt : 0,//객실객수,people : 1, //예약인원
-            rooomInfo : {
-                check_in_time : "",
-                check_out_time : "",
-                double_bed_count : 0,
-                single_bed_count : 0,
-                image : [],
-                minimum_people : 0,
-                maximum_people : 0,
-                name : "",
-                price : 0,
-                reservable_room_count : 0,
-                room_num : "",
-                tags : [],
-                // delete_date : null,
-                // holiday_price_status : 0,
-                // p_weekday_price : 0,
-                // p_weekend_price : 0,
-                // room_detail_info : {},
-                // weekday_price : 0,
-                // weekend_price : 0,
-                // last_reservation_date : 0
-            }
-        }]
+        roomList : [{}]
     })
 });
   
@@ -82,12 +57,37 @@ export default handleActions(
     {
         [SET_INFO] : (state, action) => {
             const { data } = action.payload;
-              return state.setIn(['hotelInfo', 'hotel_num'], data.hotel_num)
+            console.log(data.roomList);
+            let arr = [];
+            let setData = {
+                people : 1,
+                room_cnt : 0,
+                roomInfo : {}
+            };
+            if(data.roomList.length !== 0){
+                if(data.roomList.length === 1){
+                    setData.roomInfo = data.roomInfo[0];
+                    arr.push(setData);
+                }else{
+                    for(let i = 0; i <2; i++){
+                        setData = {
+                            people : 1,
+                            room_cnt : 0,
+                            roomInfo : data.roomList[i]
+                        };
+                        console.log('setData'+i,data.roomList[i],setData);
+                        arr.push(setData);
+                    }
+                    console.log('arr', arr);
+                    //console.log('arr', arr);
+                }
+            }
+            return state.setIn(['hotelInfo', 'hotel_num'], data.hotel_num)
                      .setIn(['hotelInfo', 'hotel_ko_name'], data.hotel_ko_name)
                      .setIn(['hotelInfo', 'hotel_en_name'], data.hotel_en_name)
                      .setIn(['hotelInfo', 'reservation_start_date'], data.reservation_start_date)
                      .setIn(['hotelInfo', 'reservation_end_date'], data.reservation_end_date)
-                     .setIn(['hotelInfo', 'roomList', [0],'rooomInfo'], data.roomInfo);
+                     .setIn(['hotelInfo', 'roomList'], arr);
         },
         [ADD_ROOMLIST] : (state, {payload : {data}}) => {
             let arr = state.getIn(['hotelInfo', 'roomList']);
@@ -121,7 +121,7 @@ export default handleActions(
             arr.filter((item) => (item.room_cnt !== 0 && (
                 new_arr.push(item)
             )));
-            console.log('SET_SELECTROOM new_arr',new_arr);
+            //console.log('SET_SELECTROOM new_arr',new_arr);
             return state.setIn(['hotelInfo', 'roomList'], new_arr);
         },
         [SET_SELECTONEROOM] : (state, { payload: { index } }) => {
@@ -130,12 +130,11 @@ export default handleActions(
             arr.filter((item, idx) => (idx === index && (
                 new_arr.push(item)
             )));
-            console.log('new_arr',new_arr);
+            //console.log('new_arr',new_arr);
             return state.setIn(['hotelInfo', 'roomList'], new_arr);
         },
 
         [RESET] : () => {
-            console.log('RESET', initialState);
             return initialState;
         }
 }, initialState);

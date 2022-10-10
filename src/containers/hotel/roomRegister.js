@@ -139,6 +139,7 @@ const RoomRegister = (props) => {
                 parseValue = '0'+''+parseValue;
             }
             arr[0] === 'checkIn' ? RoomInfoActions.changeInput({name:'check_in_time',value: parseValue+':00', form : 'REGISTER'}) : RoomInfoActions.changeInput({name:'check_out_time',value: parseValue+':00', form : 'REGISTER'});
+        
         }else if(arr[0] === 'singleBed' || arr[0] === 'doubleBed'){
             let value = arr[0] === 'singleBed' ? props.form.toJS().single_bed_count : props.form.toJS().double_bed_count;
             if(arr[1] === 'minus'){
@@ -147,6 +148,7 @@ const RoomRegister = (props) => {
                 if(value < 5){value++;}
             }
             arr[0] === 'singleBed' ? RoomInfoActions.changeInput({name:'single_bed_count',value: value, form : 'REGISTER'}) : RoomInfoActions.changeInput({name:'double_bed_count',value: value, form : 'REGISTER'});
+        
         }else if(arr[0] === 'room'){
             const inputItemsCopy = JSON.parse(JSON.stringify(props.form.toJS().room_detail_list));
             if(arr[1] === 'plus'){

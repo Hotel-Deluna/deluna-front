@@ -17,7 +17,7 @@ const ImageModal = (props) => {
         props.setRoomModalOpen(false);
     }
     return(
-        <Modal size="lg"  show={props.roomModalOpen} onHide={closeOnClick} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal size="xl"  show={props.roomModalOpen} onHide={closeOnClick} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title>{props.imgType === 0 ? '호텔이미지' : '객실이미지'}</Modal.Title>
             </Modal.Header>
@@ -40,19 +40,17 @@ const ImageModal = (props) => {
             </Modal.Body>
             <Modal.Footer style={{backgroundColor : '#212529'}}>
                 <Container>
-                    <Row className="justify-content-around">
-                    { props.imgList.map((item, index) => (
-                        props.imgList.length === 1 
-                        ? 
-                        <Col xs='auto' key={index}>
-                            <Image style={{height : '6rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
-                        </Col>
-                        :
-                        <Col xs key={index}>
-                            <Image style={{height : '6rem', width: '100%'}} className="img-thumbnail" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
-                        </Col>
-                    ))}
+                <Row>
+                    <Col sm={12} xs={12} md={12}>
+                    <Row className="justify-content-md-center justify-content-sm-center justify-content-xs-center">
+                        { props.imgList.map((item, index) => (
+                            <Col md="auto" sm="auto" xs='auto'>
+                            <Image style={{height : '4rem', width: '5rem', margin:'0.2rem'}} className="img-thumbnail mx-auto d-block" src={item} alt={'thumbnail'+index} onClick={()=>handleClick(index)}/>
+                            </Col>
+                        ))}
                     </Row>
+                    </Col>
+                </Row>
                 </Container>
             </Modal.Footer>
         </Modal>

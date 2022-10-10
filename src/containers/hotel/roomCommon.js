@@ -33,6 +33,7 @@ const RoomCommon = ({type, room_num, hotel_num, setRoomModalOpen, roomModalOpen,
                 setRoomModalOpen(false);
             } 
         }
+        console.log('aaaa');
         return () => {
             room_info_reset();
             dispatch(roomInfoReducer.reset());

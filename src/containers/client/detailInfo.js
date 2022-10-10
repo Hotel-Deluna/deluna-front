@@ -17,8 +17,6 @@ const DetailInfo = ({}) => {
     const [hotelInfos, setHotelInfo] = useState([]); //호텔정보
     const [room_arr, setRoom_arr] = useState([]); //객실리스트
     const [roomArrIdx, setRoomArrIdx] = useState(0); //선택한 객실의 inxdex
-    const [hotelCodes, setHotelCodes] = useState([]); // 호텔 코드
-    const [roomCodes, setroomCodes] = useState([]); // 객실 코드
     const [hotelImgIdx, setHotelImgIdx] = useState(0); // 호텔이미지 index
     const [hotelImgMaxIdx, setHotelImgMaxIdx] = useState(0); //호텔 이미지 최대 갯수
     const [roomModalOpen, setRoomModalOpen] = useState(false); // 모달열림 boolean
@@ -37,7 +35,7 @@ const DetailInfo = ({}) => {
     const {info} = useSelector(({hotelInfoActions})=>({info : hotelInfoActions.info}));
     const {hotelCode} = useSelector(({hotelMainActions})=>({hotelCode : hotelMainActions.code}));
     const {roomCode} = useSelector(({roomMainActions})=>({roomCode : roomMainActions.code}));
-    const {roomInfo} = useSelector(({infoReducer})=>({roomInfo: infoReducer.getIn(['hotelInfo']).toJS()}));
+    const {allInfo} = useSelector(({infoReducer})=>({allInfo: infoReducer.getIn(['hotelInfo']).toJS()}));
     const [allReservationCheck, setAllReservationCheck] = useState(false);
     const [btnIsCheck, setBtnIsCheck] = useState(false);
     //첫진입 시 호텔정보, 객실리스트 조회
@@ -45,6 +43,8 @@ const DetailInfo = ({}) => {
         //console.log('searchValue', searchValue);
         if(searchValue !== undefined){
             //console.log('searchValue',searchValue);
+            dispatch(hotel_code());
+            dispatch(room_code());
             dispatch(hotel_info(parseInt(searchValue)));
         }
         return () => {
@@ -56,19 +56,64 @@ const DetailInfo = ({}) => {
     useEffect(() => {
         if(info) {
             if(info.result === 'OK'){ 
-                //console.log(info.data);
-                setHotelInfo(info.data);
-                const roomList = JSON.parse(JSON.stringify(info.data.room_list));
-                dispatch(set_info({data : {
-                    hotel_num : parseInt(searchValue),
-                    hotel_ko_name : info.data.name,
-                    hotel_en_name : info.data.eng_name,
-                    roomInfo : roomList[pagingIdx],
-                    reservation_start_date : headerData.reservation_start_date,
-                    reservation_end_date :headerData.reservation_end_date
-                }}));
-                setRoom_arr([roomList[pagingIdx]]);
-                setPagingIdx((pagingIdx+1));
+                console.log('info.data', info.data);
+                let infoCopy = JSON.parse(JSON.stringify(info.data));
+                if(hotelCode){
+                    if(hotelCode.result === 'OK'){
+                        const tags = infoCopy.tags;
+                        if(tags){
+                            let name_tags = [];
+                            tags.map((item) => 
+                                hotelCode.data.map((code_item) => (
+                                    item === code_item.code &&( name_tags.push(code_item.name))
+                                ))
+                            );
+                            infoCopy.tags = name_tags;
+                        }
+                        
+                    }
+                }
+                //setHotelInfo(info.data);
+                const roomList = JSON.parse(JSON.stringify(infoCopy.room_list));
+                if(roomList){
+                    let roomTags = [];
+                    if(roomCode){
+                        if(roomCode.result === 'OK'){
+                            roomTags = roomCode.data;
+                        }
+                    }
+                    for(var i=0; i<roomList.length; i++){
+                        let nameTags = [];
+                        //let cooma_price = roomList[i].price.toString();
+                        let tags = roomList[i].tags;
+                        if(roomTags.length !== 0){
+                            tags.map((tagCode)=>(
+                                roomTags.map((tagData) => (
+                                    tagData.code === tagCode && nameTags.push(tagData.name)
+                                ))
+                            ))
+                            roomList[i].tags = nameTags;
+                        }
+                    }
+                    dispatch(set_info({data : {
+                        hotel_num : parseInt(searchValue),
+                        hotel_ko_name : info.data.name,
+                        hotel_en_name : info.data.eng_name,
+                        roomList : roomList,
+                        reservation_start_date : headerData.reservation_start_date,
+                        reservation_end_date :headerData.reservation_end_date
+                    }}));
+                    
+                    infoCopy.room_list = roomList;
+                        if(roomList.length > 1){
+                            setRoom_arr([roomList[pagingIdx],roomList[pagingIdx+1]]);
+                            setPagingIdx((pagingIdx+2));
+                        }else{
+                            setPagingIdx((pagingIdx+1));
+                            setRoom_arr([roomList[pagingIdx]]);
+                        }
+                    }
+                setHotelInfo(infoCopy);
                 //console.log('roomList', roomList[pagingIdx]);
                 const img_copy = JSON.parse(JSON.stringify(info.data.image));
                 if(info.data.image){
@@ -96,22 +141,6 @@ const DetailInfo = ({}) => {
             }
         }
     },[hotel_info, info]);
-
-    useEffect(() => {
-        if(roomCode){
-            if(roomCode.result === 'OK'){
-                setroomCodes(roomCode.data);
-            }
-        }
-    },[room_code, roomCode]);
-
-    useEffect(() => {
-        if(hotelCode){
-            if(hotelCode.result === 'OK'){
-                setHotelCodes(hotelCode.data);
-            }
-        }
-    },[hotel_code, hotelCode]);
 
     //infinitescroll
     useEffect(()=>{
@@ -148,6 +177,7 @@ const DetailInfo = ({}) => {
     function handleImgClick(idx){
         const type = idx.split('_')[0];
         const modalIndex = idx.split('_')[1];
+        //console.log('aa',typeof allInfo.roomList[idx]);
         setImgType(type === 'hotel' ? 0 : 1);
         setModalIdx(parseInt(modalIndex));
         type === 'room' && (setRoomArrIdx(parseInt(idx.split('_')[2])));//객실이미지 선택시 객실 리스트 index값을 받아와야함
@@ -161,14 +191,13 @@ const DetailInfo = ({}) => {
         if(nameArr[0] === 'people'){
             const type = nameArr[1];
             const room_idx = nameArr[2];
-            let value = roomInfo.roomList[room_idx].people;
-            console.log(nameArr[0],nameArr[1], nameArr[2]);
+            let value = allInfo.roomList[room_idx].people;
             if(type === 'minus'){
-                if(1 < roomInfo.roomList[room_idx].people){
+                if(1 < allInfo.roomList[room_idx].people){
                      value--;
                 }
             }else{
-                if(roomInfo.roomList[room_idx].people < room_arr[room_idx].maximum_people){
+                if(allInfo.roomList[room_idx].people < room_arr[room_idx].maximum_people){
                     value++;
                     
                 }
@@ -176,15 +205,19 @@ const DetailInfo = ({}) => {
             dispatch(change_roomField({index : room_idx,key : nameArr[0],value : value}));
 
         }else if(nameArr[0] === 'makeReservationOne_' || 'makeReservationAll_'){
-            console.log('move',nameArr[0]);
             if(nameArr[0] === 'makeReservationAll'){
                 console.log('all');
                 goDispatch(set_selectRoom());
+                setBtnIsCheck(true);
             }else{
                 console.log('one', parseInt(nameArr[1]));
-                goDispatch(set_selectOneRoom({index : parseInt(nameArr[1])}));
+                if(allInfo.roomList[parseInt(nameArr[1])].room_cnt === 0){
+                    alert('객실을 선택해야 예약이 가능합니다.');
+                }else{
+                    goDispatch(set_selectOneRoom({index : parseInt(nameArr[1])}));
+                    setBtnIsCheck(true);
+                }   
             }
-            setBtnIsCheck(true);
                         
            
         }
@@ -195,12 +228,12 @@ const DetailInfo = ({}) => {
         if(btnIsCheck){
             navigate("/reservation", {
                 state : {
-                    reservationList : roomInfo
+                    reservationList : allInfo
                 }
             });
         }
         
-      },[roomInfo, btnIsCheck]);
+      },[allInfo, btnIsCheck]);
 
     const handleSelect = (e) => {
         let {value} = e.currentTarget;
@@ -217,9 +250,9 @@ const DetailInfo = ({}) => {
 
     
     return(
-        <InfoHotel hotelInfo={hotelInfos} room_arr={room_arr} hotelCodes={hotelCodes} roomCodes={roomCodes} hotelImgIdx={hotelImgIdx} hotelImgMaxIdx={hotelImgMaxIdx} handleImgBtnClick={handleImgBtnClick} isHotelLoading={isHotelLoading}
+        <InfoHotel hotelInfo={hotelInfos} room_arr={room_arr} hotelImgIdx={hotelImgIdx} hotelImgMaxIdx={hotelImgMaxIdx} handleImgBtnClick={handleImgBtnClick} isHotelLoading={isHotelLoading}
             roomModalOpen={roomModalOpen} setRoomModalOpen={setRoomModalOpen} handleImgClick={handleImgClick} imgType={imgType} modalIdx={modalIdx} roomArrIdx={roomArrIdx} isRoomLoading={isRoomLoading} views={ref} pagingIdx={pagingIdx}
-            roomInfo={roomInfo} handleClick={handleClick} handleSelect={handleSelect} allReservationCheck={allReservationCheck}
+            allInfo={allInfo} handleClick={handleClick} handleSelect={handleSelect} allReservationCheck={allReservationCheck}
         />
     );
 }
