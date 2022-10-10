@@ -65,7 +65,7 @@ export default handleActions(
                     let setData = {
                         people : 1,
                         room_cnt : 0,
-                        roomInfo : data.roomInfo[0]
+                        roomInfo : data.roomList[0]
                     };
                     arr.push(setData);
                 }else{
