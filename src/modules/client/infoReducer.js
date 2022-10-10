@@ -59,18 +59,18 @@ export default handleActions(
             const { data } = action.payload;
             console.log(data.roomList);
             let arr = [];
-            let setData = {
-                people : 1,
-                room_cnt : 0,
-                roomInfo : {}
-            };
+            
             if(data.roomList.length !== 0){
                 if(data.roomList.length === 1){
-                    setData.roomInfo = data.roomInfo[0];
+                    let setData = {
+                        people : 1,
+                        room_cnt : 0,
+                        roomInfo : data.roomInfo[0]
+                    };
                     arr.push(setData);
                 }else{
                     for(let i = 0; i <2; i++){
-                        setData = {
+                        let setData = {
                             people : 1,
                             room_cnt : 0,
                             roomInfo : data.roomList[i]
