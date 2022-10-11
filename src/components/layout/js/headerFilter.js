@@ -169,6 +169,7 @@ function HeaderFilter({search_bar,searchList,headerData}) {
                                         setRoomPers(true)
                                         setSearch(false)
                                     }} value={'객실 '+roomCount+'개, 인원 ' + persCount+'명'}
+                                    readOnly
                                     />
                                 </InputGroup>
                             <InputGroup className="mb-3">

@@ -10,6 +10,8 @@ import {my_hotel_list, reset} from "../../modules/hotel/hotelMainActions";
 import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom';
 
+//페이징 로딩 이미지
+import loadingImg from "../common/loading.gif"
 const MyhotelList = ({my_hotel_list,hotelList,reset}) => { 
     const [modalOpen, setModalOpen] = useState(false);
     const [hotelNum, setHotelNum] = useState('');
@@ -19,7 +21,7 @@ const MyhotelList = ({my_hotel_list,hotelList,reset}) => {
     const [ref, inView] = useInView();
     const [hotelLists, setHotelLists] = useState([]);
     const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const [rendering, setRendering] = useState(false)
     let navigate = useNavigate();
@@ -80,6 +82,7 @@ const MyhotelList = ({my_hotel_list,hotelList,reset}) => {
         if(hotelList && rendering){
             if(hotelList.result === 'OK'){
                 if(hotelList.data.length > 0){
+                    setLoading(true)
                     setPage((page) => page+1)
                     hotelList.data.map((array) => hotelLists.push(array))
                     setHotelLists(hotelLists)
@@ -154,7 +157,11 @@ const MyhotelList = ({my_hotel_list,hotelList,reset}) => {
                     <HotelDelete hotel_name={hotelName} hotel_num={hotelNum} modalOpen={modalOpen} getData={getData} deleteCode={deleteCode}/>
                 )}
                 </div>
-                <div ref={ref} />
+                <div ref={ref}>
+                    {/* {loading &&(
+                        <img src={loadingImg} alt="loading..." />
+                    )} */}
+                </div>
         </>
     )
 };

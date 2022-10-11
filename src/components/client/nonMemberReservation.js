@@ -18,7 +18,12 @@ const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation
         if(e.target.id === 'formName'){
             setName(e.target.value)
         }else if(e.target.id === 'formPhone'){
-            setPhone(e.target.value)
+            //setPhone(e.target.value)
+            const regex = /^[0-9\b -]{0,13}$/;
+            if(regex.test(e.target.value)){
+                const reValue = e.target.value.replace(/[^0-9]/g, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
+                setPhone(reValue)
+            }
         }else if(e.target.id === 'formReservation'){
             setReservationNum(e.target.value)
         }
@@ -28,7 +33,7 @@ const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation
     const reservationSelect = () => {
         nonmember_reservation_list({
             reservation_name : name,
-            reservation_phone : phone,
+            reservation_phone : phone.replace(/\-/g,''),
             reservation_num : reservationNum
         })
     }
@@ -73,7 +78,7 @@ const NonMemberReservation = ({modalOpen, closeReservation,nonmember_reservation
 
                         <Form.Group className="mb-3" controlId="formPhone">
                             <Form.Label>휴대폰 번호</Form.Label>
-                            <Form.Control type="phone" placeholder="-을 제외하고 입력해주세요." onChange={handleInput}/>
+                            <Form.Control value={phone} type="phone" placeholder="-을 제외하고 입력해주세요." onChange={handleInput}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formReservation">

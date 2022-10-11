@@ -127,7 +127,8 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
     useEffect(() => {
         if(edit) {
             if(edit.result === 'OK'){ //성공
-                alert("호텔 정보 수정이 완료되었습니다.")
+                alert("호텔 정보 수정이 완료되었습니다.");
+                navigate("/auth/hotel/main");
             }else{ //실패
                 alert("호텔 정보 수정이 실패하였습니다. 잠시 후 다시 이용해주세요.")
             }

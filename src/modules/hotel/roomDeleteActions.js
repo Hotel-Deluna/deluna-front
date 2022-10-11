@@ -150,6 +150,7 @@ function* batchDeleteSaga(action){
     }else{
         try {
             const batchDelete = yield call(api.room_batch_delete, action.payload);
+            console.log(batchDelete)
             yield put({
                 type : BATCH_DELETE_SUCCESS,
                 payload : batchDelete.data

@@ -48,7 +48,7 @@ const RoomBatchDelete = ({room_num,infoState,batch_delete_info,batchDeleteInfo, 
             if(deleteState.result === 'OK'){
                 alert("객실 삭제가 완료 되었습니다.");
                 setShow(false);
-                getData(false);
+                getData("delete");
             }else{
                 alert("객실 삭제가 실패하였습니다. 관리자게에 문의해주세요.")
             }
@@ -100,13 +100,13 @@ const RoomBatchDelete = ({room_num,infoState,batch_delete_info,batchDeleteInfo, 
                         <Row>
                             <Col xs={9} md={6}>
                                 비성수기가격<br />
-                                주중(일~월) 가격 : {batchDeleteInfo.form.info.weekday_price}원<br />
-                                주말(금,토) 가격 : {batchDeleteInfo.form.info.weekend_price}원
+                                주중(일~월) 가격 : {batchDeleteInfo.form.info.weekday_price ? batchDeleteInfo.form.info.weekday_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",") : null}원<br />
+                                주말(금,토) 가격 : {batchDeleteInfo.form.info.weekend_price ? batchDeleteInfo.form.info.weekend_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",") : null}원
                             </Col>
                             <Col xs={9} md={6}>
                                 성수기 가격 <br />
-                                주중(일~월) 가격 : {batchDeleteInfo.form.info.p_weekday_price}원<br />
-                                주말(금,토) 가격 : {batchDeleteInfo.form.info.p_weekend_price}원
+                                주중(일~월) 가격 : {batchDeleteInfo.form.info.p_weekday_price ? batchDeleteInfo.form.info.p_weekday_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",") : null}원<br />
+                                주말(금,토) 가격 : {batchDeleteInfo.form.info.p_weekend_price ? batchDeleteInfo.form.info.p_weekend_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",") : null}원
                             </Col>
                         </Row>
                         <Row>

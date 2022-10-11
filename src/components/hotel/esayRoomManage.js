@@ -13,6 +13,9 @@ import { useSearchParams,Link } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 //객실 등록&수정 모달
 import RoomCommon from "../../containers/hotel/roomCommon";
+//페이징 로딩 이미지
+import loadingImg from "../common/loading.gif";
+
 const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,reset}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [hotelListValue, setHotelListValue] = useState([]);
@@ -26,7 +29,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
     //페이징 처리
     const [ref, inView] = useInView();
     const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     
     const [searchClick, setSearchClick] = useState(false);
     const [rendering, setRendering] = useState(false)
@@ -52,22 +55,48 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
     //roomBatchDelete.js(자식컴포넌트) 에게 전달받은 modal false : modal창 닫기 위해서
     const getData = (modalOpen) => {
         setModalOpen(modalOpen);
+        if(modalOpen === 'delete'){
+            setModalOpen(false);
+            setHotelListValue([])
+            setPage(1)
+            setLoading(true)
+            my_hotel_list({
+                text : searchClick ? reSearchValue : searchValue,
+                page : 1
+            });
+        }else{
+            setModalOpen(modalOpen);
+        }
     }
-
     //객실 추가&등록, 수정 모달 시작
-    const [changeInfo, setChangeInfo] = useState(false); //등록이 되었을시 setChangeInfo(true)
+    //const [changeInfo, setChangeInfo] = useState(false); //등록이 되었을시 setChangeInfo(true)
     const [roomModalOpen, setRoomModalOpen] = useState(false); //모달 오픈 boolean 
     const [type, setType] = useState(0); //  0-등록
     const [roomNum, setRoomNum] = useState(''); //객실 번호-> 수정 시 -없어도 됨
-    const roomModal = (type,index) => {
+    const roomModal = (type,index,index2) => {
         //등록
         if(type === 0){
+            setType(type)
             setHotelNum(hotelListValue[index].hotel_num)
             setRoomModalOpen(true)
         //수정
         }else{
-
+            setType(type)
+            setRoomNum(hotelListValue[index].room_list[index2].room_num)
+            setRoomModalOpen(true)
         }
+    }
+
+    const setChangeInfo = (changeInfo) => {
+       if(changeInfo){
+            setHotelListValue([])
+            setPage(1)
+            setLoading(true)
+            my_hotel_list({
+                text : searchClick ? reSearchValue : searchValue,
+                page : 1
+            });
+       }
     }
     //종료
     
@@ -101,6 +130,7 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
         if(hotelList && rendering){
             if(hotelList.result === 'OK'){
                 if(hotelList.data.length > 0){
+                    setLoading(true)
                     setPage((page) => page+1)
                     hotelList.data.map((array) => hotelListValue.push(array))
                     setHotelListValue(hotelListValue)
@@ -187,7 +217,6 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
                             <Button id="roomAdd" variant="outline-primary" onClick={()=>roomModal(0,index)}>
                                     {item.room_list.length > 0 ? '객실추가' : '객실등록'}
                             </Button>{' '}
-                            <div ref={ref}/>
                             {
                             item.room_list.length > 0 ?
                                 <div className="d-flex flex-column">
@@ -216,23 +245,23 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
                                                                 <td>{item2.name}</td>
                                                                 <td>{item2.reservable_room_count}</td>
                                                                 <td>
-                                                                    <p>평일 : {item2.weekday_price}</p>
-                                                                    <p>주말 : {item2.weekend_price}</p>
+                                                                    <p>평일 : {item2.weekday_price ? item2.weekday_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",") : null}</p>
+                                                                    <p>주말 : {item2.weekend_price ? item2.weekend_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",") : null}</p>
                                                                 </td>
                                                                 <td>
-                                                                    <p>평일 : {item2.p_weekday_price}</p>
-                                                                    <p>주말 : {item2.p_weekend_price}</p>     
+                                                                    <p>평일 : {item2.p_weekday_price ? item2.p_weekday_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",") : null}</p>
+                                                                    <p>주말 : {item2.p_weekend_price ? item2.p_weekend_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",") : null}</p>     
                                                                 </td>
                                                                 <td>
                                                                     {
-                                                                        item2.available_yn ?
+                                                                        item2.reservable_room_count > 0?
                                                                         '예약가능' : 
-                                                                        
-                                                                        item2.room_closed_start +'~'+item2.room_closed_end+' 예약 불가능' 
+                                                                        '예약 불가능'
+                                                                        // item2.room_closed_start +'~'+item2.room_closed_end+' 예약 불가능' 
                                                                     }
                                                                 </td>
                                                                 <td id="roomCorrec">
-                                                                    <Button variant="outline-dark" onClick={() => alert("수정 연동")}>수정</Button>
+                                                                    <Button variant="outline-dark" onClick={()=>roomModal(1,index,index2)}>수정</Button>
                                                                     <Button variant="outline-danger" onClick={() => onSetModalOpen(true,index,index2)}>삭제</Button>
                                                                 </td>
                                                             </tr>
@@ -241,17 +270,6 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
                                                         ))}
                                                         </tbody>
                                                 </Table>
-                                                <div>
-                                                {
-                                                modalOpen && (
-                                                    <RoomBatchDelete room_num={roomNum} modalOpen={modalOpen} getData={getData}/>
-                                                )}
-                                                {
-                                                roomModalOpen && (
-                                                    <RoomCommon setRoomModalOpen={setRoomModalOpen} roomModalOpen={roomModalOpen} type={type} hotel_num={hotelNum} 
-                                                        room_num={roomNum} setChangeInfo={setChangeInfo} />
-                                                )}
-                                                </div>
                                                 <Link to = {"/auth/hotel/roomDetailList?hotelNum="+item.hotel_num}>
                                                     <Button id="moreRoom" variant="outline-secondary">객실 더보기</Button>
                                                 </Link>
@@ -264,12 +282,27 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
                             :
                             null
                             }
-                            
                         </div>
                     </div>
                 </div>
             </div>   
             ))}
+            <div ref={ref} style={{textAlign:'center'}}>
+                {/* {loading &&(
+                    <img src={loadingImg} alt="loading..." />
+                )} */}
+            </div>
+            <div>
+                {
+                modalOpen && (
+                    <RoomBatchDelete room_num={roomNum} modalOpen={modalOpen} getData={getData}/>
+                )}
+                {
+                roomModalOpen && (
+                    <RoomCommon setRoomModalOpen={setRoomModalOpen} roomModalOpen={roomModalOpen} type={type} hotel_num={hotelNum} 
+                        room_num={roomNum} setChangeInfo={setChangeInfo} />
+                )}
+            </div>
         </>
     )
 };
