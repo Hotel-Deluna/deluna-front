@@ -24,7 +24,6 @@ export default function createRequestSaga(type, request) {
       //console.log("header", header);
       console.log();
       if(action.type === 'auth/LOGIN'){
-        console.log('login');
         yield put({
           type: SUCCESS,
           payload: response

@@ -280,7 +280,7 @@ const InfoHotel = (props) => {
                 <Row className="mb-3">
                     <Col xs={12} sm={12}>
                         <div className="d-grid">
-                        <Button variant="light" style={{fontSize:'1rem'}} disabled>객실 더보기 <VscTriangleDown /></Button>
+                            <Button variant="light" style={{fontSize:'1rem'}} disabled>객실 더보기 <VscTriangleDown /></Button>
                         </div>
                     </Col>
                 </Row>

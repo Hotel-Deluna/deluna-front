@@ -57,7 +57,7 @@ export default handleActions(
     {
         [SET_INFO] : (state, action) => {
             const { data } = action.payload;
-            //console.log(data.roomList);
+            console.log(data);
             let arr = [];
             
             if(data.roomList.length !== 0){

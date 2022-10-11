@@ -28,6 +28,8 @@ import roomInfoActions, {roomInfoActionsSaga} from "./hotel/roomInfoActions";
 import roomInfoReducer from "./hotel/roomInfoReducer";
 //고객
 import infoReducer from "./client/infoReducer";
+ import reservationActions, {reservationActionsSaga} from "./client/reservationActions";
+import reservationReducer from "./client/reservationReducer";
 const rootReducer = combineReducers({
     auth,
     loading,
@@ -46,13 +48,15 @@ const rootReducer = combineReducers({
     mainActions,
     roomInfoActions,
     roomInfoReducer,
-    infoReducer
+    infoReducer,
+    reservationActions,
+    reservationReducer
 })
 export function* rootSaga(){
     yield all([authSaga(), hotelInfoActionsSaga(),hotelMainActionsSaga(),
         roomBatchDeleteActionsSaga(),secessionActionsSaga(),hotelSearchActionsSaga(),
         reservationListActionsSaga(), roomMainActionsSaga(),hotelReservationActionsSaga(),
-        mainActionsSaga(), roomInfoActionsSaga()
+        mainActionsSaga(), roomInfoActionsSaga(), reservationActionsSaga()
     ]);
 }
 export default rootReducer;

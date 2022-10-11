@@ -85,11 +85,13 @@ axios.post('http://43.200.222.222:8080/reservation/unMemberInfo',data,
     }
 });
 
-
+// 호텔 예약하기
 export const reservation = (data) =>
 axios.post('http://43.200.222.222:8080/reservation/memberReservation',data,
     {
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization' : (localStorage.getItem('accessToken') && (localStorage.getItem('accessToken')))
+        
     }
 });
