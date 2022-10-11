@@ -82,7 +82,7 @@ axios.post('http://43.200.222.222:8080/hotel/room/detail/delete/info',
     {
     headers: {
         'Content-Type': 'application/json',
-        'Authorization' : '1234',
+        'Authorization' : localStorage.getItem('accessToken'),
     }
 });
 
@@ -91,7 +91,7 @@ export const room_individual_delete = (data) =>
 axios.delete('http://43.200.222.222:8080/hotel/room/delete', {
     headers: {
         'Content-Type': 'application/json',
-        'Authorization' : '1234',
+        'Authorization' : localStorage.getItem('accessToken'),
     },
     data: {
         room_detail_num : data

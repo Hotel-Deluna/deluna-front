@@ -90,7 +90,7 @@ function HeaderFilter({search_bar,searchList,headerData}) {
         }
         
         //메인일 경우 상세페이지 이동
-        if(location.pathname === '/'){
+        if(location.pathname === '/' || location.pathname === '/info'){
             navigate("/search")
         }
 
@@ -106,7 +106,6 @@ function HeaderFilter({search_bar,searchList,headerData}) {
 
     useEffect(() => {
         if(location.pathname === '/'){
-
             dispatch(hotelSearchReducer.reset());
             sessionStorage.removeItem('headerData');
         }

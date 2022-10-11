@@ -55,8 +55,9 @@ const Header = () => {
     const logout = () => {
         localStorage.removeItem('role');
         localStorage.removeItem('email');
-        localStorage.removeItem('Authorization');
-        //navigate("/");
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        navigate("/");
     }
 
     
@@ -71,8 +72,9 @@ const Header = () => {
           .then(function (response) {
             console.log(response)
                 localStorage.setItem('accessToken',response.data)
+                localStorage.setItem('refreshToken',response.data)
                 localStorage.setItem('role',2);
-
+                navigate("/auth/hotel/main");
                 // localStorage.setItem('jwtToken','eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0cGRsNTgzMkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9NRU1CRVIiLCJleHAiOjE2NjQ4ODA2OTJ9.W9Ltym_kNblL2Fqb3S2XNCeodJyNvGM5cKgBWegNlXVb75Lpp1w9a-31DhvcBJA2YFyYV2vSthVv4u8x7KEXlA')
                 // localStorage.setItem('email','tpdl5832@naver.com');
                 // localStorage.setItem('role',1);
@@ -114,7 +116,7 @@ const Header = () => {
                                             </NavDropdown.Item>
                                         </NavDropdown>
 
-                                        <Nav.Link href="#logout" onClick={() => logout()}>
+                                        <Nav.Link onClick={() => logout()}>
                                             로그아웃
                                         </Nav.Link>
                                     </Nav>
@@ -148,7 +150,7 @@ const Header = () => {
                                             </NavDropdown.Item>
                                         </NavDropdown>
 
-                                        <Nav.Link href="#logout" onClick={() => logout()}>
+                                        <Nav.Link onClick={() => logout()}>
                                             로그아웃
                                         </Nav.Link>
                                     </Nav>

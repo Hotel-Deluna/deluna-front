@@ -63,7 +63,7 @@ axios.post('http://43.200.222.222:8080/reservation/memberReservationList',data,
     {
     headers: {
         'Content-Type': 'application/json',
-        'Authorization' : localStorage.getItem('Authorization')
+        'Authorization' : localStorage.getItem('accessToken')
     }
 });
 

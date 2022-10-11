@@ -64,6 +64,7 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
     //헤더필터 값이 변할 경우 다시 재조회
     useEffect(() => {
         if(sessionStorage.getItem('headerData') !== null){
+            console.log(JSON.parse(sessionStorage.getItem('headerData')))
             setRendering(true)
             hotel_list(JSON.parse(sessionStorage.getItem('headerData')));
             hotel_code();
@@ -79,6 +80,7 @@ const SearchMain = ({hotel_list, hotelList, hotel_code, hotelCode,filterData,hot
                 dispatch(hotelSearchReducer.filterData({name : 'page',value:page}));
             }else{
                 alert("호텔 리스트 조회가 실패하였습니다. 잠시 후 다시 이용해주세요.");
+                navigate("/")
             }
         }
     },[hotel_list,hotelList]);
