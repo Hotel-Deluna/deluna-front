@@ -57,7 +57,6 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
 
             })
         }else{
-            console.log(state)
             if(state) setReservation(state.list)
         }
     },[tabs,state]);
@@ -93,9 +92,9 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
                 className="mb-3"
                 onSelect={(k) => setTabs(k)}
                 >
-                    <Tab eventKey="1" title="전체"></Tab>
-                    <Tab eventKey="2" title="예약확정"></Tab>
-                    <Tab eventKey="3" title="예약취소"></Tab>
+                    <Tab eventKey="0" title="전체"></Tab>
+                    <Tab eventKey="1" title="예약확정"></Tab>
+                    <Tab eventKey="2" title="예약취소"></Tab>
                     <Tab eventKey="4" title="이용완료"></Tab>
                 </Tabs>
                 <div style={{

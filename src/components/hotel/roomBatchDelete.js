@@ -31,10 +31,13 @@ const RoomBatchDelete = ({room_num,infoState,batch_delete_info,batchDeleteInfo, 
     //객실 상세정보 조회된 값 dispatch
     useEffect(() => {
         if(infoState){
+            console.log(infoState)
             if(infoState.result === 'OK'){
                 dispatch(roomDeleteReducer.roomBatchDeleteInfo({ data : infoState.data}));
             }else{
-                alert("해당 객실 조회가 실패하였습니다. 잠시 후 다시 이용해주세요.")
+                alert("해당 객실 조회가 실패하였습니다. 잠시 후 다시 이용해주세요.");
+                setShow(false);
+                getData(false);
             }
         }
     },[batch_delete_info,infoState]);
@@ -50,7 +53,9 @@ const RoomBatchDelete = ({room_num,infoState,batch_delete_info,batchDeleteInfo, 
                 setShow(false);
                 getData("delete");
             }else{
-                alert("객실 삭제가 실패하였습니다. 관리자게에 문의해주세요.")
+                alert("객실 삭제가 실패하였습니다. 관리자게에 문의해주세요.");
+                setShow(false);
+                getData(false);
             }
         }
     },[batch_delete,deleteState]);
@@ -122,7 +127,7 @@ const RoomBatchDelete = ({room_num,infoState,batch_delete_info,batchDeleteInfo, 
                                 삭제하실 경우 고객들은 해당 객실을 이용 할 수 없으며, <br />
                                 기존에 예약되어 있던 고객들은 이용이 가능합니다.<br />
                                 만약, 객실 삭제 시 예약 고객이 있을 경우<br />
-                                최종예약날짜({batchDeleteInfo.form.info.last_reservation_date ? batchDeleteInfo.form.info.last_reservation_date.split('T')[0] : ''}) 이후 객실이 삭제됩니다. 
+                                최종예약날짜{batchDeleteInfo.form.info.last_reservation_date ? '('+batchDeleteInfo.form.info.last_reservation_date.split('T')[0]+')' : ''} 이후 객실이 삭제됩니다. 
                             </Col>
                         </Row>
                         <Row>

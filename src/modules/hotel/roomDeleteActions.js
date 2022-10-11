@@ -146,7 +146,6 @@ function* batchDeleteInfoSaga(action){
 function* batchDeleteSaga(action){
     if(action.type == 'BATCH_DELETE_CONFIRM'){
         return initialState;
-        
     }else{
         try {
             const batchDelete = yield call(api.room_batch_delete, action.payload);

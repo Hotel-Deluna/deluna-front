@@ -16,6 +16,12 @@ const RoomDetailList = ({room_list, roomList, room_code, code}) => {
     const [room_num, setRoom_num] = useState(0);
     const [changeInfo, setChangeInfo] = useState(false);
 
+    //객실 일괄삭제
+    const [batchModalOpen, setBatchModalOpen] = useState(false);
+    //객실 개별삭제
+    const [individualModalOpen, setIndividualModalOpen] = useState(false);
+    //호실 번호
+    const [room_detail_num, setRoom_detail_num] = useState(0);
     const showRoomModal = (e) => {
         const {name} = e.currentTarget;
         if(name === 'register'){
@@ -28,6 +34,39 @@ const RoomDetailList = ({room_list, roomList, room_code, code}) => {
         }
         setRoomModalOpen(true);
     };
+
+    //객실 일괄 삭제 시작
+    const showBatchModal = (e) => {
+        const {name} = e.currentTarget;
+        setRoom_num(room_arr[name].room_num);
+        setBatchModalOpen(true)
+    }
+    const batchData = (value) => {
+        if(value === 'delete'){
+            room_list({hotel_num : searchValue[0], page : 1, page_cnt : 10});
+            setBatchModalOpen(false)
+        }else{
+            setBatchModalOpen(value)
+        }
+        
+    }
+    //객실 일괄 삭제 끝
+
+    //객실 개별 삭제 시작
+    const showIndividualModal = (e) => {
+        const {name} = e.currentTarget;
+        setRoom_detail_num(name)
+        setIndividualModalOpen(true)
+    }
+    const individualData = (value) => {
+        if(value === 'delete'){
+            room_list({hotel_num : searchValue[0], page : 1, page_cnt : 10});
+            setIndividualModalOpen(false)
+        }else{
+            setIndividualModalOpen(value)
+        }
+    }
+    //객실 개별 삭제 끝
     let navigate = useNavigate();
 
     //진입 시 모든 리스트가 보여줘야 함
@@ -112,7 +151,10 @@ const RoomDetailList = ({room_list, roomList, room_code, code}) => {
         }
     }
     return(
-        <RoomDetailListTable room_arr={room_arr} code_arr={code_arr} hotel_num={searchValue[0]} handleClick={handleClick} setRoomModalOpen={setRoomModalOpen} showRoomModal={showRoomModal} roomModalOpen={roomModalOpen} type={type} room_num={room_num} setChangeInfo={setChangeInfo} hotelName={searchValue[1]} />
+        <RoomDetailListTable room_arr={room_arr} code_arr={code_arr} hotel_num={searchValue[0]} handleClick={handleClick} setRoomModalOpen={setRoomModalOpen} showRoomModal={showRoomModal} roomModalOpen={roomModalOpen} type={type} room_num={room_num} setChangeInfo={setChangeInfo} hotelName={searchValue[1]} 
+        batchModalOpen={batchModalOpen} showBatchModal={showBatchModal} batchData={batchData} 
+        showIndividualModal={showIndividualModal} individualModalOpen={individualModalOpen} room_detail_num={room_detail_num} individualData={individualData}
+        />
     );
 }
 

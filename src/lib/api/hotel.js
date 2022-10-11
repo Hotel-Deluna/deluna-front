@@ -88,7 +88,7 @@ axios.post('http://43.200.222.222:8080/hotel/room/detail/delete/info',
 
 //호실삭제 요청 API
 export const room_individual_delete = (data) =>
-axios.delete('http://43.200.222.222:8080/hotel/room/delete', {
+axios.delete('http://43.200.222.222:8080/hotel/room/detail/delete', {
     headers: {
         'Content-Type': 'application/json',
         'Authorization' : localStorage.getItem('accessToken'),

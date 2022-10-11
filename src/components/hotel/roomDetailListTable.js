@@ -2,6 +2,11 @@ import React from "react";
 import { Container, Row, Col, Table, Button } from "react-bootstrap";
 import {VscTriangleUp, VscTriangleDown } from "react-icons/vsc";
 import RoomCommon from "../../containers/hotel/roomCommon";
+/* 객실 일괄 삭제 모달 */
+import RoomBatchDelete from "./roomBatchDelete";
+/* 호실 개별 삭제 모달 */
+import RoomIndividualDelete from "./roomIndividualDelete";
+
 const RoomDetailListTable =  (props) => {
     const price_align = {
         textAlign : 'left',
@@ -88,7 +93,7 @@ const RoomDetailListTable =  (props) => {
                                                 <Button variant="primary" name={'modify_'+index} onClick={props.showRoomModal}>수정</Button>
                                             </Col>
                                             <Col sm={6}>
-                                                <Button variant="danger" >삭제</Button>
+                                                <Button variant="danger" name={index} onClick={props.showBatchModal}>삭제</Button>
                                             </Col>
                                         </Row>
                                     </td>
@@ -125,7 +130,7 @@ const RoomDetailListTable =  (props) => {
                                                                 </Col>
                                                                 {/* <Col xs='auto' /> */}
                                                                 <Col sm={2}>
-                                                                    <Button variant="danger" style={{width : '100%'}}>호실삭제</Button>
+                                                                    <Button variant="danger" name={items.room_detail_num} style={{width : '100%'}} onClick={props.showIndividualModal}>호실삭제</Button>
                                                                 </Col>
                                                             </Row>
                                                         </td>
@@ -164,6 +169,16 @@ const RoomDetailListTable =  (props) => {
                 </Col>
             </Row>
             {props.roomModalOpen && (<RoomCommon setRoomModalOpen={props.setRoomModalOpen} roomModalOpen={props.roomModalOpen} type={props.type} hotel_num={props.hotel_num} room_num={props.room_num} setChangeInfo={props.setChangeInfo} />)}
+            {/* 객실 일괄 삭제 모달 */}
+            {
+            props.batchModalOpen && (
+                <RoomBatchDelete room_num={props.room_num} modalOpen={props.batchModalOpen} getData={props.batchData}/>
+            )}
+            객실 개별 삭제 모달
+            {
+            props.individualModalOpen && (
+            <RoomIndividualDelete room_detail_num={props.room_detail_num} modalOpen={props.individualModalOpen} getData={props.individualData}/>
+            )}
         </Container>  
     );
 }

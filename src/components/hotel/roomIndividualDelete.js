@@ -31,6 +31,7 @@ const RoomIndividualDelete = ({room_detail_num,modalOpen,getData,individual_dele
     useEffect(() => {
         if(infoState){
             if(infoState.result === 'OK'){
+                console.log(infoState)
                 dispatch(roomDeleteReducer.roomIndividualDeleteInfo({data : infoState.data}))
             }else{
                 alert("해당 객실 조회가 실패하였습니다. 잠시 후 다시 이용해주세요.")
@@ -40,12 +41,15 @@ const RoomIndividualDelete = ({room_detail_num,modalOpen,getData,individual_dele
 
     useEffect(() => {
         if(deleteState){
+            console.log(deleteState)
             if(deleteState.result === 'OK'){
                 alert("객실 삭제가 완료 되었습니다.");
                 setShow(false);
-                getData(false);
+                getData("delete");
             }else{
-                alert("객실 삭제가 실패하였습니다. 관리자게에 문의해주세요.")
+                alert("객실 삭제가 실패하였습니다. 관리자게에 문의해주세요.");
+                setShow(false);
+                getData(false);
             }
         }
     },[individual_delete,deleteState]);
@@ -62,7 +66,7 @@ const RoomIndividualDelete = ({room_detail_num,modalOpen,getData,individual_dele
                     <Container>
                         <Row>
                             <Col xs={18} md={12}>
-                                삭제 호실 :  {roomInfo.name}
+                                삭제 호실 :  <b>{roomInfo.room_name} {roomInfo.name}</b>
                             </Col>
                         </Row>
                         <Row>
@@ -70,7 +74,7 @@ const RoomIndividualDelete = ({room_detail_num,modalOpen,getData,individual_dele
                                 삭제하실 경우 고객들은 해당 객실을 이용할 수 없으며, <br />
                                 기존에 예약되어 있던 고객들은 이용이 가능합니다. <br />
                                 만약, 객실삭제 시 예약고객이 있을 경우 <br />
-                                최종예약날짜({roomInfo.last_reservation_date ? roomInfo.last_reservation_date.split('T')[0] : ''}) 이후 객실이 삭제됩니다.
+                                최종예약날짜{roomInfo.last_reservation_date ? '('+roomInfo.last_reservation_date.split('T')[0]+')' : ''} 이후 객실이 삭제됩니다.
                             </Col>
                         </Row>
                     </Container>

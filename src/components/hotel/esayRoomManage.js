@@ -54,7 +54,6 @@ const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,re
 
     //roomBatchDelete.js(자식컴포넌트) 에게 전달받은 modal false : modal창 닫기 위해서
     const getData = (modalOpen) => {
-        setModalOpen(modalOpen);
         if(modalOpen === 'delete'){
             setModalOpen(false);
             setHotelListValue([])
