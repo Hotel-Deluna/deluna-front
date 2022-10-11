@@ -16,8 +16,8 @@ export const login = ({email, password, role}) =>
 export const partnerSelect = ({token }) =>
     axios.post('http://43.200.222.222:8080/owner/view-info', {headers: {'Content-Type': 'application/json','Authorization' : token,}});
 //고객
-export const userSelect = ({token }) =>
-    axios.post('http://43.200.222.222:8080/member/view-info', {headers: {'Content-Type': 'application/json','Authorization' : token,}});
+export const userSelect = () =>
+    axios.post('http://43.200.222.222:8080/member/view-info', {headers: {'Content-Type': 'application/json','Authorization' : localStorage.getItem('accessToken')}});
 /*정보수정 */
 //사업자
 export const partnerModify = ({token, business_num, name, opening_day,phone_num }) =>

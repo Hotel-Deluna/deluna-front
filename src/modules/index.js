@@ -23,7 +23,6 @@ import reservationListActions,{reservationListActionsSaga} from "./client/reserv
 //사업자 
 import roomMainActions, {roomMainActionsSaga} from "./hotel/roomMainActions";
 import hotelReservationActions, {hotelReservationActionsSaga} from "./hotel/hotelReservationActions";
-import roomMainReducer from "./hotel/roomMainReducer";
 import mainActions, {mainActionsSaga} from "./mainActions";
 import roomInfoActions, {roomInfoActionsSaga} from "./hotel/roomInfoActions";
 import roomInfoReducer from "./hotel/roomInfoReducer";
@@ -42,7 +41,6 @@ const rootReducer = combineReducers({
     hotelSearchActions,
     hotelSearchReducer,
     reservationListActions,
-    roomMainReducer,
     roomMainActions,
     hotelReservationActions,
     mainActions,

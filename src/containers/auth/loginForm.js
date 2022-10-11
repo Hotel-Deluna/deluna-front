@@ -106,12 +106,18 @@ const Login =() => {
             console.log(auth);
             //navigate('/');
             //window.location.href = "./auth/token/login";
-            const token = 'token';//data["token"]; 
-            localStorage.setItem('jwtToken', token);
-            if(autoLogin){//자동로그인 체크한경우에만
-                const refreshtoken = 'refreshToken';//data["refreshToken"];//자동로그인
-                localStorage.setItem('refreshtoken', refreshtoken);
-            }
+            localStorage.clear();
+            localStorage.setItem('accessToken',auth.headers.authorization);
+            localStorage.setItem('refreshToken',auth.headers.refreshtoken);
+            localStorage.setItem('role',auth.data.role);
+            localStorage.setItem('email',auth.data.email);
+            //console.log(auth.headers.authorization,auth.data.role, auth.data.email);
+            //console.log('refresh',auth.headers.authorization);
+            //console.log(localStorage.getItem('accessToken'),localStorage.getItem('refreshToken'),localStorage.getItem('role'),localStorage.getItem('email'));
+            // if(autoLogin){//자동로그인 체크한경우에만
+            //     const refreshtoken = 'refreshToken';//data["refreshToken"];//자동로그인
+            //     localStorage.setItem('refreshtoken', refreshtoken);
+            // }
             
         }
     }, [auth, authError]);

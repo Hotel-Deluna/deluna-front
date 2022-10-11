@@ -19,16 +19,23 @@ export default function createRequestSaga(type, request) {
     yield put(startLoading(type)); // 로딩 시작
     try {
       const response = yield call(request, action.payload);
-      const header = response.headers;
+      //const header = response.headers;
       //console.log("response", response);
-      console.log("header", header);
-      localStorage.setItem('Authorization',header.authorization)
-      localStorage.setItem('role',response.data.role)
-      localStorage.setItem('email',response.data.email)
-      yield put({
-        type: SUCCESS,
-        payload: response.data
-      });
+      //console.log("header", header);
+      console.log();
+      if(action.type === 'auth/LOGIN'){
+        console.log('login');
+        yield put({
+          type: SUCCESS,
+          payload: response
+        });
+      }else{
+        yield put({
+          type: SUCCESS,
+          payload: response.data
+        });
+      }
+      
       //console.log('success', response.data);
       //console.log('saga',response, request);
     } catch (e) {

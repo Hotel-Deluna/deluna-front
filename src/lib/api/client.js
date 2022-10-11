@@ -84,3 +84,12 @@ axios.post('http://43.200.222.222:8080/reservation/unMemberInfo',data,
         'Content-Type': 'application/json'
     }
 });
+
+
+export const reservation = (data) =>
+axios.post('http://43.200.222.222:8080/reservation/memberReservation',data,
+    {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
