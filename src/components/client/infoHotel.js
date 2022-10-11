@@ -42,6 +42,8 @@ const InfoHotel = (props) => {
     }
     
     return(
+        <>
+        {props.isHotelLoading && (
         <Container fluid="xxl">
             <Row className="justify-content-md-center mb-3">
                 <Col sm={12}>
@@ -93,7 +95,7 @@ const InfoHotel = (props) => {
             </Row>
             </>)
             )}
-            {props.isHotelLoading && (<>
+            
             <Row className="mb-3">
                 <Col sm={12}>
                     <Card style={{width : '100%'}}>
@@ -258,7 +260,7 @@ const InfoHotel = (props) => {
                
                
             </Row>
-            </>)}
+            
             {
             props.allInfo.roomList.length > 1 && !props.isRoomLoading &&(
                 <Row className="mb-3"><Col sm={5} /><Col sm={2} style={{textAlign : 'center'}}><Spinner animation="border" /></Col><Col sm={5} /></Row>
@@ -301,6 +303,7 @@ const InfoHotel = (props) => {
             )}
             
         </Container>
+        )}</>
     );
 }
 

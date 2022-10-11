@@ -134,7 +134,7 @@ export default handleActions(
 
         [RESET] : () => {
             return initialState;
-        }
+        },
 }, initialState);
 
   
