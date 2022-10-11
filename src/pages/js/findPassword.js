@@ -69,7 +69,7 @@ const FindPassword = () => {
     }
 
     const handleCertReq = () => {
-        /*axios.post('http://43.200.222.222:8080/common/phone/auth/request',{
+        axios.post('http://43.200.222.222:8080/common/phone/auth/request',{
           phone_num: phone.replace(/\-/g,'')
           }).then((res) => {
               if(res.data.result === "OK"){ //성공
@@ -79,11 +79,11 @@ const FindPassword = () => {
                   setTimerCheck(false);//timer종료
                   alert('문자발송에 실패하였습니다. 잠시후 다시 이용 부탁드립니다.');
               }
-          });*/
-        setTimerCheck(true);//timer시작
+        });
+        //setTimerCheck(true);//timer시작
     }
     const handleCertConfirm = () => {
-        /*axios.post('http://43.200.222.222:8080/common/phone/auth/verify',{
+        axios.post('http://43.200.222.222:8080/common/phone/auth/verify',{
         auth_num : certNum, 
         phone_num : phone.replace(/\-/g,'')
         }).then((res) => {
@@ -100,9 +100,9 @@ const FindPassword = () => {
                 alert('일시적인 에러입니다. 관리자에게 문의해주세요.');
 
             }
-        })*/
-        setTimerCheck(false);//타이머종료
-        setCertification(true);
+        })
+        // setTimerCheck(false);//타이머종료
+        // setCertification(true);
     }
     useEffect(() => { //타이머 시간 끝났을 시
         if(reset === 1){

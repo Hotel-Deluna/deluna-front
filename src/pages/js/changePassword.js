@@ -2,14 +2,13 @@ import React, { useState,useEffect } from "react";
 import { Container, Row, Form, Button,Col,FloatingLabel } from "react-bootstrap";
 import "../css/authFind.scss";
 import { Link } from 'react-router-dom';
-import Timer from "../../components/auth/timer";
 import axios from "axios";
 const FindPassword = () => {
     //변경할 비밀번호
     const [password, setPassword] = useState('');
     const [rePassword, setRePasswor] = useState('');
     const [rePasswordCheck, setRePassworCheck] = useState('');
-
+    const [code, setCode] = useState('');
     const handlePassword = (e) => {
         const {name, value} = e.target;
         if(name === 'rePassword' ){
@@ -21,6 +20,9 @@ const FindPassword = () => {
         }
     }
 
+    const handleCode = (e) => {
+        setCode(e.target.value);
+    }
     const changePassword = () => {
         let pwCheck = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
         if(!pwCheck.test(rePassword)){
@@ -38,14 +40,23 @@ const FindPassword = () => {
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization' : localStorage.getItem('Authorization'),
+                            'Authorization' : localStorage.getItem('accessToken'),
                         }
                     }).then((res) => {
                         console.log(res)
                     });
                 }else{
-                    console.log(2)
-                    alert('비밀번호 재설정 api')
+                    axios.patch('http://43.200.222.222:8080/member/updatePwd',{
+                        password :rePassword,
+                        email_auth_num : code
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then((res) => {
+                        console.log(res)
+                    });
                 }
             }
         }
@@ -98,12 +109,22 @@ const FindPassword = () => {
                 </FloatingLabel>
             </Col>
         </Row>
+        {(localStorage.getItem('role') === null && 
+            <Row className="align-items-center mb-3">
+                {/* 휴대폰번호 input창 */}
+                <Col sm = {12}>
+                <FloatingLabel controlId="rePasswordCheck" label="인증코드">
+                        <Form.Control type="number" name="verificationCode" onChange={handleCode} />
+                    </FloatingLabel>
+                </Col>
+            </Row>   
+        )}
         <Row>
             <Col sm = {12}>
                 <div id="buttonGroup">
                     <Button variant="outline-primary"
                     disabled={
-                        localStorage.getItem('role') === null ? (!rePassword || !rePasswordCheck || rePasswordCheck !== rePassword ? true : false)
+                        localStorage.getItem('role') === null ? (!rePassword || !rePasswordCheck || rePasswordCheck !== rePassword || !code ? true : false)
                         :  (!password || !rePassword || !rePasswordCheck || rePasswordCheck !== rePassword || rePassword === password ? true : false)
                     }
                     onClick={() => changePassword()}
