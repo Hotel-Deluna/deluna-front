@@ -58,7 +58,7 @@ const FindPassword = () => {
             phone_num: phone.replace(/\-/g,'')
           }).then((res) => {
               if(res.data.result === "OK"){ //성공
-                console.log(res.data)
+                localStorage.setItem('accessToken',res.headers.authorization);
                 setFindIdClick(true)
                 alert('해당 이메일로 전송되었습니다.');
                 //navigate("/auth/login")

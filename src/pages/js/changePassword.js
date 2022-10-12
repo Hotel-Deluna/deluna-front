@@ -3,12 +3,15 @@ import { Container, Row, Form, Button,Col,FloatingLabel } from "react-bootstrap"
 import "../css/authFind.scss";
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
 const FindPassword = () => {
     //변경할 비밀번호
     const [password, setPassword] = useState('');
     const [rePassword, setRePasswor] = useState('');
     const [rePasswordCheck, setRePassworCheck] = useState('');
     const [code, setCode] = useState('');
+    let navigate = useNavigate(); //페이지 이동 : react v6부터 useHistory -> useNavigate
     const handlePassword = (e) => {
         const {name, value} = e.target;
         if(name === 'rePassword' ){
@@ -43,7 +46,17 @@ const FindPassword = () => {
                             'Authorization' : localStorage.getItem('accessToken'),
                         }
                     }).then((res) => {
-                        console.log(res)
+                        if(res.data.result === "OK"){
+                            alert('비밀번호 변경에 성공하였습니다. 재로그인 해주세요.');
+                            localStorage.removeItem('role');
+                            localStorage.removeItem('email');
+                            localStorage.removeItem('accessToken');
+                            localStorage.removeItem('refreshToken');
+                            navigate("/auth/login");
+                        }else{
+                            alert('비밀번호 변경에 실패하셨습니다.');
+
+                        }
                     });
                 }else{
                     axios.patch('http://43.200.222.222:8080/member/updatePwd',{
@@ -52,10 +65,19 @@ const FindPassword = () => {
                     },
                     {
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization' : localStorage.getItem('accessToken')
                         }
                     }).then((res) => {
-                        console.log(res)
+                        localStorage.removeItem('accessToken');
+                        if(res.data.result === "OK"){
+                            alert('비밀번호 변경에 성공하였습니다. 로그인 해주세요.')
+                            navigate("/auth/login");
+                        }else{
+                            alert('비밀번호 변경에 실패하셨습니다.');
+                            navigate("/auth/findPassword");
+
+                        }
                     });
                 }
             }
