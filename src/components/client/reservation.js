@@ -20,12 +20,17 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
     const [modalOpen, setModalOpen] = useState(false);
     const [reservationNum, setReservationNum] = useState('');
     const [reservationName, setReservationName]= useState('');
-    const now = new Date();
+    const [status, setStatus] = useState('');
+    const now = new Date('');
     const [stDate, setStDate] = useState(moment(now).format("YYYY-MM-DD"));
     const [edDate, setEdDate]=  useState(moment(new Date(now.setDate(now.getDate() + 30))).format("YYYY-MM-DD"))
+
+    // 당일 예약 or 이용중일 경우 버튼막기
+
     const onSetModalOpen = (open, index) => {
         setReservationNum(reservation[index].reservation_num)
         setReservationName(reservation[index].reservation_name)
+        setStatus(reservation[index].reservation_status)
         setModalOpen(open)
     }
 
@@ -66,7 +71,6 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
             if(reservationList.result === 'OK'){
                 if(reservationList.list.length > 0){
                     setPage((page) => page+1);
-                    
                     reservationList.list.map((array) => reservation.push(array));
                     setReservation(reservation);
                     setLoading(true)
@@ -112,7 +116,7 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
             
             :null
         }
-        <Table bordered style={{marginTop:'10px'}}>
+        <Table bordered style={{marginTop:'10px', textAlign:'center'}}>
             <thead className="table-blue">
                 <tr>
                     <th>예약번호</th>
@@ -137,6 +141,7 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
                     <td>{item.name}</td>
                     <td>{item.room_detail_name}</td>
                     <td>{item.reservation_people}</td>
+                    {/* item.st_date ? item.st_date.split(' ')[0] : null} ~ {item.ed_date ? item.ed_date.split(' ')[0] : null */}
                     <td>{item.st_date ? item.st_date.split(' ')[0] : null} ~ {item.ed_date ? item.ed_date.split(' ')[0] : null}</td>
                     <td>{item.reservation_price ? item.reservation_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null}원</td>
                     {/* 1 : 예약확정, 2:예약취소, 3:이용완료 */}
@@ -148,7 +153,18 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
                     </td>
                     <td>
                         {item.reservation_status === '1'?
-                            <Button variant="outline-danger">예약취소</Button>
+                            <Button variant="outline-danger"
+                            disabled={moment(item.st_date.split(' ')[0]).format('YYYY-MM-DD') > moment().format('YYYY-MM-DD') || 
+                                        moment(item.st_date.split(' ')[0]).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')}
+                            >
+                                {moment(item.st_date.split(' ')[0]).format('YYYY-MM-DD') > moment().format('YYYY-MM-DD') || 
+                                moment(item.st_date.split(' ')[0]).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')
+                                ?
+                                '취소불가'
+                                :
+                                '예약취소'
+                                }
+                            </Button>
                         :
                         item.reservation_status === '2'?
                             <Button variant="outline-dark" onClick={() => onSetModalOpen(true,index)}>취소사유</Button> 
@@ -170,7 +186,7 @@ const ReservationList = ({reservation_list, reservationList,reservation_reset}) 
         <div ref={ref}/>
         <div>
         {modalOpen && (
-            <ReservationCancelReason reservation_num={reservationNum} reservation_name={reservationName} modalOpen={modalOpen} getData={getData}/>
+            <ReservationCancelReason reservation_num={reservationNum} reservation_name={reservationName} status={status} modalOpen={modalOpen} getData={getData}/>
         )}
         </div>
         </>

@@ -4,7 +4,7 @@ import { Modal, Button,Container, Row, Col,Form } from "react-bootstrap";
 import { connect, useDispatch } from 'react-redux';
 import {reservation_cancel_reason} from "../../modules/client/reservationListActions";
 //객실번호 필요(일괄삭제)
-const ReservationCancelReason = ({reservation_num, reservation_name, modalOpen, getData
+const ReservationCancelReason = ({reservation_num, reservation_name, status,modalOpen, getData
 ,reservation_cancel_reason,reservationCancelReason
 }) => {
     const [show, setShow] = useState(modalOpen);
@@ -15,8 +15,7 @@ const ReservationCancelReason = ({reservation_num, reservation_name, modalOpen, 
 
     useEffect(() => {
         reservation_cancel_reason({
-            reservation_num : reservation_num,
-            user_num : '00001' 
+            reservation_num : reservation_num, 
         });
 
     },[])
@@ -25,6 +24,8 @@ const ReservationCancelReason = ({reservation_num, reservation_name, modalOpen, 
             if(reservationCancelReason.result === 'OK'){
                 
             }else{
+                setShow(false);
+                getData(false);
                 alert("취소사유 조회에 실패하였습니다. 잠시 후 다시 이용해주세요.");
             }  
         }
@@ -48,7 +49,7 @@ const ReservationCancelReason = ({reservation_num, reservation_name, modalOpen, 
                                 예약자명 : {reservation_name}
                             </Col>
                             <Col xs={18} md={12}>
-                                예약 취소자 : 고객
+                                예약 취소자 : {status === '2' ? '고객' : '사업자'}
                             </Col>
                         </Row>
                         <Row>
@@ -61,6 +62,7 @@ const ReservationCancelReason = ({reservation_num, reservation_name, modalOpen, 
                                             fontSize: '0.8rem'
                                         }} 
                                         defaultValue={reservationCancelReason ? reservationCancelReason.data.content : ''}
+                                        //defaultValue={'예약취소'}
                                         />
                                     </Form.Group>
                                 </Form>
