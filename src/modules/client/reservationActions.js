@@ -18,7 +18,7 @@ const initialState = {
 }
 export const member_info = createAction(MEMBERINFO); //객실등록
 export const reservation_register = createAction(RESERVATION, (data) => data); //객실수정
-const memberInfoSaga = createRequestSaga(MEMBERINFO, authApi.partnerSelect);
+const memberInfoSaga = createRequestSaga(MEMBERINFO, authApi.userSelect);
 const reservationSaga = createRequestSaga(RESERVATION, clientApi.reservation);
 
 export function* reservationActionsSaga(){

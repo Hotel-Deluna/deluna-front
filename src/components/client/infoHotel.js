@@ -1,6 +1,7 @@
 import React from "react";
 import HeaderFilter from "../layout/js/headerFilter";
 import ImageModal from "./imageModal";
+import AuthLoginModal from "../auth/authLoginModal";
 import { Container, Row, Col, Button, Card, Form, Image, Carousel, Spinner } from "react-bootstrap";
 import { CardBody, CardHeader } from "reactstrap";
 import { VscTriangleLeft, VscTriangleRight, VscTriangleUp, VscTriangleDown } from "react-icons/vsc";
@@ -297,9 +298,11 @@ const InfoHotel = (props) => {
             <Row className="mb-3"><Col xs><div ref={props.views}></div></Col></Row>
             <Row className="mb-3"><Col sm={12} /></Row>
             <Row><Col sm={12} /></Row>
-            
             {props.roomModalOpen && (
                 <ImageModal imgType={props.imgType} setRoomModalOpen={props.setRoomModalOpen} roomModalOpen={props.roomModalOpen} idx={props.modalIdx} imgList={props.imgType === 0 ? props.hotelInfo.image : JSON.parse(JSON.stringify(props.allInfo.roomList[props.roomArrIdx].roomInfo.image))} />
+            )}
+            {props.loginModalOpen && (
+                <AuthLoginModal setLoginModalOpen={props.setLoginModalOpen} loginModalOpen={props.loginModalOpen} setLoginCheck={props.setLoginCheck} />
             )}
             
         </Container>

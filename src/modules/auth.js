@@ -96,13 +96,9 @@ export const userJoin = createAction (JOINUSER, ({email, name, password, phone_a
 }));
 
 //고객 정보 조회
-export const userSelect = createAction(SELECTUSER, ({  token  }) => ({
-  token 
-}));
+export const userSelect = createAction(SELECTUSER);
 //사업자 정보 조회
-export const partnerSelect = createAction(SELECTPARTNER, ({  token  }) => ({
-  token
-}));
+export const partnerSelect = createAction(SELECTPARTNER);
 
 //고객 정보 수정
 export const userModify = createAction (MODIFYUSER, ({token, name, phone_auth_num, phone_num}) => ({
@@ -142,40 +138,7 @@ export function* authSaga() {
 }
 
 const initialState = {
-  login: {
-    email : '',
-    password : '',
-    role : '',
-  },
-  join : {
-    business_num : '', 
-    email : '', 
-    name : '', 
-    opening_day : '', 
-    password : '', 
-    phone_num : '',
-    phone_auth_num : '',
-  },
-  select : {
-    token : '',
-  },
   
-  modify : {
-    token : '',
-    business_num : '', 
-    email : '', 
-    name : '', 
-    opening_day : '', 
-    phone_num : '',
-    phone_auth_num : '',
-  },
-
-  auth: null,//성공 response
-  authError: null,//실패 response
-  authSelect : null,
-  authSelectError : null,
-  authModify : null,
-  authModifyError : null,
 };
 
 const auth = handleActions(
@@ -196,10 +159,35 @@ const auth = handleActions(
     produce(state, draft => {
       draft[form].slice = {[key] : value};//키 삭제
     }),
-    [INITIALIZE_FORM]: (state, { payload: {form} }) => ({
-      ...state,
-      [form]: initialState[form],
-      authError: null // 폼 전환 시 회원 인증 에러 초기화
+    [INITIALIZE_FORM]: () =>({
+      login: {
+        email : '',
+        password : '',
+        role : '',
+      },
+      join : {
+        business_num : '', 
+        email : '', 
+        name : '', 
+        opening_day : '', 
+        password : '', 
+        phone_num : '',
+        phone_auth_num : '',
+      },
+      modify : {
+        business_num : '', 
+        email : '', 
+        name : '', 
+        opening_day : '', 
+        phone_num : '',
+        phone_auth_num : '',
+      },
+      auth: null,//성공 response
+      authError: null,//실패 response
+      authSelect : null,
+      authSelectError : null,
+      authModify : null,
+      authModifyError : null
     }),
     [RESET_RESPONSE]: (state, { payload: {key} }) => ({
       ...state,

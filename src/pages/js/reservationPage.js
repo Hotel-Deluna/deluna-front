@@ -4,8 +4,11 @@ import ReservationContainer from "../../containers/client/reservationContainer";
 
 const ReservationPage = () => {
     const location = useLocation();
+
+    
+
     return(
-        <ReservationContainer reservationList={location.state.reservationList}  />
+        <ReservationContainer reservationList={location.state && location.state.reservationList}  />
     )
 }
 

@@ -35,12 +35,11 @@ export default handleActions({
                         ed_date : moment(data.list.reservation_end_date).format("YYYY-MM-DD"),
                         role : data.list.role,
                         room_num : data.list.roomList[i].roomInfo.room_num,
-                        reservation_people : data.list.roomList[i].roomInfo.people,
+                        reservation_people : data.list.roomList[i].people,
                         reservation_price : data.list.roomList[i].roomInfo.price,
                         reservation_name : data.memberInfo.name,
                         reservation_phone : data.memberInfo.phone_num? (data.memberInfo.phone_num.length === 10 ? data.memberInfo.phone_num.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'):data.memberInfo.phone_num.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3') ) : '',
                     }
-                    
                 }else{
                     setData = {
                         hotel_num : data.list.hotel_num,
@@ -88,7 +87,6 @@ export default handleActions({
         const infoArr = state.getIn(['reservationInfoList']);
         const filter_infoArr = infoArr.filter((item, index) => (index !== data.index));
         const filter_arr = arr.filter((item, index) => (index !== data.index));
-        console.log('aa', filter_infoArr, typeof filter_arr);
         let allPrice = 0;
         filter_arr.map((item)=> (
             allPrice += item.reservation_price

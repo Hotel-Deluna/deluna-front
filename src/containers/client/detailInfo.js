@@ -10,7 +10,7 @@ import {hotel_code} from "../../modules/hotel/hotelMainActions";
 import { useDispatch,useSelector } from "react-redux";
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
-
+import moment from "moment";
 const DetailInfo = ({}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchValue, setSearchValue] = useState(searchParams.get('hotelNum'));
@@ -18,7 +18,8 @@ const DetailInfo = ({}) => {
     const [roomArrIdx, setRoomArrIdx] = useState(0); //선택한 객실의 inxdex
     const [hotelImgIdx, setHotelImgIdx] = useState(0); // 호텔이미지 index
     const [hotelImgMaxIdx, setHotelImgMaxIdx] = useState(0); //호텔 이미지 최대 갯수
-    const [roomModalOpen, setRoomModalOpen] = useState(false); // 모달열림 boolean
+    const [roomModalOpen, setRoomModalOpen] = useState(false); // 이미지모달열림 boolean
+    const [loginModalOpen, setLoginModalOpen] = useState(false); // 로그인모달열림 boolean
     const [imgType, setImgType] = useState(0); // 모달에 띄울 이미지 타입 0- 호텔 1- 객실
     const [modalIdx, setModalIdx] = useState(0); // 모달에서 노출되는 이미지의 index
 
@@ -37,6 +38,8 @@ const DetailInfo = ({}) => {
     const {allInfo} = useSelector(({infoReducer})=>({allInfo: infoReducer.getIn(['hotelInfo']).toJS()}));
     const [allReservationCheck, setAllReservationCheck] = useState(false);
     const [btnIsCheck, setBtnIsCheck] = useState(false);
+    const [btnname, setBtnName] = useState('');
+    const [loginCheck, setLoginCheck] = useState(0);//1-로그인, 3-비회원로그인
     //첫진입 시 호텔정보, 객실리스트 조회
     useEffect(() => {
         //console.log('searchValue', searchValue);
@@ -94,13 +97,17 @@ const DetailInfo = ({}) => {
                             roomList[i].tags = nameTags;
                         }
                     }
+                    
+                    let today = headerData.reservation_start_date ? headerData.reservation_start_date : moment(new Date()).format("YYYY/MM/DD");
+                    let now = new Date();
+                    let tomorrow = headerData.reservation_end_date ? headerData.reservation_end_date : moment(new Date(now.setDate(now.getDate() + 1))).format("YYYY/MM/DD");
                     dispatch(set_info({data : {
                         hotel_num : parseInt(searchValue),
                         hotel_ko_name : info.data.name,
                         hotel_en_name : info.data.eng_name,
                         roomList : roomList,
-                        reservation_start_date : headerData.reservation_start_date,
-                        reservation_end_date :headerData.reservation_end_date
+                        reservation_start_date : today,
+                        reservation_end_date :tomorrow
                     }}));
                     
                     infoCopy.room_list = roomList;
@@ -136,7 +143,7 @@ const DetailInfo = ({}) => {
                     navigate("/search");
                 }
             }else{ //실패할 경우 error 노출하고 main 페이지 이동
-                console.log(info);
+                //console.log(info);
                 alert("호텔 정보 조회가 실패하였습니다.");
                 navigate("/search");
             }
@@ -199,35 +206,67 @@ const DetailInfo = ({}) => {
             }
             dispatch(change_roomField({index : room_idx,key : nameArr[0],value : value}));
 
-        }else if(nameArr[0] === 'makeReservationOne_' || 'makeReservationAll_'){
-            dispatch(change_hotelField({key : 'role', value: 3}));
-            if(nameArr[0] === 'makeReservationAll'){
-                console.log('all');
-                goDispatch(set_selectRoom());
-                setBtnIsCheck(true);
-            }else{
-                console.log('one', parseInt(nameArr[1]));
-                if(allInfo.roomList[parseInt(nameArr[1])].room_cnt === 0){
-                    alert('객실을 선택해야 예약이 가능합니다.');
+        }else if(nameArr[0] === 'makeReservationOne' || 'makeReservationAll'){
+            if(localStorage.getItem('accessToken')){
+                dispatch(change_hotelField({key : 'role', value: 1}));
+                if(nameArr[0] === 'makeReservationOne'){
+                    moveSetting(nameArr[0],nameArr[1]);
                 }else{
-                    goDispatch(set_selectOneRoom({index : parseInt(nameArr[1])}));
-                    setBtnIsCheck(true);
-                }   
+                    moveSetting(nameArr[0]);
+                }
+                
+            }else{
+                if(nameArr[0] === 'makeReservationOne'){
+                    setRoomArrIdx(parseInt(nameArr[1]));
+                }
+                setBtnName(nameArr[0]);
+                setLoginModalOpen(true);
             }
-                        
-           
         }
     }
+    
+    function moveSetting(name, idx){
+        if(name === 'makeReservationAll'){
+            //console.log('all');
+            goDispatch(set_selectRoom());
+            setBtnIsCheck(true);
+        }else{
+            //console.log('one', idx);
+            if(allInfo.roomList[parseInt(idx)].room_cnt === 0){
+                alert('객실을 선택해야 예약이 가능합니다.');
+            }else{
+                goDispatch(set_selectOneRoom({index : parseInt(idx)}));
+                setBtnIsCheck(true);
+            }  
+        }
+        
+    }
+    
+    useEffect(()=>{//로그인 선택창 시
+        if(loginCheck !== 0){
+            setLoginCheck(0);
+            if(loginCheck === 1){
+                console.log('로그인함');
+                dispatch(change_hotelField({key : 'role', value: 1}));
+            }else{
+                console.log('비회원로그인');
+                dispatch(change_hotelField({key : 'role', value: 3}));
+            }
+            moveSetting(btnname, roomArrIdx);
+            
+        }
+      },[loginCheck]);
+
     useEffect(()=>{
         if(btnIsCheck){
+            setBtnIsCheck(false);
             navigate("/reservation", {
                 state : {
                     reservationList : allInfo
                 }
             });
         }
-        
-      },[allInfo, btnIsCheck]);
+      },[btnIsCheck]);
 
     const handleSelect = (e) => {
         let {value} = e.currentTarget;
@@ -245,8 +284,8 @@ const DetailInfo = ({}) => {
     
     return(
         <InfoHotel hotelInfo={hotelInfos} hotelImgIdx={hotelImgIdx} hotelImgMaxIdx={hotelImgMaxIdx} handleImgBtnClick={handleImgBtnClick} isHotelLoading={isHotelLoading} roomModalOpen={roomModalOpen} 
-                    setRoomModalOpen={setRoomModalOpen} handleImgClick={handleImgClick} imgType={imgType} modalIdx={modalIdx} roomArrIdx={roomArrIdx} isRoomLoading={isRoomLoading} views={ref} 
-                    pagingIdx={pagingIdx} allInfo={allInfo} handleClick={handleClick} handleSelect={handleSelect} allReservationCheck={allReservationCheck}
+                    setRoomModalOpen={setRoomModalOpen} handleImgClick={handleImgClick} imgType={imgType} modalIdx={modalIdx} roomArrIdx={roomArrIdx} isRoomLoading={isRoomLoading} views={ref} setLoginCheck={setLoginCheck}
+                    pagingIdx={pagingIdx} allInfo={allInfo} handleClick={handleClick} handleSelect={handleSelect} allReservationCheck={allReservationCheck} setLoginModalOpen={setLoginModalOpen} loginModalOpen={loginModalOpen}
         />
     );
 }

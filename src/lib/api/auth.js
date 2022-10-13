@@ -13,10 +13,10 @@ export const login = ({email, password, role}) =>
 /*정보조회*/
 //사업자
 export const partnerSelect = () =>
-    axios.post('http://43.200.222.222:8080/owner/view-info', {headers: {'Authorization' :  localStorage.getItem('accessToken')}});
+    axios.post('http://43.200.222.222:8080/owner/view-info','', {headers: {'Authorization' :  localStorage.getItem('accessToken')}});
 //고객
 export const userSelect = () =>
-axios.post('http://43.200.222.222:8080/member/view-info',{
+axios.post('http://43.200.222.222:8080/member/view-info','',{
     headers: {
         'Authorization' : localStorage.getItem('accessToken')
     }

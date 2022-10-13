@@ -67,24 +67,17 @@ function ModifyForm(props) {
   }));
   // 정보조회
   useEffect(() => {//조회하기
-    dispatch(initializeForm('select'));
-    dispatch(initializeForm('modify'));
-    dispatch(
-      changeField({
-          form : 'select',
-          key : 'token',
-          value : '1234'
-      })
-    );
-    const { token } = selectForm;
+    //dispatch(initializeForm('select'));
+    //dispatch(initializeForm('modify'));
+   
     if(props.type === '0'){//고객
       console.log(selectForm, '고객조회');
-      dispatch(userSelect({ token}));
+      dispatch(userSelect());
       
     }
     if(props.type === '1'){//사업자
       console.log(selectForm, '사업자조회');
-      dispatch(partnerSelect({ token}));
+      dispatch(partnerSelect());
     }
     
   }, []);
@@ -93,25 +86,25 @@ function ModifyForm(props) {
   useEffect(() => {
     if(authSelect){
       //데이터 뽑아내기 
-      dispatch(changeField({ form : 'modify', key : 'email', value : authSelect.data.email}));
-      dispatch(changeField({ form : 'modify', key : 'name', value : authSelect.data.name}));
+      dispatch(changeField({ form : 'modify', key : 'email', value : authSelect.email}));
+      dispatch(changeField({ form : 'modify', key : 'name', value : authSelect.name}));
       
-      let phoneNum = authSelect.data.phone_num;
+      let phoneNum = authSelect.phone_num;
       phoneNum = phoneNum.length === 10 ? phoneNum.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3') :  phoneNum.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-      dispatch(changeField({ form : 'modify', key : 'phone_num', value :  authSelect.data.phone_num}));
+      dispatch(changeField({ form : 'modify', key : 'phone_num', value :  authSelect.phone_num}));
       
-      let businessNum = authSelect.data.business_num !== undefined && authSelect.data.business_num;
-      businessNum = authSelect.data.business_num !== undefined ? businessNum.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3') : '';
-      authSelect.data.business_num !== undefined && dispatch(changeField({ form : 'modify', key : 'business_num', value :  businessNum}));
+      let businessNum = authSelect.business_num !== undefined && authSelect.business_num;
+      businessNum = authSelect.business_num !== undefined ? businessNum.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3') : '';
+      authSelect.business_num !== undefined && dispatch(changeField({ form : 'modify', key : 'business_num', value :  businessNum}));
 
-       let openingDay = authSelect.data.opening_day !== undefined &&  authSelect.data.opening_day;
-       openingDay = authSelect.data.opening_day !== undefined ? openingDay.replace(/\T.*/,'') : '';
-      authSelect.data.opening_day !== undefined && dispatch(changeField({ form : 'modify', key : 'opening_day', value :  openingDay}));
+       let openingDay = authSelect.opening_day !== undefined &&  authSelect.opening_day;
+       openingDay = authSelect.opening_day !== undefined ? openingDay.replace(/\T.*/,'') : '';
+      authSelect.opening_day !== undefined && dispatch(changeField({ form : 'modify', key : 'opening_day', value :  openingDay}));
       
       console.log(phoneNum, businessNum);
-      authSelect.data.business_num !== undefined ? setSetInfo((state) => ({...state,'phoneNum' : {...state.phoneNum, 'value' : phoneNum},'businessNum' : {...state.businessNum, 'value' : businessNum}}))
+      authSelect.business_num !== undefined ? setSetInfo((state) => ({...state,'phoneNum' : {...state.phoneNum, 'value' : phoneNum},'businessNum' : {...state.businessNum, 'value' : businessNum}}))
       : setSetInfo((state) => ({...state,'phoneNum' : {...state.phoneNum, 'value' : phoneNum}}));
-      setSetInfo((state) => ({...state,'phone_auth_num' : {...state.phone_auth_num, 'original_value' : authSelect.data.phone_auth_num}}));
+      setSetInfo((state) => ({...state,'phone_auth_num' : {...state.phone_auth_num, 'original_value' : authSelect.phone_auth_num}}));
       //dispatch(resetResponse({ key : 'authSelect'}));
       //console.log('데이터 들어갔니',form);
     }
@@ -149,7 +142,7 @@ const onChange = e => {//그외
       }else{
         setSetInfo((state) => ({...state,'name' : {...state.name,'isCheck' : false}}));
       }
-      if(authSelect.data.name === value){ //기존정보와 동일한지
+      if(authSelect.name === value){ //기존정보와 동일한지
         setSetInfo((state) => ({...state,'name' : {...state.name,'isSame' : true}}));
       }else{
         setSetInfo((state) => ({...state,'name' : {...state.name,'isSame' : false}}));
@@ -163,8 +156,8 @@ const onChange = e => {//그외
     }else{
       setSetInfo((state) => ({...state, 'opening_day' : {'isCheck' : false}}));
     }
-    let openingDay = authSelect.data.opening_day !== undefined &&  authSelect.data.opening_day;
-    openingDay = authSelect.data.opening_day !== undefined ? openingDay.replace(/\T.*/,'') : '';
+    let openingDay = authSelect.opening_day !== undefined &&  authSelect.opening_day;
+    openingDay = authSelect.opening_day !== undefined ? openingDay.replace(/\T.*/,'') : '';
     if(openingDay === value){//기존정보와 동일한지
       setSetInfo((state) => ({...state, 'opening_day' : {'isSame' : true}}));
     }else{
@@ -190,7 +183,7 @@ const onChange = e => {//그외
         }else{
           setSetInfo((state) => ({...state, 'phoneNum' : {...state.phoneNum,'isCheck' : false,'value' : value, 'msg' : '휴대폰번호를 정확히 입력하세요.'}}));
         }
-        if(authSelect.data.phone_num === value.replace(/-/g, '')){//기존정보와 동일한지
+        if(authSelect.phone_num === value.replace(/-/g, '')){//기존정보와 동일한지
           setSetInfo((state) => ({...state, 'phoneNum' : {...state.phoneNum,'isSame' : true, 'msg' : ''}}));
           setTimerCheck(false);
           setRequestPhoneNum('');
@@ -214,7 +207,7 @@ const onChange = e => {//그외
             }
             setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'isCheck' : false}}));
           }
-          if(authSelect.data.business_num === value.replace(/-/g, '')){//기존정보와 동일한지
+          if(authSelect.business_num === value.replace(/-/g, '')){//기존정보와 동일한지
             setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'isSame' : true, 'msg' : ''}}));
           }else{
             setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'isSame' : false}}));

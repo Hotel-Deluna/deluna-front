@@ -13,7 +13,7 @@ import Login from "../../containers/auth/loginForm";
 const LoginPage = () => {
     return (
         <AuthLayout>
-            <Login />
+            <Login page={0} />
             {/* <AuthTabs type={'login'} /> */}
         </AuthLayout>
     );

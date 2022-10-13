@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 
 const ReservationContainer = (props) => {
-    const list = JSON.parse(JSON.stringify(props.reservationList));
+    const list = props.reservationList;
     const {memberInfo, reservationRegister} = useSelector(({reservationActions})=>({reservationRegister: reservationActions.reservationRegister, memberInfo : reservationActions.memberInfo}));
     const {reservationList, totalPrice, reservationInfoList} = useSelector(({reservationReducer})=>({reservationList: reservationReducer.getIn(['reservationList']),reservationInfoList: reservationReducer.getIn(['reservationInfoList']), totalPrice : reservationReducer.getIn(['totalPrice'])}));
     const dispatch = useDispatch();
@@ -15,20 +15,27 @@ const ReservationContainer = (props) => {
     const [btnCheck, setBtnCheck] = useState(false);
     //첫진입 시
     useEffect(() => {
-        if(list.role === 3){//비회원 시 고객정보 조회 하지 않음
-            console.log('비회원', list);
-            dispatch(set_info({data : {
-                list : list
-            }}));
-            setLoading(true);
-        }else if(list.role === 1){
-            console.log('회원', list);
-            console.log('member');
-            dispatch(member_info());
+        if(list){
+            if(list.role === 3){//비회원 시 고객정보 조회 하지 않음
+                console.log('비회원', list);
+                dispatch(set_info({data : {
+                    list : list
+                }}));
+                setLoading(true);
+            }else if(list.role === 1){
+                console.log('회원', list);
+                console.log('member');
+                dispatch(member_info());
+            }else{
+                alert('잘못된 접근입니다.');
+                navigate(-1);
+            }
         }else{
-            alert('뒤로가');
+            console.log('잘못된 접근입니다. url 치고 들어오지마');
+            alert('잘못된 접근입니다. url 치고 들어오지마');
             navigate(-1);
         }
+        
     },[]);
     //고객 정보 조회 시
     useEffect(()=>{
@@ -36,8 +43,9 @@ const ReservationContainer = (props) => {
             if(memberInfo.result === 'OK'){ 
                 dispatch(set_info({data : {
                     list : list,
-                    memberInfo : JSON.parse(JSON.stringify(memberInfo.data))
+                    memberInfo : JSON.parse(JSON.stringify(memberInfo))
                 }}));
+                setLoading(true);
             }else{
                 console.log('고객정보에러', memberInfo);
                 alert('고객정보에러');
@@ -124,24 +132,23 @@ const ReservationContainer = (props) => {
                             if(reservationList[i].reservation_phone.replace(/-/g, '') === reservationList[i].reservation_phone_confirm.replace(/-/g, '')){
                                 setBtnCheck(true);
                             }else{
-                                console.log('dd');
                                 setBtnCheck(false);
                                 break;
                             }
                         }else{
-                            console.log('cc');
                             setBtnCheck(false);
                             break;
                         }
                     }else{
-                        console.log('bb');
                         setBtnCheck(false);
                         break;
                     }
                 }else{//회원일때
-                    if(reservationList[i].name && reservationList[i].reservation_phone){
-                        if(reservationList[i].reservation_phone.length > 11){
+                    if(reservationList[i].reservation_name && reservationList[i].reservation_phone){
+                        if(reservationList[i].reservation_phone.replace(/-/g, '').length > 9){
                             setBtnCheck(true);
+                        }else{
+                            setBtnCheck(false);
                         }
                     }else{
                         setBtnCheck(false);

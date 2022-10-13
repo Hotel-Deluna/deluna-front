@@ -33,8 +33,6 @@ const MainContainer = ({selectCityList, cityList}) => {
         let today = new Date();
         let now = new Date();
         let tomorrow = new Date(now.setDate(now.getDate() + 1));
-        console.log(moment(today).format("YYYY/MM/DD"));
-        console.log(moment(tomorrow).format("YYYY/MM/DD"));
         dispatch(hotelSearchReducer.headerData({
             data : {
                 page : 1,

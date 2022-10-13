@@ -3,7 +3,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Alert } from "react-bootstrap";
 import axios from "axios";
-
+import { Container, Row, Col, Spinner } from "react-bootstrap";
 const Naver = () => {
     const href = window.location.href;
     let params = new URL(document.URL).searchParams;
@@ -20,6 +20,15 @@ const Naver = () => {
       .catch(function (error) {
         console.log(error);
       });
+      return(
+        <Container>
+          <Row>
+            <Col style={{textAlign:'center'}}>
+              <Spinner animation="border" size="sm" />
+            </Col>
+          </Row>
+        </Container>
+      );
 }
 
 export default Naver;
