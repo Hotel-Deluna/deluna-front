@@ -11,13 +11,14 @@ const [MEMBERINFO, MEMBERINFO_SUCCESS, MEMBERINFO_FAILURE] = createRequestAction
 const [RESERVATION, RESERVATION_SUCCESS, RESERVATION_FAILURE] = createRequestActionTypes(
     'client/RESERVATION'
 );
-
+const RESET = 'client/RESET';
 const initialState = {
     memberInfo : null, //객실리스트 상태
     reservationRegister : null //공통코드(호텔 부가서비스/시설) 상태
 }
 export const member_info = createAction(MEMBERINFO); //객실등록
 export const reservation_register = createAction(RESERVATION, (data) => data); //객실수정
+export const reset = createAction(RESET); //객실등록
 const memberInfoSaga = createRequestSaga(MEMBERINFO, authApi.userSelect);
 const reservationSaga = createRequestSaga(RESERVATION, clientApi.reservation);
 
@@ -48,7 +49,10 @@ const reservationActions = handleActions(
             ...state,
             reservationRegister : action.payload,
         }),
-
+        [RESET] : () => (console.log('bbbb'),{ 
+            reservationRegister : null,
+            memberInfo : null
+        }),
     },
     initialState
 );

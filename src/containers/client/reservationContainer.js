@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from "react";
 import ReservationComponent from "../../components/client/reservationComponent";
-import { member_info, reservation_register } from "../../modules/client/reservationActions";
+import { member_info, reservation_register, reset } from "../../modules/client/reservationActions";
 import { set_info, change_value, delete_list } from "../../modules/client/reservationReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
@@ -13,23 +13,11 @@ const ReservationContainer = (props) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [btnCheck, setBtnCheck] = useState(false);
+    const firstDispatch = useDispatch();
     //첫진입 시
     useEffect(() => {
         if(list){
-            if(list.role === 3){//비회원 시 고객정보 조회 하지 않음
-                console.log('비회원', list);
-                dispatch(set_info({data : {
-                    list : list
-                }}));
-                setLoading(true);
-            }else if(list.role === 1){
-                console.log('회원', list);
-                console.log('member');
-                dispatch(member_info());
-            }else{
-                alert('잘못된 접근입니다.');
-                navigate(-1);
-            }
+            firstDispatch(reset());
         }else{
             console.log('잘못된 접근입니다. url 치고 들어오지마');
             alert('잘못된 접근입니다. url 치고 들어오지마');
@@ -37,6 +25,23 @@ const ReservationContainer = (props) => {
         }
         
     },[]);
+
+    useEffect(()=>{//로그인 선택창 시
+        if(list.role === 3){//비회원 시 고객정보 조회 하지 않음
+            console.log('비회원', list);
+            dispatch(set_info({data : {
+                list : list
+            }}));
+            setLoading(true);
+        }else if(list.role === 1){
+            console.log('회원', list);
+            console.log('member');
+            dispatch(member_info());
+        }else{
+            alert('잘못된 접근입니다.');
+            navigate(-1);
+        }
+      },[firstDispatch]);
     //고객 정보 조회 시
     useEffect(()=>{
         if(memberInfo){
@@ -112,16 +117,18 @@ const ReservationContainer = (props) => {
 
     //결제하기 시
     useEffect(()=>{
-        if(reservationRegister){
-            if(reservationRegister.result === 'OK'){ 
-                alert('예약이 완료되었습니다.');
-            }else{
-                console.log('예약하기에러', reservationRegister);
-                alert('예약에 실패하였습니다. 다시 시도해주세요.');
-                //navigate(-1);
+        if(loading){
+            if(reservationRegister){
+                if(reservationRegister.result === 'OK'){ 
+                    alert('예약이 완료되었습니다.');
+                }else{
+                    console.log('예약하기에러', reservationRegister);
+                    alert('예약에 실패하였습니다. 다시 시도해주세요.');
+                    //navigate(-1);
+                }
             }
         }
-      },[reservationRegister, reservationRegister]);
+      },[reservationRegister]);
 
     useEffect(()=>{//결제하기 버튼 유효성
         if(reservationList){

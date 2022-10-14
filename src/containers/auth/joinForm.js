@@ -17,6 +17,9 @@ const JoinForm = () => {
     const [reset, resetCertify] = useState(false); //타이머 리셋
     const [isCheckbox1, setIsCheckbox1] = useState(false);//개인정보 체크박스
     const [isCheckbox2, setIsCheckbox2] = useState(false);//사업정보 체크박스
+    const [firstCheck, setFirstCheck] = useState(false);
+
+    const firstDispatch = useDispatch();
     const dispatch = useDispatch();
 
     const { form, auth, authError } = useSelector(({ auth }) => ({
@@ -27,8 +30,15 @@ const JoinForm = () => {
     }));
     useEffect(() => {
         console.log("I run only Once.");
-        dispatch(initializeForm('join'));
+        firstDispatch(initializeForm('join'));
      }, []);
+
+     useEffect(() => {
+      if(!firstCheck){
+          //console.log("I run only Once.", form);
+          setFirstCheck(true);
+      }
+   }, [firstDispatch]);
 
     const [setInfo , setSetInfo] = useState({ //수정시 저장 state
         email : {
@@ -332,7 +342,7 @@ const JoinForm = () => {
     }, [auth, authError]);
 
     return(
-        <AuthJoinForm type={type} form={form} setInfo={setInfo} onChangeNum={onChangeNum} timerCheck={timerCheck} reTimerCheck={reTimerCheck} menuChange={menuChange}
+        <AuthJoinForm type={type} form={form} setInfo={setInfo} onChangeNum={onChangeNum} timerCheck={timerCheck} reTimerCheck={reTimerCheck} menuChange={menuChange} firstCheck={firstCheck}
         onChange={onChange} onSubmit={onSubmit} onClick={onClick} resetCertify={resetCertify} highFunction1={highFunction1} highFunction2={highFunction2} />
     );
 }
