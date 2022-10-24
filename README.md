@@ -3,8 +3,7 @@
  2. [사용한 기술 스택](#사용한-기술-스택)
  3. [요구사항 및 구현목록](#요구사항-및-구현목록)
  4. [UI 화면](#UI-화면)
- 5. [연동 API 문서](#연동-API-문서) 
- 6. [기획자,개발자 정보](#기획자,개발자-정보)
+ 5. [기획자&개발자 정보](#기획자&개발자-정보)
 <hr />
 
 ### 프로젝트 소개
@@ -18,6 +17,7 @@
  
  스토리보드 : [호텔델루나 스토리 보드](https://github.com/Hotel-Deluna/deluna-front/files/9850748/_._220811_v1.1.pptx)
  
+ 연동 API 문서 : <a href="http://43.200.222.222:8080/swagger-ui/#/member-controller/MemberSignInUsingPOST">Swagger</a>
 <hr />
 
 ### 사용한 기술 스택
@@ -179,11 +179,7 @@
 
 <hr />
 
-### 연동 API 문서
-<a href="http://43.200.222.222:8080/swagger-ui/#/member-controller/MemberSignInUsingPOST">Swagger</a>
-
-
-### 기획자,개발자 정보
+### 기획자&개발자 정보
 
 |Profile|<img src="https://user-images.githubusercontent.com/48265181/197502155-a56f3d2b-6301-41cf-aa65-59e54e253fa9.png" />|<img src="https://user-images.githubusercontent.com/48265181/197502149-8535e32f-3848-4f0a-897f-e4f49fbc8df2.png" />|
 |:---:|:---:|:---:|
