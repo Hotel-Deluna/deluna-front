@@ -3,11 +3,20 @@
  2. [사용한 기술 스택](#사용한-기술-스택)
  3. [요구사항 및 구현목록](#요구사항-및-구현목록)
  4. [UI 화면](#UI-화면(핵심기능))
- 5. 연동 API 문서 
+ 5. [연동 API 문서](#연동-API-문서) 
  6. 개발자 정보
 <hr />
 
 ### 프로젝트 소개
+
+ 호텔델루나 프로젝트는 호텔 예약 플랫폼 개발 프로젝트입니다.
+ 
+ 호텔델루나는 사업자의 경우 호텔 정보를 업로드 및 요청된 예약을 관리하고, 고객은 호텔 정보 조회 및 예약 요청을 할 수 있는 플랫폼입니다.
+ 
+ 참고 사이트 : 아고다, 익스피디아
+ 
+ 스토리 보드 : 
+ 
 <hr />
 
 ### 사용한 기술 스택
@@ -94,7 +103,7 @@
 
 <img width="15px" src="https://user-images.githubusercontent.com/48265181/197480731-ecbb80d8-2af7-4c9d-82af-995aa5e71086.png"/> 예약 취소 : 예약내역 정보 노출 , 취소사유 필수 작성 후 예약취소 기능 구현중
 
-#### [사업자(호텔)]
+#### [고객]
 <img width="15px" src="https://user-images.githubusercontent.com/48265181/197480731-ecbb80d8-2af7-4c9d-82af-995aa5e71086.png"/> 소셜로그인 기능 구현 중(카카오, 네이버, 구글)
 
 <img width="15px" src="https://user-images.githubusercontent.com/48265181/197480734-de78051d-c41e-467f-9505-55913c160ff9.png" /> 메인페이지 : 검색 바 및 지역별 호텔 수 정보 노출 기능 구현완료
@@ -135,8 +144,8 @@
 <img width="15px" src="https://user-images.githubusercontent.com/48265181/197480731-ecbb80d8-2af7-4c9d-82af-995aa5e71086.png" /> 비밀번호 찾기 : email, 이름, 휴대폰 인증 성공 시 해당 email로 비밀번호 재설정 URL+인증코드 발송 기능 구현 중
 
 <img width="15px" src="https://user-images.githubusercontent.com/48265181/197480734-de78051d-c41e-467f-9505-55913c160ff9.png" /> 비밀번호 변경 : 기존 비밀번호가 일치할 시 변경비밀번호로 변경 기능 구현 완료
-<img width="15px" src="https://user-images.githubusercontent.com/48265181/197480734-de78051d-c41e-467f-9505-55913c160ff9.png" /> 회원탈퇴 : 회원탈퇴 사유 선택 후 탈퇴 기능 구현완료
 
+<img width="15px" src="https://user-images.githubusercontent.com/48265181/197480734-de78051d-c41e-467f-9505-55913c160ff9.png" /> 회원탈퇴 : 회원탈퇴 사유 선택 후 탈퇴 기능 구현완료
 <hr />
 
 ### UI 화면(핵심기능)
@@ -166,3 +175,8 @@
 
 7. 사업자(호텔) 객실 등록하기 - 이미지 등록&변경&일괄삭제&개별삭제&순서바꾸기
 <img width="50%" src="https://user-images.githubusercontent.com/48265181/197477991-767d4d68-bc5c-4810-8b33-31bd54714a34.gif" />
+
+<hr />
+
+### 연동 API 문서
+<a href="http://43.200.222.222:8080/swagger-ui/#/member-controller/MemberSignInUsingPOST">Swagger</a>
