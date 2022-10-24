@@ -130,7 +130,8 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
                 alert("호텔 정보 수정이 완료되었습니다.");
                 navigate("/auth/hotel/main");
             }else{ //실패
-                alert("호텔 정보 수정이 실패하였습니다. 잠시 후 다시 이용해주세요.")
+                alert("호텔 정보 수정이 실패하였습니다. 잠시 후 다시 이용해주세요.");
+                navigate("/auth/hotel/main");
             }
         }
     }, [hotel_edit,edit]);
@@ -142,7 +143,14 @@ const HotelInfo = ({hotel_register, hotel_edit, hotel_info, inputValue, hotelSer
                 alert("호텔 등록이 완료되었습니다.")
                 navigate("/auth/hotel/main");
             }else{ //등록 실패
-                alert("호텔 등록이 실패하였습니다. 잠시 후 다시 이용해주세요.")
+                if(register.message){
+                    alert("이미 등록된 호텔입니다.");
+                    navigate("/auth/hotel/main");
+                }else{
+                    alert("호텔 등록이 실패하였습니다. 잠시 후 다시 이용해주세요.");
+                    navigate("/auth/hotel/main");
+                }
+
             }
         }
     }, [hotel_register,register]);

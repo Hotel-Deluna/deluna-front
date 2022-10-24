@@ -168,9 +168,9 @@ const Header = () => {
                                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                                 <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
                                     <Nav>
-                                        <Nav.Link onClick={createToken}>
+                                        {/* <Nav.Link onClick={createToken}>
                                             임시토큰생성
-                                        </Nav.Link>
+                                        </Nav.Link> */}
                                         <Nav.Link onClick={showReservationModal}>
                                             예약내역
                                         </Nav.Link>

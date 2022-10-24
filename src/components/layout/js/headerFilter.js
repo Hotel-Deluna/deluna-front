@@ -143,6 +143,7 @@ function HeaderFilter({search_bar,searchList,headerData}) {
                                 
                                 <InputGroup className="mb-3">
                                     <Form.Control aria-label="FirstDate" type="date"
+                                        min={moment(now).format("YYYY-MM-DD")}
                                         value={startDate}
                                         onChange={handleStartDate}
                                         onClick={() => {
@@ -153,6 +154,7 @@ function HeaderFilter({search_bar,searchList,headerData}) {
                                 </InputGroup>
                                 <InputGroup className="mb-3">
                                     <Form.Control aria-label="LastDate" type="date"
+                                    min={moment(new Date(now.setDate(now.getDate() + 2))).format("YYYY-MM-DD")}
                                     value={endDate}
                                     onChange={handleEndDate}
                                         onClick={() => {
