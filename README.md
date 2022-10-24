@@ -16,7 +16,7 @@
  
  참고 사이트 : 아고다, 익스피디아
  
- 스토리 보드 : 
+ 스토리보드 : [호텔델루나 스토리 보드](https://github.com/Hotel-Deluna/deluna-front/files/9850748/_._220811_v1.1.pptx)
  
 <hr />
 
@@ -185,7 +185,8 @@
 
 ### 기획자,개발자 정보
 
-|로그인 고객|비회원 고객|
-|:---:|:---:|
-|이준표|한예지|
-|2junticket@gmail.com|tpdl5832@naver.com|
+|Profile|<img src="https://user-images.githubusercontent.com/48265181/197502155-a56f3d2b-6301-41cf-aa65-59e54e253fa9.png" />|<img src="https://user-images.githubusercontent.com/48265181/197502149-8535e32f-3848-4f0a-897f-e4f49fbc8df2.png" />|
+|:---:|:---:|:---:|
+|Name|이준표|한예지|
+|Email|2junticket@gmail.com|tpdl5832@naver.com|
+|BranchName|ljp|hyj|
