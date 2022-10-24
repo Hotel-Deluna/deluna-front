@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+### 목차
+ 1. [프로젝트 소개](#프로젝트-소개)
+ 2. [사용한 기술 스택](#사용한-기술-스택)
+ 3. [요구사항 및 구현목록](#요구사항-및-구현목록)
+ 4. [UI 화면](#UI-화면)
+ 5. 연동 API 문서 
+ 6. 개발자 정보
+<hr />
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 프로젝트 소개
 
-## Available Scripts
 
-In the project directory, you can run:
+### 사용한 기술 스택
+#### IDE
 
-### `npm start`
+  <img src="https://img.shields.io/badge/Visual Studio Code-007ACC?style=flat&logo=Visual Studio Code&logoColor=white"/>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### Front-End Programming Languages
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white"/> <img src="https://img.shields.io/badge/SASS(SCSS)-CC6699?style=flat&logo=sass&logoColor=white"/> <img src="https://img.shields.io/badge/JavaScript(ES8)-F7DF1E?style=flat&logo=javascript&logoColor=white"/> <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/BootStrap-7952B3?style=flat&logo=bootstrap&logoColor=white"/>
+  
+#### 소프트웨어
+  
+  <img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=Node.js&logoColor=white"/>
+ 
+#### 형상관리
+  
+  <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white"/>
+ 
+#### 클라우드
+  
+  <img src="https://img.shields.io/badge/Amazon aws-232F3E?style=flat&logo=Amazon aws&logoColor=white"/>
 
-### `npm test`
+#### State Management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+  <img src="https://img.shields.io/badge/Redux-764ABC?style=flat&logo=redux&logoColor=white"/> <img src="https://img.shields.io/badge/ReduxSaga-999999?style=flat&logo=Redux-Saga&logoColor=white"/>
+  
+#### 라이브러리
+  * axios : 0.27.2
+  * react-bootstrap : 2.5.0
+  * Data-fns : 2.29.3
+  * immer : 9.0.15
+  * Immutable : 4.1.0
+  * jwt-decode : 3.1.2
+  * moment : 2.29.4
+  * React-datepicker : 4.8.0
+  * React-daum-postcode : 3.1.1
+  * react-grid-dnd : 2.1.2
+  * react-intersection-observer : 9.4.0
+  * React-icons : 4.4.0
+  * React-kakao-login : 2.1.1
+  * React-kakao-maps-sdk : 1.1.3
+  * React-login-by-naver : 0.1.8
+  * react-router-dom : 6.3.0
+  * react-redux : 8.0.2
+  * redux :4.2.0
+  * redux-saga : 1.2.1
+  * @react-oauth/google : 0.2.8
+  
+### UI 화면
+1. 로그인 고객 & 비로그인 고객 메인페이지
+  <img width="50%" src="https://user-images.githubusercontent.com/48265181/197466752-b1512c48-f3e7-4546-b305-f2ca0385562b.png" />
