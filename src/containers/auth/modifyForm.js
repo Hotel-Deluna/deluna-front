@@ -71,12 +71,12 @@ function ModifyForm(props) {
     setFirstCheck(true);
     //dispatch(initializeForm('modify'));
    
-    if(props.type === '0'){//고객
+    if(props.type === 1){//고객
       console.log(selectForm, '고객조회');
       dispatch(userSelect());
       
     }
-    if(props.type === '1'){//사업자
+    if(props.type === 2){//사업자
       console.log(selectForm, '사업자조회');
       dispatch(partnerSelect());
     }

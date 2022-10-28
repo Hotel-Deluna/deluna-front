@@ -37,7 +37,7 @@ const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onCh
                     </Col>
                     }
                 </Row>
-                {type === '0' 
+                {type === 1
                 ? <Row className="align-items-center mb-3">
                     {/* 이름 input창 */}
                     <Col sm = {12}>
@@ -63,7 +63,7 @@ const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onCh
                     </Col>
                 </Row>
                 </>)}
-                {type === '1' && (
+                {type === 1 && (
                     <Row className="align-items-center mb-3">
                         <Col sm={8}>
                             <FloatingLabel controlId="businessNum" label="사업자등록번호">
@@ -130,7 +130,7 @@ const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onCh
                     <Row className="align-items-center mb-3">
                         <Col sm = {12}>
                             {/* 개인정보/기업정보 약관동의 checkbox */}
-                            {type === '1' ? <JoinCheck value={type} getDataCheckbox1={highFunction1} />
+                            {type === 2 ? <JoinCheck value={type} getDataCheckbox1={highFunction1} />
                             :
                             <JoinCheck value={type} getDataCheckbox1={highFunction1} getDataCheckbox2={highFunction2} />}
                         </Col>

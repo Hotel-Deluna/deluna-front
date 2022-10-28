@@ -18,9 +18,9 @@ const AuthJoinForm = ({type ,form, setInfo, menuChange, onChangeNum, timerCheck,
     return(
         <>
         {firstCheck && (
-            <Tabs defaultActiveKey='user' onSelect={(e) => menuChange(type === '0' ? '1' : '0', e)} id="justify-tab-example" justify>
+            <Tabs defaultActiveKey='user' onSelect={(e) => menuChange(type === 1 ? 2 : 1, e)} id="justify-tab-example" justify>
             <Tab eventKey="user" title={'고객 회원가입'}>
-            {type === '0' &&(
+            {type === 1 &&(
                 <Container style={FormContainer} className="joinMainCountainer" fluid="xxl">
                 <AuthCommonForm page={'join'} type={type} form={form} setInfo={setInfo} onChangeNum={onChangeNum} timerCheck={timerCheck} reTimerCheck={reTimerCheck} 
                     onChange={onChange} onSubmit={onSubmit} onClick={onClick} resetCertify={resetCertify} highFunction1={highFunction1} />
@@ -29,7 +29,7 @@ const AuthJoinForm = ({type ,form, setInfo, menuChange, onChangeNum, timerCheck,
                 
             </Tab>
             <Tab eventKey="partner" title={'사업자 회원가입'}>
-            {type === '1' && (
+            {type === 2 && (
                 <Container style={FormContainer} className="joinMainCountainer" fluid="xxl">
                 <AuthCommonForm page={'join'} type={type} form={form} setInfo={setInfo} onChangeNum={onChangeNum} timerCheck={timerCheck} reTimerCheck={reTimerCheck}
                     onChange={onChange} onSubmit={onSubmit} onClick={onClick} resetCertify={resetCertify} highFunction1={highFunction1} highFunction2={highFunction2} />

@@ -10,7 +10,7 @@ import axios from "axios";
  * 
  */
 const JoinForm = () => {
-    const [type, setType] = useState('0');//고객- 0, 사업자-1 
+    const [type, setType] = useState(1);//고객- 1, 사업자-2
     const [timerCheck, setTimerCheck] = useState(false);
     const [reTimerCheck, setReTimerCheck] = useState(0);
     const [requestPhoneNum, setRequestPhoneNum] = useState('');//인증요청한 번호
@@ -73,7 +73,7 @@ const JoinForm = () => {
     
     const menuChange = (type, e) => {
         console.log(type, e);
-        if((type === '1' && e === 'partner') || (type === '0' && e === 'user')){
+        if((type === 2 && e === 'partner') || (type === 1 && e === 'user')){
             setType(type);
             dispatch( resetField({ form : 'join',key : 'email' }));
             dispatch( resetField({ form : 'join',key : 'password' }));
@@ -201,18 +201,23 @@ const JoinForm = () => {
     }
   const onClick = (e) => {
     const {name} = e.currentTarget;
-    console.log(name);
+    console.log(name, form.email, type);
     if(name === 'emailBtn'){
         axios.post('http://43.200.222.222:8080/common/email/duplicate-check',{
             email: form.email,
             role : type
         }).then((res) =>{
-            console.log(res);
+          console.log(res);
+          if(res.data.result === 'OK'){
             if(res.data.data){ //중복일때
-                setSetInfo((state) => ({...state,'email' : {...state.email,'btnCheck' : 1, 'msg' : '중복된 아이디 입니다. 다시 입력해주세요.'}}));
+              setSetInfo((state) => ({...state,'email' : {...state.email,'btnCheck' : 1, 'msg' : '중복된 아이디 입니다. 다시 입력해주세요.'}}));
             }else{// 중복이 아닐때
-                setSetInfo((state) => ({...state,'email' : {...state.email,'btnCheck' : 2, 'msg' : ''}}));
+              setSetInfo((state) => ({...state,'email' : {...state.email,'btnCheck' : 2, 'msg' : ''}}));
             }
+          }else{
+            alert('이메일 중복확인에 실패하셨습니다.')
+          }
+            
         });
     }else if(name === 'businessBtn'){//사업자번호 확인요청 버튼 시
         axios.post('http://43.200.222.222:8080/',{}).then((res) =>{
@@ -314,7 +319,7 @@ const JoinForm = () => {
         //business_num, email, name, opening_day, password, phone_num 순서
         //console.log('submit', form.business_num, form.email,form.name, form.opening_day,form.password, form.phone_num);
         e.preventDefault();
-        if(type === '0'){
+        if(type === 1){
             const {email, name, password, phone_num} = form;
             dispatch(userJoin({ email, name, password, phone_num}));
         }else{

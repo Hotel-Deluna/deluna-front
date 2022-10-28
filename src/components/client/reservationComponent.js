@@ -85,7 +85,7 @@ const ReservationComponent = (props) => {
                                 <Row>
                                     <Col xs={11} sm={11} md={11}></Col>
                                     <Col xs={1} sm={1} md={1} style={{textAlign: 'right', fontSize : '1rem', paddingTop: '0.2rem'}}>
-                                        <CloseButton name={'closeBtn_'+reservationIdx} onClick={props.handleClickl} />
+                                        <CloseButton name={'closeBtn_'+reservationIdx} onClick={props.handleClick} />
                                     </Col>
                                 </Row>
                         ))}
