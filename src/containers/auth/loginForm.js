@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 */
 
 const Login =(props) => {
-    //console.log(role);
+    ////console.log(role);
     const [errCount, setErrCount] = useState(0);
     const [autoLogin, setAutoLogin] = useState(false);
     const [type, setType] = useState('1');//고객- 1, 사업자-2 
@@ -24,9 +24,9 @@ const Login =(props) => {
     const dispatch = useDispatch();
      //  //첫 렌더링 시 폼 초기화
      useEffect(() => {
-        console.log('first');
+        ////console.log('first');
         // function start(){
-        //     console.log('start');
+        //     //console.log('start');
         //     gapi.client.init({
         //         GOOGLE_CLIENT_ID,
         //         scope: 'profile email https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
@@ -34,27 +34,29 @@ const Login =(props) => {
         // }
 
         // gapi.load('client:auth2', start);
-        // console.log("I run only Once.");
+        // //console.log("I run only Once.");
         firstDispatch(initializeForm('login'));
      }, []);
      
 
-     const { form, auth, authError } = useSelector(({ auth }) => ({
+     const { form, auth, authError, authSocialLogin, authSocialLoginError } = useSelector(({ auth }) => ({
         form: auth.login,
         auth : auth.auth,
-        authError : auth.authError
+        authError : auth.authError,
+        authSocialLogin : auth.authSocialLogin,
+        authSocialLoginError : auth.authSocialLoginError
     }));
 
     useEffect(() => {
         if(!firstCheck){
-            //console.log("I run only Once.", form);
+            ////console.log("I run only Once.", form);
             setFirstCheck(true);
         }
      }, [firstDispatch]);
 
 
     const menuChange = (type, e) => {
-        console.log(type, e);
+        //console.log(type, e);
         if((type === '2' && e === 'partner') || (type === '1' && e === 'user')){
             setType(type);
             dispatch( resetField({ form : 'login',key : 'email' }));
@@ -70,11 +72,11 @@ const Login =(props) => {
     }
 
    
-    //console.log('form', form);
+    ////console.log('form', form);
 
     const onChange = e =>{
         const {name, value} = e.target;
-        ////console.log(name, value);
+        //////console.log(name, value);
         dispatch(
             changeField({
                 form : 'login',
@@ -91,7 +93,7 @@ const Login =(props) => {
         );
     }
     const onCheck =(checked)=> {
-        ////console.log(checked);
+        //////console.log(checked);
         setAutoLogin(checked);
     }
    
@@ -106,9 +108,9 @@ const Login =(props) => {
         if(!mailCheck.test(form.email) && !pwCheck.test(form.password)){ setErrCount(3) }
        
         if(mailCheck.test(form.email) && pwCheck.test(form.password)){//정규식통과시 로그인 api연동
-             //console.log(form.email, form.password, form.role);
+             ////console.log(form.email, form.password, form.role);
              const { email,  password, role } = form;
-             console.log(email, password, role);
+             //console.log(email, password, role);
              dispatch(login({ email, password, role }));
         }
     }
@@ -129,13 +131,13 @@ const Login =(props) => {
             if(authError){
                 //에러
                 //alert('실패!');
-                console.log(authError);
+                //console.log(authError);
                 return;
             }
             if(auth){
-                //console.log('로그인성공');
+                ////console.log('로그인성공');
                 //토큰값 받아오기
-                console.log(auth);
+                //console.log(auth);
                 //navigate('/');
                 //window.location.href = "./auth/token/login";
                 if(auth.data.result === 'OK'){
@@ -145,7 +147,7 @@ const Login =(props) => {
                     localStorage.setItem('role',auth.data.role);
                     localStorage.setItem('email',auth.data.email);
                     //dispatch(initializeForm('login'));
-                    console.log(auth.headers.authorization,auth.data.role, auth.data.email);
+                    //console.log(auth.headers.authorization,auth.data.role, auth.data.email);
                     if(auth.data.role === 2){
                         navigate('/auth/hotel/main');
                     }else{
@@ -158,13 +160,13 @@ const Login =(props) => {
                         
                     }
                 }else{
-                    console.log('아이디 비밀번호 error', auth);
+                    //console.log('아이디 비밀번호 error', auth);
                     alert('아이도 또는 비밀번호가 틀립니다. 다시 입력해주세요.');
                 }
                 
-                //console.log(auth.headers.authorization,auth.data.role, auth.data.email);
-                //console.log('refresh',auth.headers.authorization);
-                //console.log(localStorage.getItem('accessToken'),localStorage.getItem('refreshToken'),localStorage.getItem('role'),localStorage.getItem('email'));
+                ////console.log(auth.headers.authorization,auth.data.role, auth.data.email);
+                ////console.log('refresh',auth.headers.authorization);
+                ////console.log(localStorage.getItem('accessToken'),localStorage.getItem('refreshToken'),localStorage.getItem('role'),localStorage.getItem('email'));
                 // if(autoLogin){//자동로그인 체크한경우에만
                 //     const refreshtoken = 'refreshToken';//data["refreshToken"];//자동로그인
                 //     localStorage.setItem('refreshtoken', refreshtoken);
@@ -174,7 +176,39 @@ const Login =(props) => {
         }
         
     }, [auth, authError]);
-
+    useEffect(() => {
+        if(firstCheck){
+            if(authSocialLoginError){
+                //에러
+                //alert('실패!');
+                console.log(authSocialLoginError);
+                return;
+            }
+            if(authSocialLogin){
+                if(authSocialLogin.data.result === 'OK'){
+                    console.log('aa');
+                    localStorage.clear();
+                    localStorage.setItem('accessToken',auth.headers.authorization);
+                    localStorage.setItem('refreshToken',auth.headers.refreshtoken);
+                    localStorage.setItem('role',auth.data.role);
+                    localStorage.setItem('email',auth.data.email);
+                    //dispatch(initializeForm('login'));
+                    //console.log(auth.headers.authorization,auth.data.role, auth.data.email);
+                    if(authSocialLogin.data.role === 2){
+                        navigate('/auth/hotel/main');
+                    }else{
+                        if(props.page === 0){
+                            navigate('/');
+                        }else{
+                            props.setLoginCheck(1);
+                            props.closeOnClick();
+                        }
+                        
+                    }
+                }
+            }
+        }
+        }, [authSocialLogin, authSocialLoginError]);
     return(
         <>
         {/* <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}> */}

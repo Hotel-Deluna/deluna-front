@@ -72,12 +72,12 @@ function ModifyForm(props) {
     //dispatch(initializeForm('modify'));
    
     if(props.type === 1){//고객
-      console.log(selectForm, '고객조회');
+      //console.log(selectForm, '고객조회');
       dispatch(userSelect());
       
     }
     if(props.type === 2){//사업자
-      console.log(selectForm, '사업자조회');
+      //console.log(selectForm, '사업자조회');
       dispatch(partnerSelect());
     }
     
@@ -88,32 +88,32 @@ function ModifyForm(props) {
     if(firstCheck){
       if(authSelect){
         //데이터 뽑아내기 
-        dispatch(changeField({ form : 'modify', key : 'email', value : authSelect.email}));
-        dispatch(changeField({ form : 'modify', key : 'name', value : authSelect.name}));
+        dispatch(changeField({ form : 'modify', key : 'email', value : authSelect.data.email}));
+        dispatch(changeField({ form : 'modify', key : 'name', value : authSelect.data.name}));
         
-        let phoneNum = authSelect.phone_num;
+        let phoneNum = authSelect.data.phone_num;
         phoneNum = phoneNum.length === 10 ? phoneNum.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3') :  phoneNum.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-        dispatch(changeField({ form : 'modify', key : 'phone_num', value :  authSelect.phone_num}));
+        dispatch(changeField({ form : 'modify', key : 'phone_num', value :  authSelect.data.phone_num}));
         
-        let businessNum = authSelect.business_num !== undefined && authSelect.business_num;
-        businessNum = authSelect.business_num !== undefined ? businessNum.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3') : '';
-        authSelect.business_num !== undefined && dispatch(changeField({ form : 'modify', key : 'business_num', value :  businessNum}));
+        let businessNum = authSelect.data.business_num !== undefined && authSelect.data.business_num;
+        businessNum = authSelect.data.business_num !== undefined ? businessNum.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3') : '';
+        authSelect.data.business_num !== undefined && dispatch(changeField({ form : 'modify', key : 'business_num', value :  businessNum}));
   
-         let openingDay = authSelect.opening_day !== undefined &&  authSelect.opening_day;
-         openingDay = authSelect.opening_day !== undefined ? openingDay.replace(/\T.*/,'') : '';
-        authSelect.opening_day !== undefined && dispatch(changeField({ form : 'modify', key : 'opening_day', value :  openingDay}));
+         let openingDay = authSelect.data.opening_day !== undefined &&  authSelect.data.opening_day;
+         openingDay = authSelect.data.opening_day !== undefined ? openingDay.replace(/\T.*/,'') : '';
+        authSelect.data.opening_day !== undefined && dispatch(changeField({ form : 'modify', key : 'opening_day', value :  openingDay}));
         
-        console.log(phoneNum, businessNum);
-        authSelect.business_num !== undefined ? setSetInfo((state) => ({...state,'phoneNum' : {...state.phoneNum, 'value' : phoneNum},'businessNum' : {...state.businessNum, 'value' : businessNum}}))
+        //console.log(phoneNum, businessNum);
+        authSelect.data.business_num !== undefined ? setSetInfo((state) => ({...state,'phoneNum' : {...state.phoneNum, 'value' : phoneNum},'businessNum' : {...state.businessNum, 'value' : businessNum}}))
         : setSetInfo((state) => ({...state,'phoneNum' : {...state.phoneNum, 'value' : phoneNum}}));
-        setSetInfo((state) => ({...state,'phone_auth_num' : {...state.phone_auth_num, 'original_value' : authSelect.phone_auth_num}}));
+        setSetInfo((state) => ({...state,'phone_auth_num' : {...state.phone_auth_num, 'original_value' : authSelect.data.phone_auth_num}}));
         //dispatch(resetResponse({ key : 'authSelect'}));
-        //console.log('데이터 들어갔니',form);
+        ////console.log('데이터 들어갔니',form);
       }
       if(authSelectError){
         if(authSelectError !== null){
           alert('잠시후 다시 시도해주세요.');
-          console.log(authSelectError);
+          //console.log(authSelectError);
           //authSelectError초기화
           dispatch(resetResponse({ key : 'authSelectError'}));
           props.setIsModalOpen(false);
@@ -135,7 +135,7 @@ function ModifyForm(props) {
 
 const onChange = e => {//그외
   const {name, value} = e.currentTarget;
-  console.log(name, value);
+  //console.log(name, value);
   if(name === 'name'){//성명,사업자명 바꿀때
     const nameCheck1 = /^[ㄱ-ㅎ|가-힣]{0,17}$/;//한글만 입력되게
     if(nameCheck1.test(value)){
@@ -146,7 +146,7 @@ const onChange = e => {//그외
       }else{
         setSetInfo((state) => ({...state,'name' : {...state.name,'isCheck' : false}}));
       }
-      if(authSelect.name === value){ //기존정보와 동일한지
+      if(authSelect.data.name === value){ //기존정보와 동일한지
         setSetInfo((state) => ({...state,'name' : {...state.name,'isSame' : true}}));
       }else{
         setSetInfo((state) => ({...state,'name' : {...state.name,'isSame' : false}}));
@@ -160,8 +160,8 @@ const onChange = e => {//그외
     }else{
       setSetInfo((state) => ({...state, 'opening_day' : {'isCheck' : false}}));
     }
-    let openingDay = authSelect.opening_day !== undefined &&  authSelect.opening_day;
-    openingDay = authSelect.opening_day !== undefined ? openingDay.replace(/\T.*/,'') : '';
+    let openingDay = authSelect.data.opening_day !== undefined &&  authSelect.data.opening_day;
+    openingDay = authSelect.data.opening_day !== undefined ? openingDay.replace(/\T.*/,'') : '';
     if(openingDay === value){//기존정보와 동일한지
       setSetInfo((state) => ({...state, 'opening_day' : {'isSame' : true}}));
     }else{
@@ -172,7 +172,7 @@ const onChange = e => {//그외
 
   const onChangeNum = e => {//번호에 하이픈 들어가는 input창
     let {name, value} = e.currentTarget;
-    console.log(name, value);
+    //console.log(name, value);
     if(name === 'phoneNum'){//휴대폰번호입력시
       let regCheck = /^[0-9\b -]{0,13}$/;
         if(regCheck.test(value)){// 숫자입력시에만 Input에 들어감
@@ -187,7 +187,7 @@ const onChange = e => {//그외
         }else{
           setSetInfo((state) => ({...state, 'phoneNum' : {...state.phoneNum,'isCheck' : false,'value' : value, 'msg' : '휴대폰번호를 정확히 입력하세요.'}}));
         }
-        if(authSelect.phone_num === value.replace(/-/g, '')){//기존정보와 동일한지
+        if(authSelect.data.phone_num === value.replace(/-/g, '')){//기존정보와 동일한지
           setSetInfo((state) => ({...state, 'phoneNum' : {...state.phoneNum,'isSame' : true, 'msg' : ''}}));
           setTimerCheck(false);
           setRequestPhoneNum('');
@@ -211,7 +211,7 @@ const onChange = e => {//그외
             }
             setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'isCheck' : false}}));
           }
-          if(authSelect.business_num === value.replace(/-/g, '')){//기존정보와 동일한지
+          if(authSelect.data.business_num === value.replace(/-/g, '')){//기존정보와 동일한지
             setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'isSame' : true, 'msg' : ''}}));
           }else{
             setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'isSame' : false}}));
@@ -221,7 +221,7 @@ const onChange = e => {//그외
       let certifyCheck = /[(0-9)]{6}$/;
       dispatch( changeField({ form : 'modify', key : 'phone_auth_num', value : value}));
       if(certifyCheck.test(value)){
-        console.log(value);
+        //console.log(value);
         setSetInfo((state) => ({...state, 'phone_auth_num' : {...state.phone_auth_num,'isCheck' : true}}));
       }else{
           setSetInfo((state) => ({...state, 'phone_auth_num' : {...state.phone_auth_num,'isCheck' : false}}));
@@ -230,11 +230,12 @@ const onChange = e => {//그외
   }
   const onClick = (e) => {
     const {name} = e.currentTarget;
-    console.log(name);
+    //console.log(name);
     if(name === 'businessBtn'){//사업자번호 확인요청 버튼 시
-      axios.post('http://43.200.222.222:8080/',{
+      axios.post('http://43.200.222.222:8080/owner/verify',{
         }).then((res) =>{
-            if(!res.data.data){ //조회완료
+          if(res.data.result === 'OK'){
+            if(res.data.data){ //조회완료
                 setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'btnCheck' : 2}}));
                 dispatch(
                     changeField({
@@ -258,18 +259,21 @@ const onChange = e => {//그외
               setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'btnCheck' : 1}}));
                 alert('등록된 정보가 없습니다. 사업주명, 사업자등록번호, 개업일자를 다시 선택해주세요.');
             }
+          }else{
+            alert('사업자 진위여부 실패');
+          }
         })
     }
     else if(name === 'phoneBtn'){//인증번호요청 버튼시
       //timers.current.startTimer(); 
       if(requestPhoneNum === ''){//최초승인요청시
-        console.log('aa');
+        //console.log('aa');
         if(form.phone_auth_num !== '') {dispatch(changeField({ form : 'modify', key : 'phone_auth_num', value : ''}));}//인증번호iput 초기화
           setRequestPhoneNum(setInfo.phoneNum.value.replace(/\-/g,''));
           axios.post('http://43.200.222.222:8080/common/phone/auth/request',{
           phone_num: setInfo.phoneNum.value.replace(/\-/g,'')
           }).then((res) => {
-            console.log(res.data.result);
+            //console.log(res.data.result);
               if(res.data.result === "OK"){ //성공
                 setSetInfo((state) => ({...state, 'phoneNum' : {...state.phoneNum, 'btnCheck' : 2, 'msg' : '입력하신 번호로 문자가 발송되었습니다'}}));
                 setTimerCheck(true);//timer시작
@@ -296,8 +300,8 @@ const onChange = e => {//그외
         auth_num : form.phone_auth_num, 
         phone_num : requestPhoneNum
         }).then((res) => {
-            console.log('인증확인', res.data.result);
-            if(res.data.result === "OK"){ //성공
+            //console.log('인증확인', res.data.result);
+            if(res.data.data){ //성공
               alert('인증이 완료되었습니다.');
               setTimerCheck(false);//타이머종료
               setSetInfo((state) => ({...state, 'phoneNum' : {...state.phoneNum, 'msg' : ''}}));
@@ -352,7 +356,7 @@ const onChange = e => {//그외
             changeField({
                 form : 'modify',
                 key : 'form',
-                value : authSelect.phone_auth_num
+                value : authSelect.data.phone_auth_num
             })
           );
         }
@@ -388,7 +392,7 @@ const onChange = e => {//그외
     if(authModifyError){
       if(authModifyError !== null){
         alert('수정에 실패하였습니다. 잠시후 다시 시도해주세요.');
-        console.log(authModifyError);
+        //console.log(authModifyError);
         dispatch(resetResponse({ key : 'authSelect'}));
         dispatch(resetResponse({ key : 'authModifyError'}));
         props.setIsModalOpen(false);
@@ -397,7 +401,7 @@ const onChange = e => {//그외
     if(authModify){
       if(authModify !== null){
         alert('수정 완료하였습니다.')
-        console.log(authModify);
+        //console.log(authModify);
         //authModify = null;
         dispatch(resetResponse({ key : 'authSelect'}));
         dispatch(resetResponse({ key : 'authModify'}));

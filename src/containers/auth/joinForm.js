@@ -29,13 +29,13 @@ const JoinForm = () => {
 
     }));
     useEffect(() => {
-        console.log("I run only Once.");
+        ////console.log("I run only Once.");
         firstDispatch(initializeForm('join'));
      }, []);
 
      useEffect(() => {
       if(!firstCheck){
-          //console.log("I run only Once.", form);
+          ////console.log("I run only Once.", form);
           setFirstCheck(true);
       }
    }, [firstDispatch]);
@@ -48,6 +48,15 @@ const JoinForm = () => {
         },
         name : {
             isCheck : false
+        },
+        password : {
+          msg: '',
+          isCheck : false//유효성통과 시 -true
+        },
+        passwordCheck : {
+          value : '',
+          isCheck : false,//유효성통과 시 -true
+          msg : ''
         },
         businessNum : {
             value : '',
@@ -72,7 +81,7 @@ const JoinForm = () => {
     });
     
     const menuChange = (type, e) => {
-        console.log(type, e);
+        ////console.log(type, e);
         if((type === 2 && e === 'partner') || (type === 1 && e === 'user')){
             setType(type);
             dispatch( resetField({ form : 'join',key : 'email' }));
@@ -90,6 +99,15 @@ const JoinForm = () => {
                 },
                 name : {
                     isCheck : false
+                },
+                password : {
+                  msg: '',
+                  isCheck : false//유효성통과 시 -true
+                },
+                passwordCheck : {
+                  value : '',
+                  isCheck : false,//유효성통과 시 -true
+                  msg : ''
                 },
                 businessNum : {
                     value : '',
@@ -122,7 +140,7 @@ const JoinForm = () => {
     }
     const onChange = e => {//그외
         const {name, value} = e.currentTarget;
-        console.log(name, value);
+        ////console.log(name, value);
         if(name === 'email'){
             if(setInfo.email.isCheck){
                 setSetInfo((state) => ({...state,'email' : {...state.email,'isCheck' : false}}));
@@ -153,6 +171,27 @@ const JoinForm = () => {
             }else{
                 setSetInfo((state) => ({...state, 'opening_day' : {'isCheck' : false}}));
             }
+        }else if(name === 'pwd'){
+          dispatch(changeField({ form : 'join', key : 'password', value : value}));
+          setSetInfo((state) => ({...state,'passwordCheck' : {...state.passwordCheck,'value' : ''}}));
+          setSetInfo((state) => ({...state,'passwordCheck' : {...state.passwordCheck,'isCheck' : false}}));
+          const pwCheck = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/; //비밀번호정규식 - 8~15자리이내
+          if(pwCheck.test(value)){//정규식 통과 시
+            setSetInfo((state) => ({...state,'password' : {...state.password,'msg' : '해당 비밀번호 사용 가능합니다.'}}));
+            setSetInfo((state) => ({...state,'password' : {...state.password,'isCheck' : true}}));
+          }else{
+            setSetInfo((state) => ({...state,'password' : {...state.password,'msg' : '숫자, 영문 대or소문자, 특수문자 포함 8자리 이상 15자리 이하로 입력해주세요.'}}));
+            setSetInfo((state) => ({...state,'password' : {...state.password,'isCheck' : false}}));
+          }
+        }else if(name === 'pwdcheck'){
+          setSetInfo((state) => ({...state,'passwordCheck' : {...state.passwordCheck,'value' : value}}));
+          if(form.password === value){
+            setSetInfo((state) => ({...state,'passwordCheck' : {...state.passwordCheck,'isCheck' : true}}));
+            setSetInfo((state) => ({...state,'passwordCheck' : {...state.passwordCheck,'msg' : '비밀번호와 일치합니다.'}}));
+          }else{
+            setSetInfo((state) => ({...state,'passwordCheck' : {...state.passwordCheck,'isCheck' : false}}));
+            setSetInfo((state) => ({...state,'passwordCheck' : {...state.passwordCheck,'msg' : '비밀번호와 일치하지않습니다.'}}));
+          }
         }
     }
     const onChangeNum = e => {//번호에 하이픈 들어가는 input창
@@ -192,7 +231,7 @@ const JoinForm = () => {
           let certifyCheck = /[(0-9)]{6}$/;
           dispatch( changeField({ form : 'join', key : 'phone_auth_num', value : value}));
           if(certifyCheck.test(value)){
-            console.log(value);
+            ////console.log(value);
             setSetInfo((state) => ({...state, 'phone_auth_num' : {...state.phone_auth_num,'isCheck' : true}}));
           }else{
               setSetInfo((state) => ({...state, 'phone_auth_num' : {...state.phone_auth_num,'isCheck' : false}}));
@@ -201,13 +240,13 @@ const JoinForm = () => {
     }
   const onClick = (e) => {
     const {name} = e.currentTarget;
-    console.log(name, form.email, type);
+    //console.log(name, form.email, type);
     if(name === 'emailBtn'){
         axios.post('http://43.200.222.222:8080/common/email/duplicate-check',{
             email: form.email,
             role : type
         }).then((res) =>{
-          console.log(res);
+          //console.log(res);
           if(res.data.result === 'OK'){
             if(res.data.data){ //중복일때
               setSetInfo((state) => ({...state,'email' : {...state.email,'btnCheck' : 1, 'msg' : '중복된 아이디 입니다. 다시 입력해주세요.'}}));
@@ -220,43 +259,48 @@ const JoinForm = () => {
             
         });
     }else if(name === 'businessBtn'){//사업자번호 확인요청 버튼 시
-        axios.post('http://43.200.222.222:8080/',{}).then((res) =>{
-            if(!res.data.data){ //조회완료
-                setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'btnCheck' : 2}}));
-                dispatch(
-                    changeField({
-                        form : 'partner',
-                        key : 'name',
-                        value : form.name
-                    },
-                    {
-                        form : 'partner',
-                        key : 'business_num',
-                        value : setInfo.businessNum.value.replace(/-/g, '')
-                    },
-                    {
-                        form : 'partner',
-                        key : 'opening_day',
-                        value : form.opening_day
-                    })
-                );
-                
+        axios.post('http://43.200.222.222:8080/owner/verify',{}).then((res) =>{
+          if(res.data.result === 'OK'){
+            if(res.data.data){ //조회완료
+              setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'btnCheck' : 2}}));
+              dispatch(
+                  changeField({
+                      form : 'partner',
+                      key : 'name',
+                      value : form.name
+                  },
+                  {
+                      form : 'partner',
+                      key : 'business_num',
+                      value : setInfo.businessNum.value.replace(/-/g, '')
+                  },
+                  {
+                      form : 'partner',
+                      key : 'opening_day',
+                      value : form.opening_day
+                  })
+              );
+              
             }else{// 조회실패
               setSetInfo((state) => ({...state, 'businessNum' : {...state.businessNum,'btnCheck' : 1}}));
                 alert('등록된 정보가 없습니다. 사업주명, 사업자등록번호, 개업일자를 다시 선택해주세요.');
             }
+          }else{
+            alert('사업자 진위여부 실패');
+          }
+            
         })
     }
     else if(name === 'phoneBtn'){//인증번호요청 버튼시
       //timers.current.startTimer(); 
       if(requestPhoneNum === ''){//최초승인요청시
-        console.log('aa');
+        //console.log('aa');
         if(form.phone_auth_num !== '') {dispatch(changeField({ form : 'join', key : 'phone_auth_num', value : ''}));}//인증번호iput 초기화
           setRequestPhoneNum(setInfo.phoneNum.value.replace(/\-/g,''));
           axios.post('http://43.200.222.222:8080/common/phone/auth/request',{
           phone_num: setInfo.phoneNum.value.replace(/\-/g,'')
           }).then((res) => {
-            //console.log(res.data.result);
+            ////console.log(res.data.result);
               if(res.data.result === "OK"){ //성공
                 setSetInfo((state) => ({...state, 'phoneNum' : {...state.phoneNum, 'btnCheck' : 2, 'msg' : '입력하신 번호로 문자가 발송되었습니다'}}));
                 setTimerCheck(true);//timer시작
@@ -283,8 +327,8 @@ const JoinForm = () => {
         auth_num : form.phone_auth_num, 
         phone_num : requestPhoneNum
         }).then((res) => {
-            console.log('인증확인', res.data.result);
-            if(res.data.result === "OK"){ //성공
+            //console.log('인증확인', res.data.result);
+            if(res.data){ //성공
               alert('인증이 완료되었습니다.');
               setTimerCheck(false);//타이머종료
               setSetInfo((state) => ({...state, 'phoneNum' : {...state.phoneNum, 'msg' : ''}}));
@@ -317,8 +361,8 @@ const JoinForm = () => {
    
     const onSubmit = e => {
         //business_num, email, name, opening_day, password, phone_num 순서
-        //console.log('submit', form.business_num, form.email,form.name, form.opening_day,form.password, form.phone_num);
-        e.preventDefault();
+        ////console.log('submit', form.business_num, form.email,form.name, form.opening_day,form.password, form.phone_num);
+        //e.preventDefault();
         if(type === 1){
             const {email, name, password, phone_num} = form;
             dispatch(userJoin({ email, name, password, phone_num}));
@@ -331,15 +375,15 @@ const JoinForm = () => {
     useEffect(() => {
         if(authError){
             //에러
-            console.log(authError);
-            console.log('회원가입실패');
+            //console.log(authError);
+            //console.log('회원가입실패');
             dispatch(resetResponse({ key : 'auth'}));
             dispatch(resetResponse({ key : 'authError'}));
             return;
         }
         if(auth){
-            console.log('회원가입성공');
-            console.log(auth);
+            //console.log('회원가입성공');
+            //console.log(auth);
             dispatch(resetResponse({ key : 'auth'}));
             dispatch(resetResponse({ key : 'authError'}));
             window.location.href = "./login";
@@ -348,7 +392,7 @@ const JoinForm = () => {
 
     return(
         <AuthJoinForm type={type} form={form} setInfo={setInfo} onChangeNum={onChangeNum} timerCheck={timerCheck} reTimerCheck={reTimerCheck} menuChange={menuChange} firstCheck={firstCheck}
-        onChange={onChange} onSubmit={onSubmit} onClick={onClick} resetCertify={resetCertify} highFunction1={highFunction1} highFunction2={highFunction2} />
+        onChange={onChange} onSubmit={onSubmit} onClick={onClick} resetCertify={resetCertify} highFunction1={highFunction1} highFunction2={highFunction2} isCheckbox1={isCheckbox1} isCheckbox2 = {isCheckbox2} />
     );
 }
 

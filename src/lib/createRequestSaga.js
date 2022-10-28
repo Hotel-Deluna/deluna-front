@@ -23,7 +23,7 @@ export default function createRequestSaga(type, request) {
       //console.log("response", response);
       //console.log("header", header);
       console.log();
-      if(action.type === 'auth/LOGIN'){
+      if(action.type === 'auth/LOGIN' || action.type === 'auth/SOCIALLOGIN'){
         yield put({
           type: SUCCESS,
           payload: response

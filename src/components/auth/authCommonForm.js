@@ -6,7 +6,7 @@ import { Container, Row, Col,Form, FloatingLabel, Button } from "react-bootstrap
 import "./css/authForm.scss";
 import { setIn } from "immutable";
 
-const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onChangeNum, onClick, onSubmit, timerCheck, reTimerCheck, resetCertify,  highFunction1, highFunction2}) => {
+const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onChangeNum, onClick, onSubmit, timerCheck, reTimerCheck, resetCertify,  highFunction1, highFunction2, isCheckbox1, isCheckbox2}) => {
     //console.log(form);
     return(
         <Row className="justify-content-md-center" style={{marginTop: '1rem'}}>
@@ -37,6 +37,29 @@ const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onCh
                     </Col>
                     }
                 </Row>
+                {page === 'join' && (
+                    <>
+                    <Row className="g-2 mb-3">
+                        {/* 비밀번호 input창 */}
+                        <Col sm = {12}>
+                            <FloatingLabel label="비밀번호">
+                                <Form.Control type="password" name="pwd" value={form.password} onChange={onChange} maxLength={15} />
+                                <Form.Text id="managerPasswordHelpBlock">{form.password === '' ? '숫자, 영문 대or소문자, 특수문자 포함 8자리 이상 15자리 이하로 입력해주세요.' : setInfo.password.msg }</Form.Text>
+                            </FloatingLabel>
+                        </Col>
+                    </Row>
+                    <Row className="g-2 mb-3">
+                        {/* 비밀번호확인 input창 */}
+                        <Col sm = {12}>
+                            <FloatingLabel label="비밀번호확인">
+                                <Form.Control type="password" name="pwdcheck" value={setInfo.passwordCheck.value} onChange={onChange} maxLength={15} disabled= {(setInfo.password.isCheck === false) ? true : false} />
+                                <Form.Text id="managerPasswordCheckHelpBlock">{setInfo.passwordCheck.value === '' ? '위 입력한 비밀번호와 동일하게 입력하세요.' : setInfo.passwordCheck.msg}</Form.Text>
+                            </FloatingLabel>
+                        </Col>
+                    </Row>
+                </>
+                )}
+
                 {type === 1
                 ? <Row className="align-items-center mb-3">
                     {/* 이름 input창 */}
@@ -63,7 +86,7 @@ const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onCh
                     </Col>
                 </Row>
                 </>)}
-                {type === 1 && (
+                {type === 2 && (
                     <Row className="align-items-center mb-3">
                         <Col sm={8}>
                             <FloatingLabel controlId="businessNum" label="사업자등록번호">
@@ -77,7 +100,7 @@ const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onCh
                         <div className={page === 'join' ? 'd-grid join_btns' : (setInfo.businessNum.isSame ? 'd-grid' : 'd-grid join_btns')}>
                             <Button name='businessBtn' variant={'outline-primary'} onClick={onClick} size="md" 
                             disabled={page === 'join' ? setInfo.name.isCheck || setInfo.businessNum.isCheck || setInfo.opening_day.isCheck ? false : true : (setInfo.name.isSame && setInfo.businessNum.isSame && setInfo.opening_day.isSame ? true : (setInfo.name.isCheck === true || setInfo.businessNum.isCheck === true || setInfo.opening_day.isCheck === true ? false : true))}>
-                                {setInfo.businessNum.btnCheck < 2 ? '사업자번호 확인요청' : '사업자번호 확인완료'}
+                                {setInfo.businessNum.btnCheck < 2 ? '사업자 확인요청' : '사업자 확인완료'}
                             </Button>
                         </div>
                     </Col>
@@ -140,7 +163,12 @@ const AuthCommonForm = ({page, type, form, closeOnClick, setInfo, onChange, onCh
                     <Col xs lg="5">
                         <div className="d-grid">
                             {page === 'join' 
-                            ? <Button type="submit" onClick={onSubmit} variant="primary" size="lg" disabled={!setInfo.name.isCheck || setInfo.email.btnCheck < 2 || setInfo.phoneNum.btnCheck < 2 ? true : false}>회원가입</Button> 
+                            ? 
+                            (type === 1 ?
+                                <Button type="submit" onClick={onSubmit} variant="primary" size="lg" disabled={!setInfo.name.isCheck || setInfo.email.btnCheck < 2 || setInfo.phoneNum.btnCheck < 2 || !setInfo.passwordCheck.isCheck || !isCheckbox1  ? true : false}>회원가입</Button> 
+                                :
+                                <Button type="submit" onClick={onSubmit} variant="primary" size="lg" disabled={!setInfo.name.isCheck || setInfo.email.btnCheck < 2 || setInfo.phoneNum.btnCheck < 2 || setInfo.businessNum.btnCheck < 2 || !setInfo.passwordCheck.isCheck|| !isCheckbox1 || !isCheckbox2  ? true : false}>회원가입</Button> 
+                            )
                             :  <Button type="submit" onClick={onSubmit} variant="primary" size="lg" disabled={(setInfo.name.isSame && setInfo.phoneNum.isSame && setInfo.businessNum && setInfo.opening_day.isSame ) && true }>수정</Button>} 
                         </div>
                     </Col>

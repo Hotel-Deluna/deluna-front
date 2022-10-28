@@ -9,6 +9,9 @@ export const userJoin = ({  email, name, password, phone_num }) =>
 //로그인
 export const login = ({email, password, role}) =>
     axios.post('http://43.200.222.222:8080/member/sign-in', {email, password, role});
+//소셜로그인
+export const socialLogin = ({email, name, role}) =>
+    axios.post('http://43.200.222.222:8080/member/sign-in-social', {email, name, role});
 
 /*정보조회*/
 //사업자

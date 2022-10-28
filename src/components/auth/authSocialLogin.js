@@ -8,12 +8,15 @@ import KakaoLogin from 'react-kakao-login';
 import jwt_decode from "jwt-decode";
 import { Row,Col, Button } from "react-bootstrap";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { socialLogin } from "../../modules/auth";
+import { useDispatch } from "react-redux";
 
 const AuthSocialLogin = () => {
+    const dispatch = useDispatch();
      //소셜로그인 선택 시
      function handleSocialClick(names,e) {
         //소셜로그인 부분
-        console.log('소셜',names, e);
+        ////console.log('소셜',names, e);
         let email = '';
         let name = '';
         if(names === 'kakao'){
@@ -24,19 +27,19 @@ const AuthSocialLogin = () => {
                 return alert('카카오 이메일 승인을 해야합니다.');
             }
         }else if(names === 'naver'){
-            //console.log('aa',e.email, e.name);
+            ////console.log('aa',e.email, e.name);
              email = e.email;
             name = e.name;
         }else if(names === 'google'){
             
             var decoded = jwt_decode(e.credential);
-            console.log('decoded', decoded);
+            //console.log('decoded', decoded);
             email = decoded.email;
             name = decoded.name;
         }
-
-        console.log('email, name',email,name);
+        dispatch(socialLogin({email, name}));
     }
+    
 
     const simbolSize = {
         width : '1.5rem',

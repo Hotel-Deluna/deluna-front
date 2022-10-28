@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Tabs, Tab} from "react-bootstrap";
 import AuthCommonForm from "./authCommonForm";
-const AuthJoinForm = ({type ,form, setInfo, menuChange, onChangeNum, timerCheck, reTimerCheck, onChange, onSubmit, onClick, resetCertify, highFunction1, highFunction2, firstCheck}) => {
+const AuthJoinForm = ({type ,form, setInfo, menuChange, onChangeNum, timerCheck, reTimerCheck, onChange, onSubmit, onClick, resetCertify, highFunction1, highFunction2, firstCheck, isCheckbox1, isCheckbox2}) => {
     //console.log(setInfo);
     const FormContainer = {
         textAlign : 'left',
@@ -23,7 +23,7 @@ const AuthJoinForm = ({type ,form, setInfo, menuChange, onChangeNum, timerCheck,
             {type === 1 &&(
                 <Container style={FormContainer} className="joinMainCountainer" fluid="xxl">
                 <AuthCommonForm page={'join'} type={type} form={form} setInfo={setInfo} onChangeNum={onChangeNum} timerCheck={timerCheck} reTimerCheck={reTimerCheck} 
-                    onChange={onChange} onSubmit={onSubmit} onClick={onClick} resetCertify={resetCertify} highFunction1={highFunction1} />
+                    onChange={onChange} onSubmit={onSubmit} onClick={onClick} resetCertify={resetCertify} highFunction1={highFunction1} isCheckbox1={isCheckbox1} />
                 </Container>
             )}
                 
@@ -32,7 +32,7 @@ const AuthJoinForm = ({type ,form, setInfo, menuChange, onChangeNum, timerCheck,
             {type === 2 && (
                 <Container style={FormContainer} className="joinMainCountainer" fluid="xxl">
                 <AuthCommonForm page={'join'} type={type} form={form} setInfo={setInfo} onChangeNum={onChangeNum} timerCheck={timerCheck} reTimerCheck={reTimerCheck}
-                    onChange={onChange} onSubmit={onSubmit} onClick={onClick} resetCertify={resetCertify} highFunction1={highFunction1} highFunction2={highFunction2} />
+                    onChange={onChange} onSubmit={onSubmit} onClick={onClick} resetCertify={resetCertify} highFunction1={highFunction1} highFunction2={highFunction2} isCheckbox1={isCheckbox1} isCheckbox2={isCheckbox2} />
                 </Container>
             )}
             </Tab>

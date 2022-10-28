@@ -133,7 +133,7 @@ const HotelReservationListTable = ({hotel_list, onChangeSelect, onClick, inputid
                                 </tr>
                             )}
                         </tbody>
-                        <tbody>
+                        {/* <tbody>
                             <tr>
                                 <td>12345</td>
                                 <td>신라스테이 강남</td>
@@ -144,7 +144,7 @@ const HotelReservationListTable = ({hotel_list, onChangeSelect, onClick, inputid
                                 <td>예약확정</td>
                                 <td><Button variant="danger">예약취소</Button></td>
                             </tr>
-                        </tbody>
+                        </tbody> */}
                     </Table>
                 </Col>
             </Row>

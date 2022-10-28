@@ -16,6 +16,10 @@ const RESET_RESPONSE = 'auth/RESET_RESPONSE';
 const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createRequestActionTypes(
   'auth/LOGIN'
 );
+//소셜로그인
+const [SOCIALLOGIN, SOCIALLOGIN_SUCCESS, SOCIALLOGIN_FAILURE] = createRequestActionTypes(
+  'auth/SOCIALLOGIN'
+);
 //회원가입 = JOINUSER - 고객 
 const [JOINUSER, JOINUSER_SUCCESS, JOINUSER_FAILURE] = createRequestActionTypes(
   'auth/JOINUSER'
@@ -86,6 +90,11 @@ export const initializeForm = createAction(INITIALIZE_FORM, form => form); // pa
 export const login = createAction(LOGIN, ({  email, password, role  }) => ({
   email, password, role 
 }));
+//소셜로그인
+export const socialLogin =  createAction(SOCIALLOGIN, ({  email, name,role  }) => ({
+  email, name, role
+}));
+
 //사업자 회원가입
 export const partnerJoin = createAction(JOINPARTNER, ({business_num, email, name, opening_day, password, phone_num})=> ({
   business_num, email, name, opening_day, password, phone_num
@@ -112,7 +121,7 @@ export const partnerModify = createAction(MODIFYPARTNER, ({token, business_num, 
 // saga 생성
 //로그인
 const loginSaga = createRequestSaga(LOGIN, authAPI.login);
-
+const socialLoginSaga = createRequestSaga(SOCIALLOGIN, authAPI.socialLogin);
 //회원가입
 const partnerJoinSaga = createRequestSaga(JOINPARTNER, authAPI.partnerJoin);
 const userJoinSaga = createRequestSaga(JOINUSER, authAPI.userJoin);
@@ -126,6 +135,7 @@ const partnerModifySaga = createRequestSaga(MODIFYPARTNER, authAPI.partnerModify
 export function* authSaga() {
   //로그인
   yield takeLatest(LOGIN, loginSaga);
+  yield takeLatest(SOCIALLOGIN, socialLoginSaga);
   //회원가입
   yield takeLatest(JOINPARTNER, partnerJoinSaga);
   yield takeLatest(JOINUSER, userJoinSaga);
@@ -165,6 +175,11 @@ const auth = handleActions(
         password : '',
         role : '',
       },
+      socialLogin: {
+        email : '',
+        name : '',
+        role : 1
+      },
       join : {
         business_num : '', 
         email : '', 
@@ -187,7 +202,9 @@ const auth = handleActions(
       authSelect : null,
       authSelectError : null,
       authModify : null,
-      authModifyError : null
+      authModifyError : null,
+      authSocialLogin : null,
+      authSocialLoginError : null
     }),
     [RESET_RESPONSE]: (state, { payload: {key} }) => ({
       ...state,
@@ -203,6 +220,17 @@ const auth = handleActions(
     [LOGIN_FAILURE]: (state, { payload: error }) => ({
       ...state,
       authError: error
+    }),
+    // 로그인 성공
+    [SOCIALLOGIN_SUCCESS]: (state, { payload: authSocialLogin }) => ({
+      ...state,
+      authSocialLoginError : null,
+      authSocialLogin
+    }),
+    // 로그인 실패
+    [SOCIALLOGIN_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      authSocialLoginError: error
     }),
     //고객 회원가입 성공
     [JOINUSER_SUCCESS]: (state, { payload: auth }) => ({
