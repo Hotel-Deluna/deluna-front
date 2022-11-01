@@ -1,20 +1,21 @@
+/* 객실간편관리 컴포넌트 파일 */
+
 import React, { useEffect, useState } from "react";
 import {Row, Col,Button, Table, InputGroup,Form} from 'react-bootstrap';
 import { UncontrolledCollapse, Card, CardBody } from 'reactstrap';
-import * as hotelMainReducer from "../../modules/hotel/hotelMainReducer";
-import {my_hotel_list, hotel_code,reset} from "../../modules/hotel/hotelMainActions";
+import * as hotelMainReducer from "../../modules/hotel/hotelMainReducer"; //store
+import {my_hotel_list, hotel_code,reset} from "../../modules/hotel/hotelMainActions"; //api action
+
 import { connect, useDispatch } from 'react-redux';
-import RoomBatchDelete from "./roomBatchDelete";
-import "./css/hotelRoomList.scss"
-import star from "./images/star.png";
-import noStar from "./images/no_star.png"
+import RoomBatchDelete from "./roomBatchDelete"; //객실일괄삭제 modal 컴포넌트
+import "./css/hotelRoomList.scss"; //호텔리스트 css
+import star from "./images/star.png"; //호텔등급 별사진(foc)
+import noStar from "./images/no_star.png" //호텔등급 별사진(nor)
 import { useSearchParams,Link } from 'react-router-dom';
 //무한 스크롤 페이징 라이브러리
 import { useInView } from 'react-intersection-observer';
 //객실 등록&수정 모달
 import RoomCommon from "../../containers/hotel/roomCommon";
-//페이징 로딩 이미지
-import loadingImg from "../common/loading.gif";
 
 const EsayRoomManage = ({my_hotel_list,hotelList, hotel_code, hotelCode, code,reset}) => {
     const [searchParams, setSearchParams] = useSearchParams();
